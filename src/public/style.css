@@ -1,0 +1,55 @@
+﻿body{
+	margin: 0;
+	padding: 0;
+	font: 16px "Helvetica neue", Helvetica, Arial, sans-serif;
+	color: #333;
+}
+header, footer{
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: auto;
+	padding: 0 0.5em;
+	background-color: #8BC84B;
+	font-size: 24px;
+	line-height: 2em;
+	height: 2em;
+	color: #fff;
+}
+header{
+	font-weight: bold;
+}
+header > a:last-child{
+	float: right;
+	color: #fff;
+	font-weight: normal;
+}
+footer{
+	top: auto;
+	bottom: 0;
+}
+input{
+	height: 1.5em;
+	font-size: 14px;
+}
+#content{
+	margin: 48px 0.5em;
+	list-style: none;
+}
+.slidecontainer {
+    width: 100%; /* Width of the outside container */
+}
+/* The slider itself */
+.slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 25px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
