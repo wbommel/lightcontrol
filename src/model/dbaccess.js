@@ -27,10 +27,10 @@ var TABLE_RULES = 'lightrulesgeneral';
  Example: Weekends
  96  = 0110 0000
  */
- var helpers = require('./weekdays.js');
+var helpers = require('./weekdays.js');
 // var padStart = require('string.prototype.padstart');
 
-var rulevalidation=require('./rulevalidation');
+var rulevalidation = require('./rulevalidation');
 
 var connection = mysql.createConnection({
     host: HOST,
@@ -88,6 +88,7 @@ connection.query('SELECT * FROM ' + TABLE_RULES, function (err, results, fields)
 
         for (var idx in rules) {
             var rule = rules[idx];
+            console.log('');
 
             if (rulevalidation.TodayIsInRuleRange(rule)) {
                 console.log('today is in rule');
@@ -98,5 +99,17 @@ connection.query('SELECT * FROM ' + TABLE_RULES, function (err, results, fields)
             }
         }
         console.log('Count: %d', count);
+        console.log('');
+
+
+
+        console.log('Nothing  : '+helpers.WeekdaysToInt(false, false, false,false,false,false,false));
+        console.log('Monday   : '+helpers.WeekdaysToInt(true, false, false,false,false,false,false));
+        console.log('Tuesday  : '+helpers.WeekdaysToInt(false, true, false,false,false,false,false));
+        console.log('Wednesday: '+helpers.WeekdaysToInt(false, false, true,false,false,false,false));
+        console.log('Thursday : '+helpers.WeekdaysToInt(false, false, false,true,false,false,false));
+        console.log('Friday   : '+helpers.WeekdaysToInt(false, false, false,false,true,false,false));
+        console.log('Saturday : '+helpers.WeekdaysToInt(false, false, false,false,false,true,false));
+        console.log('Sunday   : '+helpers.WeekdaysToInt(false, false, false,false,false,false,true));
     }
 });

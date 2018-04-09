@@ -2,13 +2,21 @@
  * Created by Bommel2 on 02.04.2018.
  */
 
-var Monday = 1;
-var Tuesday = 2;
-var Wednesday = 4;
-var Thursday = 8;
-var Friday = 16;
-var Saturday = 32;
-var Sunday = 64;
+/*
+*  the list of weekdays is bound to javascript's Date().getDay() functionality where
+*  sunday is 0, monday is 1, tuesday is 2 and so on until saturday which is 6
+*
+*  this makes it easier to develop time related functions without having to convert
+*  the weekdays back and forth.
+* */
+var Sunday = Math.pow(2, 0);
+var Monday = Math.pow(2, 1);
+var Tuesday = Math.pow(2, 2);
+var Wednesday = Math.pow(2, 3);
+var Thursday = Math.pow(2, 4);
+var Friday = Math.pow(2, 5);
+var Saturday = Math.pow(2, 6);
+
 
 
 module.exports.WeekdaysToInt = function (Mo, Tu, We, Th, Fr, Sa, Su) {

@@ -15,14 +15,18 @@ var padStart = require('string.prototype.padstart');
  *
  */
 describe('model', function () {
+    //declare model-wide vars
+    var Sunday = Math.pow(2, 0);
+    var Monday = Math.pow(2, 1);
+    var Tuesday = Math.pow(2, 2);
+    var Wednesday = Math.pow(2, 3);
+    var Thursday = Math.pow(2, 4);
+    var Friday = Math.pow(2, 5);
+    var Saturday = Math.pow(2, 6);
+
+    var expected = false;
+
     describe('weekdays.js', function () {
-        var Monday = 1;
-        var Tuesday = 2;
-        var Wednesday = 4;
-        var Thursday = 8;
-        var Friday = 16;
-        var Saturday = 32;
-        var Sunday = 64;
 
         describe('#WeekdaysToInt()', function () {
             var Mo = false, Tu = false, We = false, Th = false, Fr = false, Sa = false, Su = false, expect = 0;
@@ -33,7 +37,7 @@ describe('model', function () {
                 });
             });
             Mo = true;
-            expect = 1;
+            expect = Monday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -41,7 +45,7 @@ describe('model', function () {
             });
 
             Tu = true;
-            expect = 3;
+            expect = Monday + Tuesday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -49,7 +53,7 @@ describe('model', function () {
             });
 
             We = true;
-            expect = 7;
+            expect = Monday + Tuesday + Wednesday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -57,7 +61,7 @@ describe('model', function () {
             });
 
             Th = true;
-            expect = 15;
+            expect = Monday + Tuesday + Wednesday + Thursday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -65,7 +69,7 @@ describe('model', function () {
             });
 
             Fr = true;
-            expect = 31;
+            expect = Monday + Tuesday + Wednesday + Thursday + Friday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -73,7 +77,7 @@ describe('model', function () {
             });
 
             Sa = true;
-            expect = 63;
+            expect = Monday + Tuesday + Wednesday + Thursday + Friday + Saturday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -81,7 +85,7 @@ describe('model', function () {
             });
 
             Su = true;
-            expect = 127;
+            expect = Monday + Tuesday + Wednesday + Thursday + Friday + Saturday + Sunday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -89,7 +93,7 @@ describe('model', function () {
             });
 
             Mo = false;
-            expect = 126;
+            expect = Tuesday + Wednesday + Thursday + Friday + Saturday + Sunday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -97,7 +101,7 @@ describe('model', function () {
             });
 
             Tu = false;
-            expect = 124;
+            expect = Wednesday + Thursday + Friday + Saturday + Sunday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -105,7 +109,7 @@ describe('model', function () {
             });
 
             We = false;
-            expect = 120;
+            expect = Thursday + Friday + Saturday + Sunday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -113,7 +117,7 @@ describe('model', function () {
             });
 
             Th = false;
-            expect = 112;
+            expect = Friday + Saturday + Sunday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -121,7 +125,7 @@ describe('model', function () {
             });
 
             Fr = false;
-            expect = 96;
+            expect = Saturday + Sunday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -129,7 +133,7 @@ describe('model', function () {
             });
 
             Sa = false;
-            expect = 64;
+            expect = Sunday;
             describe('#WeekdaysToInt(' + Mo + ', ' + Tu + ', ' + We + ', ' + Th + ', ' + Fr + ', ' + Sa + ', ' + Su + ')', function () {
                 it('should return ' + expect, function () {
                     assert.equal(weekdays.WeekdaysToInt(Mo, Tu, We, Th, Fr, Sa, Su), expect);
@@ -138,7 +142,7 @@ describe('model', function () {
         });
 
         describe('#HasMonday()', function () {
-            var expected = false;
+            expected = false;
             for (var i = 0; i <= 127; i++) {
                 expected = ((i & Monday) === Monday);
                 describe('#HasMonday(' + i + ')', function () {
@@ -151,7 +155,7 @@ describe('model', function () {
         });
 
         describe('#HasTuesday()', function () {
-            var expected = false;
+            expected = false;
             for (var i = 0; i <= 127; i++) {
                 expected = ((i & Tuesday) === Tuesday);
                 describe('#HasTuesday(' + i + ')', function () {
@@ -164,7 +168,7 @@ describe('model', function () {
         });
 
         describe('#HasWednesday()', function () {
-            var expected = false;
+            expected = false;
             for (var i = 0; i <= 127; i++) {
                 expected = ((i & Wednesday) === Wednesday);
                 describe('#HasWednesday(' + i + ')', function () {
@@ -177,7 +181,7 @@ describe('model', function () {
         });
 
         describe('#HasThursday()', function () {
-            var expected = false;
+            expected = false;
             for (var i = 0; i <= 127; i++) {
                 expected = ((i & Thursday) === Thursday);
                 describe('#HasThursday(' + i + ')', function () {
@@ -190,7 +194,7 @@ describe('model', function () {
         });
 
         describe('#HasFriday()', function () {
-            var expected = false;
+            expected = false;
             for (var i = 0; i <= 127; i++) {
                 expected = ((i & Friday) === Friday);
                 describe('#HasFriday(' + i + ')', function () {
@@ -203,7 +207,7 @@ describe('model', function () {
         });
 
         describe('#HasSaturday()', function () {
-            var expected = false;
+            expected = false;
             for (var i = 0; i <= 127; i++) {
                 expected = ((i & Saturday) === Saturday);
                 describe('#HasSaturday(' + i + ')', function () {
@@ -216,7 +220,7 @@ describe('model', function () {
         });
 
         describe('#HasSunday()', function () {
-            var expected = false;
+            expected = false;
             for (var i = 0; i <= 127; i++) {
                 expected = ((i & Sunday) === Sunday);
                 describe('#HasSunday(' + i + ')', function () {
@@ -234,13 +238,42 @@ describe('model', function () {
         var rule = {id: 1, Priority: 9999, From: '', To: '', DimTime: 30, Weekdays: 127};
 
         describe('#TimeIsInRange()', function () {
-            var timenow = new Date(new Date().toLocaleString());
-            rule.From = '0000;00;00;' + padStart(timenow.setHours(timenow.getHours() - 1), 2, '0') + ';' + padStart(timenow.getMinutes(), 2, '0');
-            rule.To = '0000;00;00;' + padStart(timenow.setHours(timenow.getHours() + 1), 2, '0') + ';' + padStart(timenow.getMinutes(), 2, '0');
 
             it('should return true when time is in range', function () {
+                var timenow = new Date(new Date().toLocaleString());
+                timenow.setHours(timenow.getHours() - 1);
+                rule.From = '0000;00;00;' + padStart(timenow.getHours(), 2, '0') + ';' + padStart(timenow.getMinutes(), 2, '0');
+                timenow.setHours(timenow.getHours() + 2);
+                rule.To = '0000;00;00;' + padStart(timenow.getHours(), 2, '0') + ';' + padStart(timenow.getMinutes(), 2, '0');
+
                 assert.equal(rulevalidation.TimeIsInRange(rule), true);
             });
+
+            it('should return false when time is out of range', function () {
+                var timenow = new Date(new Date().toLocaleString());
+                timenow.setHours(timenow.getHours() + 1);
+                rule.From = '0000;00;00;' + padStart(timenow.getHours(), 2, '0') + ';' + padStart(timenow.getMinutes(), 2, '0');
+                timenow.setHours(timenow.getHours() + 1);
+                rule.To = '0000;00;00;' + padStart(timenow.getHours(), 2, '0') + ';' + padStart(timenow.getMinutes(), 2, '0');
+                assert.equal(rulevalidation.TimeIsInRange(rule), false);
+            });
+
         });
+
+        describe('#TodayIsTheCorrectWeekday()', function () {
+            var timenow = new Date(new Date().toLocaleString());
+            var today = Math.pow(2, timenow.getDay());
+            expected = false;
+            for (var i = 0; i <= 127; i++) {
+                rule.Weekdays = i;
+                expected = ((i & today) === today);
+
+                it('today (' + today + ') it should return ' + expected + ' when Weekdays is ' + rule.Weekdays, function () {
+                    assert.equal(rulevalidation.TodayIsTheCorrectWeekday(rule), expected);
+                });
+            }
+        });
+
+        //describe('',function(){});
     });
 });
