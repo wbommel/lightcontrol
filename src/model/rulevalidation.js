@@ -5,7 +5,12 @@ var weekdays = require('./weekdays.js');
 var padStart = require('string.prototype.padstart');
 
 
-
+/**
+ *
+ * @param rule
+ * @returns {boolean}
+ * @constructor
+ */
 module.exports.TimeIsInRange = function (rule) {
     //TODO: check if rule is valid
     var now = new Date(new Date().toLocaleString());
@@ -18,8 +23,7 @@ module.exports.TimeIsInRange = function (rule) {
         padStart(rule.To.split(';')[4], 2, '0'));
 
     return nowtimeint >= rulefromint && nowtimeint <= ruletoint;
-};
-
+}
 
 
 /**
@@ -39,8 +43,7 @@ module.exports.TodayIsTheCorrectWeekday = function (rule) {
         (now.getDay() === 4 && weekdays.HasFriday(rule.Weekdays)) ||
         (now.getDay() === 5 && weekdays.HasSaturday(rule.Weekdays)) ||
         (now.getDay() === 6 && weekdays.HasSunday(rule.Weekdays));
-};
-
+}
 
 
 /**
@@ -54,13 +57,29 @@ module.exports.TodayIsTheCorrectWeekday = function (rule) {
 module.exports.TodayIsInRuleRange = function (rule) {
     //TODO: check if rule is valid
     var now = new Date(new Date().toLocaleString());
-    var concatnowstr = padStart(now.getFullYear().toString(), 4, '0') +
-        padStart(now.getMonth().toString(), 2, '0') +
-        padStart(now.getDate().toString(), 2, '0') +
-        padStart(now.getHours().toString(), 2, '0') +
-        padStart(now.getMinutes().toString(), 2, '0');
-    var from = rule.From.replace(/;/g, '');
-    var to = rule.To.replace(/;/g, '');
+    var concatnowstr = padStart(now.getMonth() + 1, 2, '0') + padStart(now.getDate(), 2, '0');
+    var arr = rule.From.split(';');
+    var from = arr[1] + arr[2];
+    arr = rule.To.split(';');
+    var to = arr[1] + arr[2];
 
     return parseInt(concatnowstr) >= parseInt(from) && parseInt(concatnowstr) <= parseInt(to);
-};
+}
+
+
+/**
+ *
+ * @param rule
+ * @returns {boolean}
+ * @constructor
+ */
+module.exports.YearIsInRuleRange=function(rule){
+    var now = new Date(new Date().toLocaleString());
+
+    var arr = rule.From.split(';');
+    var from = arr[0];
+    arr = rule.To.split(';');
+    var to = arr[0];
+
+    return now.getFullYear() >= parseInt(from) && now.getFullYear() <= parseInt(to);
+}
