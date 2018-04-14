@@ -6,7 +6,7 @@ var assert = require('assert');
 var weekdays = require('../model/weekdays');
 var rulevalidation = require('../model/rulevalidation');
 var padStart = require('string.prototype.padstart');
-
+var expect = require("chai").expect;
 
 
 /**
@@ -141,95 +141,83 @@ describe('model', function () {
             });
         });
 
-        describe('#HasMonday()', function () {
-            expected = false;
-            for (var i = 0; i <= 127; i++) {
-                expected = ((i & Monday) === Monday);
-                describe('#HasMonday(' + i + ')', function () {
-                    it('should return ' + expected, function () {
-                        expected = ((i & Monday) === Monday);
-                        assert.equal(weekdays.HasMonday(i), expected, 'expected is:' + expected);
-                    });
+        describe('Check for weekday in an integer', function () {
+            /**
+             * checks if a given integer (i) contains a certain (day) bit and calls the desired function (cb) according
+             * to the given day.
+             *
+             * represents a solution so the loop tests actually work. The it function is called in this separate
+             * function which is called from the loop instead.
+             *
+             * I still don't fully get why, but it works and is good enough for now. Maybe I get it by digging deeper
+             * into nodejs and mocha when time goes by. :-)
+             *
+             * @param i     integer containing the desired day bit (0-127)
+             * @param day   day value to test for
+             * @param cb    callback function (i.e. 'HasTuesday' when day = Tuesday
+             *
+             * @description test function for the 'Has...' tests which return true or false when the integer parameter
+             *      logically suites the given day.
+             *      found this here: https://stackoverflow.com/questions/40101792/using-a-for-loop-in-a-mocha-test
+             *
+             * @example itTest(65, Friday, weekdays.HasFriday) calls the HasFriday function to check if 65 contains the
+             *      Friday bit.
+             */
+            function itTest(i, day, cb) {
+                var expected = ((i & day) === day);
+                it(i + ' should return ' + expected, function () {
+                    assert.equal(cb(i), expected, 'expected is:' + expected);
                 });
             }
-        });
 
-        describe('#HasTuesday()', function () {
-            expected = false;
-            for (var i = 0; i <= 127; i++) {
-                expected = ((i & Tuesday) === Tuesday);
-                describe('#HasTuesday(' + i + ')', function () {
-                    it('should return ' + expected, function () {
-                        expected = ((i & Tuesday) === Tuesday);
-                        assert.equal(weekdays.HasTuesday(i), expected, 'expected is:' + expected);
-                    });
-                });
-            }
-        });
+            describe('#HasMonday()', function () {
+                var expected = false;
+                for (var i = 0; i <= 127; i++) {
+                    itTest(i, Monday, weekdays.HasMonday);
+                }
+            });
 
-        describe('#HasWednesday()', function () {
-            expected = false;
-            for (var i = 0; i <= 127; i++) {
-                expected = ((i & Wednesday) === Wednesday);
-                describe('#HasWednesday(' + i + ')', function () {
-                    it('should return ' + expected, function () {
-                        expected = ((i & Wednesday) === Wednesday);
-                        assert.equal(weekdays.HasWednesday(i), expected, 'expected is:' + expected);
-                    });
-                });
-            }
-        });
+            describe('#HasTuesday()', function () {
+                expected = false;
+                for (var i = 0; i <= 127; i++) {
+                    itTest(i, Tuesday, weekdays.HasTuesday);
+                }
+            });
 
-        describe('#HasThursday()', function () {
-            expected = false;
-            for (var i = 0; i <= 127; i++) {
-                expected = ((i & Thursday) === Thursday);
-                describe('#HasThursday(' + i + ')', function () {
-                    it('should return ' + expected, function () {
-                        expected = ((i & Thursday) === Thursday);
-                        assert.equal(weekdays.HasThursday(i), expected, 'expected is:' + expected);
-                    });
-                });
-            }
-        });
+            describe('#HasWednesday()', function () {
+                expected = false;
+                for (var i = 0; i <= 127; i++) {
+                    itTest(i, Wednesday, weekdays.HasWednesday);
+                }
+            });
 
-        describe('#HasFriday()', function () {
-            expected = false;
-            for (var i = 0; i <= 127; i++) {
-                expected = ((i & Friday) === Friday);
-                describe('#HasFriday(' + i + ')', function () {
-                    it('should return ' + expected, function () {
-                        expected = ((i & Friday) === Friday);
-                        assert.equal(weekdays.HasFriday(i), expected, 'expected is:' + expected);
-                    });
-                });
-            }
-        });
+            describe('#HasThursday()', function () {
+                expected = false;
+                for (var i = 0; i <= 127; i++) {
+                    itTest(i, Thursday, weekdays.HasThursday);
+                }
+            });
 
-        describe('#HasSaturday()', function () {
-            expected = false;
-            for (var i = 0; i <= 127; i++) {
-                expected = ((i & Saturday) === Saturday);
-                describe('#HasSaturday(' + i + ')', function () {
-                    it('should return ' + expected, function () {
-                        expected = ((i & Saturday) === Saturday);
-                        assert.equal(weekdays.HasSaturday(i), expected, 'expected is:' + expected);
-                    });
-                });
-            }
-        });
+            describe('#HasFriday()', function () {
+                expected = false;
+                for (var i = 0; i <= 127; i++) {
+                    itTest(i, Friday, weekdays.HasFriday);
+                }
+            });
 
-        describe('#HasSunday()', function () {
-            expected = false;
-            for (var i = 0; i <= 127; i++) {
-                expected = ((i & Sunday) === Sunday);
-                describe('#HasSunday(' + i + ')', function () {
-                    it('should return ' + expected, function () {
-                        expected = ((i & Sunday) === Sunday);
-                        assert.equal(weekdays.HasSunday(i), expected, 'expected is:' + expected);
-                    });
-                });
-            }
+            describe('#HasSaturday()', function () {
+                expected = false;
+                for (var i = 0; i <= 127; i++) {
+                    itTest(i, Saturday, weekdays.HasSaturday);
+                }
+            });
+
+            describe('#HasSunday()', function () {
+                expected = false;
+                for (var i = 0; i <= 127; i++) {
+                    itTest(i, Sunday, weekdays.HasSunday);
+                }
+            });
         });
     });
 
@@ -260,20 +248,65 @@ describe('model', function () {
 
         });
 
+        /**
+         * checks if today's bit is part of a given integer
+         *
+         * represents a solution so the loop tests actually work. The it function is called in this separate
+         * function which is called from the loop instead.
+         *
+         * I still don't fully get why, but it works and is good enough for now. Maybe I get it by digging deeper
+         * into nodejs and mocha when time goes by. :-)
+         *
+         * @param i     integer to be checked for today's bit
+         * @param today integer value of today
+         */
+        function itTestToday(i, today) {
+            rule.Weekdays = i;
+            expected = ((i & today) === today);
+
+            it('today (' + today + ') it should return ' + expected + ' when Weekdays is ' + rule.Weekdays, function () {
+                assert.equal(rulevalidation.TodayIsTheCorrectWeekday(rule), expected);
+            });
+        }
+
         describe('#TodayIsTheCorrectWeekday()', function () {
             var timenow = new Date(new Date().toLocaleString());
             var today = Math.pow(2, timenow.getDay());
             expected = false;
             for (var i = 0; i <= 127; i++) {
-                rule.Weekdays = i;
-                expected = ((i & today) === today);
-
-                it('today (' + today + ') it should return ' + expected + ' when Weekdays is ' + rule.Weekdays, function () {
-                    assert.equal(rulevalidation.TodayIsTheCorrectWeekday(rule), expected);
-                });
+                itTestToday(i, today);
             }
         });
 
-        //describe('',function(){});
+        describe('#TodayIsInRuleRange()', function () {
+            it('should return true when year day is in range', function () {
+                rule.From = '0000;01;01;00;00';
+                rule.To = '0000;12;31;00;00';
+                assert.equal(rulevalidation.TodayIsInRuleRange(rule), true);
+            });
+            it('should return false if the day is out of range', function () {
+                var timenow = new Date(new Date().toLocaleString());
+                if (timenow.getDate() === 1) {
+                    timenow.setDate(timenow.getDate() + 1);
+                } else {
+                    timenow.setDate(timenow.getDate() - 1);
+                }
+                rule.From = '0000;' + timenow.getMonth() + 1 + ';;00;00';
+                rule.To = '9999;' + timenow.getMonth() + 1 + ';;00;00';
+            });
+        });
+
+        describe('#YearIsInRuleRange()', function () {
+            it('should return true if the year is in range', function () {
+                rule.From = '0000;00;00;00;00';
+                rule.To = '9999;00;00;00;00';
+                assert.equal(rulevalidation.YearIsInRuleRange(rule), true);
+            });
+            it('should return false if the year is out of range', function () {
+                rule.From = '1971;00;00;00;00';
+                rule.To = '1981;00;00;00;00';
+                assert.equal(rulevalidation.YearIsInRuleRange(rule), false);
+            });
+        });
     });
 });
