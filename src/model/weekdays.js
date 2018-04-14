@@ -23,30 +23,31 @@ module.exports.WeekdaysToInt = function (Mo, Tu, We, Th, Fr, Sa, Su) {
     return (Mo ? Monday : 0) + (Tu ? Tuesday : 0) + (We ? Wednesday : 0) + (Th ? Thursday : 0) + (Fr ? Friday : 0) + (Sa ? Saturday : 0) + (Su ? Sunday : 0);
 }
 
+
+module.exports.HasSunday = function (WeekdayInteger) {
+    return (WeekdayInteger & Sunday) == Math.pow(2, 0);
+}
+
 module.exports.HasMonday = function (WeekdayInteger) {
-    return (WeekdayInteger & Monday) == 1;
+    return (WeekdayInteger & Monday) === Math.pow(2, 1);
 }
 
 module.exports.HasTuesday = function (WeekdayInteger) {
-    return (WeekdayInteger & Tuesday) == 2;
+    return (WeekdayInteger & Tuesday) == Math.pow(2, 2);
 }
 
 module.exports.HasWednesday = function (WeekdayInteger) {
-    return (WeekdayInteger & Wednesday) == 4;
+    return (WeekdayInteger & Wednesday) == Math.pow(2, 3);
 }
 
 module.exports.HasThursday = function (WeekdayInteger) {
-    return (WeekdayInteger & Thursday) == 8;
+    return (WeekdayInteger & Thursday) == Math.pow(2, 4);
 }
 
 module.exports.HasFriday = function (WeekdayInteger) {
-    return (WeekdayInteger & Friday) == 16;
+    return (WeekdayInteger & Friday) == Math.pow(2, 5);
 }
 
 module.exports.HasSaturday = function (WeekdayInteger) {
-    return (WeekdayInteger & Saturday) == 32;
-}
-
-module.exports.HasSunday = function (WeekdayInteger) {
-    return (WeekdayInteger & Sunday) == 64;
+    return (WeekdayInteger & Saturday) == Math.pow(2, 6);
 }
