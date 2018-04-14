@@ -27,7 +27,7 @@ var TABLE_RULES = 'lightrulesgeneral';
  Example: Weekends
  96  = 0110 0000
  */
-var helpers = require('./weekdays.js');
+var weekdays = require('./weekdays.js');
 // var padStart = require('string.prototype.padstart');
 
 var rulevalidation = require('./rulevalidation');
@@ -73,13 +73,13 @@ connection.query('SELECT * FROM ' + TABLE_RULES, function (err, results, fields)
             console.log('   to.Minute  : %s', to[4]);
             console.log('DimTime       : %d', rule.DimTime);
             console.log('Weekdays      : %d', rule.Weekdays);
-            console.log('   Monday     : %s', helpers.HasMonday(rule.Weekdays) ? 'X' : '');
-            console.log('   Tuesday    : %s', helpers.HasTuesday(rule.Weekdays) ? 'X' : '');
-            console.log('   Wednesday  : %s', helpers.HasWednesday(rule.Weekdays) ? 'X' : '');
-            console.log('   Thursday   : %s', helpers.HasThursday(rule.Weekdays) ? 'X' : '');
-            console.log('   Friday     : %s', helpers.HasFriday(rule.Weekdays) ? 'X' : '');
-            console.log('   Saturday   : %s', helpers.HasSaturday(rule.Weekdays) ? 'X' : '');
-            console.log('   Sunday     : %s', helpers.HasSunday(rule.Weekdays) ? 'X' : '');
+            console.log('   Monday     : %s', weekdays.HasMonday(rule.Weekdays) ? 'X' : '');
+            console.log('   Tuesday    : %s', weekdays.HasTuesday(rule.Weekdays) ? 'X' : '');
+            console.log('   Wednesday  : %s', weekdays.HasWednesday(rule.Weekdays) ? 'X' : '');
+            console.log('   Thursday   : %s', weekdays.HasThursday(rule.Weekdays) ? 'X' : '');
+            console.log('   Friday     : %s', weekdays.HasFriday(rule.Weekdays) ? 'X' : '');
+            console.log('   Saturday   : %s', weekdays.HasSaturday(rule.Weekdays) ? 'X' : '');
+            console.log('   Sunday     : %s', weekdays.HasSunday(rule.Weekdays) ? 'X' : '');
             console.log('------------------------------------------------------------');
         }
 
@@ -102,14 +102,86 @@ connection.query('SELECT * FROM ' + TABLE_RULES, function (err, results, fields)
         console.log('');
 
 
+        console.log('Nothing  : ' + weekdays.WeekdaysToInt(false, false, false, false, false, false, false));
+        console.log('Monday   : ' + weekdays.WeekdaysToInt(true, false, false, false, false, false, false));
+        console.log('Tuesday  : ' + weekdays.WeekdaysToInt(false, true, false, false, false, false, false));
+        console.log('Wednesday: ' + weekdays.WeekdaysToInt(false, false, true, false, false, false, false));
+        console.log('Thursday : ' + weekdays.WeekdaysToInt(false, false, false, true, false, false, false));
+        console.log('Friday   : ' + weekdays.WeekdaysToInt(false, false, false, false, true, false, false));
+        console.log('Saturday : ' + weekdays.WeekdaysToInt(false, false, false, false, false, true, false));
+        console.log('Sunday   : ' + weekdays.WeekdaysToInt(false, false, false, false, false, false, true));
+        console.log('');
 
-        console.log('Nothing  : '+helpers.WeekdaysToInt(false, false, false,false,false,false,false));
-        console.log('Monday   : '+helpers.WeekdaysToInt(true, false, false,false,false,false,false));
-        console.log('Tuesday  : '+helpers.WeekdaysToInt(false, true, false,false,false,false,false));
-        console.log('Wednesday: '+helpers.WeekdaysToInt(false, false, true,false,false,false,false));
-        console.log('Thursday : '+helpers.WeekdaysToInt(false, false, false,true,false,false,false));
-        console.log('Friday   : '+helpers.WeekdaysToInt(false, false, false,false,true,false,false));
-        console.log('Saturday : '+helpers.WeekdaysToInt(false, false, false,false,false,true,false));
-        console.log('Sunday   : '+helpers.WeekdaysToInt(false, false, false,false,false,false,true));
+
+        var rule = {id: 1, Priority: 9999, From: '', To: '', DimTime: 30, Weekdays: 127};
+        rule.From = "0000;01;01;00;00";
+        rule.To = "0000;12;31;23;59";
+
+        console.log('TodayIsinRange: ' + rulevalidation.TodayIsInRuleRange(rule));
+        console.log('');
+
+
+        var Sunday = Math.pow(2, 0);
+        var Monday = Math.pow(2, 1);
+        var Tuesday = Math.pow(2, 2);
+        var Wednesday = Math.pow(2, 3);
+        var Thursday = Math.pow(2, 4);
+        var Friday = Math.pow(2, 5);
+        var Saturday = Math.pow(2, 6);
+        var expected = false;
+        for (var idx = 0; idx <= 127; idx++) {
+            expected = ((idx & Tuesday) === Tuesday);
+            console.log('#HasTuesday(%d) should return %s', idx, expected);
+            console.log('result: %s', weekdays.HasTuesday(idx));
+        }
+        console.log('');
+
+
+        /*
+                var values = [];
+                console.log('Array length: %d', values.length);
+                for (var i = 0; i <= 127; i++) {
+                    values.push(i);
+                }
+                console.log('Array length: %d', values.length);
+                for (var value in values) {
+                    console.log('value: %d', value);
+                }
+                console.log('');
+        */
+
+        /*
+                var Sunday = Math.pow(2, 0);
+                var Monday = Math.pow(2, 1);
+                var Tuesday = Math.pow(2, 2);
+                var Wednesday = Math.pow(2, 3);
+                var Thursday = Math.pow(2, 4);
+                var Friday = Math.pow(2, 5);
+                var Saturday = Math.pow(2, 6);
+
+                var expected = false;
+                var resultMo = false;
+                var resultTu = false;
+                var resultWe = false;
+                var resultTh = false;
+                var resultFr = false;
+                var resultSa = false;
+                var resultSu = false;
+
+                for (var idx = 0; idx <= 127; idx++) {
+                    expected = ((idx & Monday) == Monday);
+                    resultMo = weekdays.HasMonday(idx);
+                    resultTu = weekdays.HasTuesday(idx);
+                    resultWe = weekdays.HasWednesday(idx);
+                    resultTh = weekdays.HasThursday(idx);
+                    resultFr = weekdays.HasFriday(idx);
+                    resultSa = weekdays.HasSaturday(idx);
+                    resultSu = weekdays.HasSunday(idx);
+                    // console.log('%d & %d == %d', idx, Monday, (idx & Monday));
+                    // console.log('expected          : %s', expected);
+                    console.log('Mo, Tu, We, Th, Fr, Sa, Su: %s, %s, %s, %s, %s, %s, %s', resultMo, resultTu, resultWe, resultTh, resultFr, resultSa, resultSu);
+                }
+                console.log('');
+        */
     }
 });
