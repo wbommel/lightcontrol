@@ -3,19 +3,30 @@
  */
 //var describe = require("mocha");
 var assert = require('assert');
-var weekdays = require('../model/weekdays');
-var rulevalidation = require('../model/rulevalidation');
 var padStart = require('string.prototype.padstart');
 var expect = require("chai").expect;
+var util = require('util');
+
+var weekdays = require('../model/weekdays');
+var rulevalidation = require('../model/rulevalidation');
+var calculations = require('../model/calculations');
+
+
+
+/**
+ * global vars
+ */
+var maxValue = 255;
+
 
 
 /**
  *  Testing of model classes
- *
- *
  */
 describe('model', function () {
     //declare model-wide vars
+    var expected = false;
+
     var Sunday = Math.pow(2, 0);
     var Monday = Math.pow(2, 1);
     var Tuesday = Math.pow(2, 2);
@@ -24,7 +35,9 @@ describe('model', function () {
     var Friday = Math.pow(2, 5);
     var Saturday = Math.pow(2, 6);
 
-    var expected = false;
+    // create rule stub
+    var rule = {id: 1, Priority: 9999, From: '', To: '', DimTime: 30, Weekdays: 127};
+
 
     describe('weekdays.js', function () {
 
@@ -151,6 +164,7 @@ describe('model', function () {
              *
              * I still don't fully get why, but it works and is good enough for now. Maybe I get it by digging deeper
              * into nodejs and mocha when time goes by. :-)
+             * UPDATE 16.04.2018: As I found this Article https://stackoverflow.com/a/111111
              *
              * @param i     integer containing the desired day bit (0-127)
              * @param day   day value to test for
@@ -162,6 +176,8 @@ describe('model', function () {
              *
              * @example itTest(65, Friday, weekdays.HasFriday) calls the HasFriday function to check if 65 contains the
              *      Friday bit.
+             *
+             * created 14.04.2018
              */
             function itTest(i, day, cb) {
                 var expected = ((i & day) === day);
@@ -222,8 +238,66 @@ describe('model', function () {
     });
 
     describe('rulevalidation.js', function () {
-        // create rule stub
-        var rule = {id: 1, Priority: 9999, From: '', To: '', DimTime: 30, Weekdays: 127};
+        /**
+         * checks if today's bit is part of a given integer
+         *
+         * represents a solution so the loop tests actually work. The it function is called in this separate
+         * function which is called from the loop instead.
+         *
+         * I still don't fully get why, but it works and is good enough for now. Maybe I get it by digging deeper
+         * into nodejs and mocha when time goes by. :-)
+         *
+         * @param i     integer to be checked for today's bit
+         * @param today integer value of today
+         */
+        function itTestToday(i, today) {
+            rule.Weekdays = i;
+            expected = ((i & today) === today);
+
+            it('today (' + today + ') it should return ' + expected + ' when Weekdays is ' + rule.Weekdays, function () {
+                assert.equal(rulevalidation.TodayIsTheCorrectWeekday(rule), expected);
+            });
+        }
+
+        describe('#YearIsInRuleRange()', function () {
+            it('should return true if the year is in range', function () {
+                rule.From = '0000;00;00;00;00';
+                rule.To = '9999;00;00;00;00';
+                assert.equal(rulevalidation.YearIsInRuleRange(rule), true);
+            });
+            it('should return false if the year is out of range', function () {
+                rule.From = '1971;00;00;00;00';
+                rule.To = '1981;00;00;00;00';
+                assert.equal(rulevalidation.YearIsInRuleRange(rule), false);
+            });
+        });
+
+        describe('#TodayIsInRuleRange()', function () {
+            it('should return true when year day is in range', function () {
+                rule.From = '0000;01;01;00;00';
+                rule.To = '0000;12;31;00;00';
+                assert.equal(rulevalidation.TodayIsInRuleRange(rule), true);
+            });
+            it('should return false if the day is out of range', function () {
+                var timenow = new Date(new Date().toLocaleString());
+                if (timenow.getDate() === 1) {
+                    timenow.setDate(timenow.getDate() + 1);
+                } else {
+                    timenow.setDate(timenow.getDate() - 1);
+                }
+                rule.From = '0000;' + timenow.getMonth() + 1 + ';;00;00';
+                rule.To = '9999;' + timenow.getMonth() + 1 + ';;00;00';
+            });
+        });
+
+        describe('#TodayIsTheCorrectWeekday()', function () {
+            var timenow = new Date(new Date().toLocaleString());
+            var today = Math.pow(2, timenow.getDay());
+            expected = false;
+            for (var i = 0; i <= 127; i++) {
+                itTestToday(i, today);
+            }
+        });
 
         describe('#TimeIsInRange()', function () {
 
@@ -247,66 +321,100 @@ describe('model', function () {
             });
 
         });
+    });
+
+    describe('calculations.js', function () {
 
         /**
-         * checks if today's bit is part of a given integer
          *
-         * represents a solution so the loop tests actually work. The it function is called in this separate
-         * function which is called from the loop instead.
-         *
-         * I still don't fully get why, but it works and is good enough for now. Maybe I get it by digging deeper
-         * into nodejs and mocha when time goes by. :-)
-         *
-         * @param i     integer to be checked for today's bit
-         * @param today integer value of today
+         * @param hrs
+         * @param mins
          */
-        function itTestToday(i, today) {
-            rule.Weekdays = i;
-            expected = ((i & today) === today);
+        function itTest_CalcDimValueByRule(hrs, mins) {
+            //get now
+            var now = new Date(new Date().toLocaleString());
 
-            it('today (' + today + ') it should return ' + expected + ' when Weekdays is ' + rule.Weekdays, function () {
-                assert.equal(rulevalidation.TodayIsTheCorrectWeekday(rule), expected);
+            //prepare rule
+            var timeFrom = new Date(new Date().toLocaleString());
+            var timeTo = new Date(timeFrom.getTime());
+
+            timeFrom.setHours(hrs);
+            timeFrom.setMinutes(mins);
+            timeFrom.setSeconds(0);
+            timeFrom.setMilliseconds(0);
+            timeTo.setHours(hrs + 2);
+            timeTo.setMinutes(mins);
+            timeTo.setSeconds(0);
+            timeTo.setMilliseconds(0);
+
+            rule.From = timeFrom.toLightRuleString();
+            rule.To = timeTo.toLightRuleString();
+
+            //calculate rule activity
+            var fromDim = new Date(timeFrom.getTime());
+            fromDim.setMinutes(fromDim.getMinutes() + rule.DimTime);
+            var toDim = new Date(timeTo.getTime());
+            toDim.setMinutes(toDim.getMinutes() + rule.DimTime);
+
+            var isDimUp = now >= timeFrom && now <= fromDim;
+            var isDimDown = now >= timeTo && now <= toDim;
+            var isRuleActive = now >= timeFrom && now <= toDim;
+
+            //calculate expected result
+            var expectedResult = 0; //default value when no rule is active
+
+            if (isRuleActive) {
+                if (isDimUp || isDimDown) {
+                    var dimSecs = rule.DimTime * 60;
+                    var fac = maxValue / dimSecs; //get value per second
+
+                    if (isDimUp) {
+                        expectedResult = parseInt(((parseInt(now.getTime()) - parseInt(timeFrom.getTime())) / 1000) * fac);
+                    } else {
+                        expectedResult = parseInt(((parseInt(toDim.getTime()) - parseInt(now.getTime())) / 1000) * fac);
+                    }
+                } else {
+                    expectedResult = maxValue;
+                }
+            }
+
+            it(util.format('should return around %d or so...', expectedResult), function () {
+                var calcValue = calculations.CalcDimValueByRule(rule);
+                console.log('hrs:mins      : %s:%s', padStart(hrs, 2, 0), padStart(mins, 2, 0));
+                console.log('expectedResult: %d', expectedResult);
+                console.log('calcValue     : %d', calcValue);
+                assert.equal(_valueInRange(calcValue, expectedResult), true);
             });
         }
 
-        describe('#TodayIsTheCorrectWeekday()', function () {
-            var timenow = new Date(new Date().toLocaleString());
-            var today = Math.pow(2, timenow.getDay());
-            expected = false;
-            for (var i = 0; i <= 127; i++) {
-                itTestToday(i, today);
-            }
-        });
+        function _valueInRange(value, expected) {
+            var range = 5; //range in %
+            var valueRange = (100 / maxValue) * range;
 
-        describe('#TodayIsInRuleRange()', function () {
-            it('should return true when year day is in range', function () {
-                rule.From = '0000;01;01;00;00';
-                rule.To = '0000;12;31;00;00';
-                assert.equal(rulevalidation.TodayIsInRuleRange(rule), true);
-            });
-            it('should return false if the day is out of range', function () {
-                var timenow = new Date(new Date().toLocaleString());
-                if (timenow.getDate() === 1) {
-                    timenow.setDate(timenow.getDate() + 1);
-                } else {
-                    timenow.setDate(timenow.getDate() - 1);
+            return expected <= (value + valueRange) && expected >= (value - valueRange);
+        }
+
+        Date.prototype.toLightRuleString = function () {
+            return this.getFullYear() +
+                ';' + padStart(this.getMonth() + 1, 2, 0) +
+                ';' + padStart(this.getDate(), 2, 0) +
+                ';' + padStart(this.getHours(), 2, 0) +
+                ';' + padStart(this.getMinutes(), 2, 0);
+        };
+
+        describe('#CalcDimValueByRule()', function () {
+            rule.Priority = 9999;
+            rule.DimTime = 30;
+            rule.Weekdays = 127;
+
+            for (hrs = 0; hrs <= 23; hrs++) {
+                for (mins = 0; mins <= 59; mins++) {
+                    itTest_CalcDimValueByRule(hrs, mins);
                 }
-                rule.From = '0000;' + timenow.getMonth() + 1 + ';;00;00';
-                rule.To = '9999;' + timenow.getMonth() + 1 + ';;00;00';
-            });
-        });
-
-        describe('#YearIsInRuleRange()', function () {
-            it('should return true if the year is in range', function () {
-                rule.From = '0000;00;00;00;00';
-                rule.To = '9999;00;00;00;00';
-                assert.equal(rulevalidation.YearIsInRuleRange(rule), true);
-            });
-            it('should return false if the year is out of range', function () {
-                rule.From = '1971;00;00;00;00';
-                rule.To = '1981;00;00;00;00';
-                assert.equal(rulevalidation.YearIsInRuleRange(rule), false);
-            });
+            }
         });
     });
 });
+
+
+
