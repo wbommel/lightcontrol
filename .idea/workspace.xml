@@ -5,11 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="396a0020-0d88-4ce6-8bfa-4f732a076419" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/model/calculations.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/dbaccess.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/dbaccess.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/rulevalidation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/rulevalidation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/weekdays.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/weekdays.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/public/client.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/public/client.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/server.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/test.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -27,8 +30,58 @@
       <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="20" column="46" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="46" />
+            <state relative-caret-position="1139">
+              <caret line="67" column="56" lean-forward="true" selection-start-line="67" selection-start-column="56" selection-end-line="67" selection-end-column="56" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/config.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/test.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1223">
+              <caret line="420" selection-start-line="420" selection-end-line="420" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="client.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/public/client.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1223">
+              <caret line="72" selection-start-line="72" selection-end-line="72" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/public/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="19" column="22" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dbaccess.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/model/dbaccess.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+              <folding>
+                <element signature="e#913#1025#0" />
+                <element signature="e#8677#8706#0" />
+                <element signature="e#9106#9150#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -36,10 +89,11 @@
       <file leaf-file-name="rulevalidation.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model/rulevalidation.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1122">
-              <caret line="68" selection-start-line="68" selection-end-line="68" />
+            <state relative-caret-position="1037">
+              <caret line="63" selection-start-line="63" selection-end-line="63" />
               <folding>
                 <element signature="e#0#44#0" />
+                <marker date="1524030417970" expanded="true" signature="252:347" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -48,13 +102,11 @@
       <file leaf-file-name="weekdays.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model/weekdays.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="31" column="41" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
+            <state relative-caret-position="459">
+              <caret line="29" selection-start-line="29" selection-end-line="29" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#618#779#0" />
-                <marker date="1523637920218" expanded="true" signature="835:877" ph="{...}" />
-                <marker date="1523637920218" expanded="true" signature="1592:1595" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -69,46 +121,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/test/test.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="893">
-              <caret line="252" column="10" lean-forward="true" selection-start-line="252" selection-start-column="10" selection-end-line="252" selection-end-column="10" />
-              <folding>
-                <element signature="e#769#6545#0" />
-                <element signature="e#7828#8040#0" />
-                <element signature="e#8087#8246#0" />
-                <element signature="e#8296#8453#0" />
-                <element signature="e#8505#8666#0" />
-                <element signature="e#8717#8876#0" />
-                <element signature="e#8925#9080#0" />
-                <element signature="e#9131#9290#0" />
-                <element signature="e#9339#9494#0" />
-                <element signature="e#8598#9823#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/package.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="18" selection-start-line="18" selection-end-line="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dbaccess.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/model/dbaccess.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2227">
-              <caret line="131" column="29" selection-start-line="131" selection-start-column="29" selection-end-line="131" selection-end-column="29" />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -117,10 +137,15 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/sql/dbscript5.sql" />
-        <option value="$PROJECT_DIR$/src/model/rulevalidation.js" />
-        <option value="$PROJECT_DIR$/src/model/dbaccess.js" />
         <option value="$PROJECT_DIR$/src/model/weekdays.js" />
+        <option value="$PROJECT_DIR$/src/public/client.js" />
+        <option value="$PROJECT_DIR$/src/model/dbaccess.js" />
+        <option value="$PROJECT_DIR$/src/model/rulevalidation.js" />
+        <option value="$PROJECT_DIR$/src/public/index.html" />
+        <option value="$PROJECT_DIR$/src/model/calculations.js" />
+        <option value="$PROJECT_DIR$/src/config.json" />
         <option value="$PROJECT_DIR$/src/test/test.js" />
+        <option value="$PROJECT_DIR$/src/server.js" />
       </list>
     </option>
   </component>
@@ -149,16 +174,89 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1176" />
+    <option name="width" value="1926" />
+    <option name="height" value="1160" />
   </component>
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="Scope" currentSubView="Project Files" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <expand>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="lightcontrol" type="cbb8eebc:String" user="lightcontrol" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="lightcontrol" type="cbb8eebc:String" user="lightcontrol" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="lightcontrol" type="cbb8eebc:String" user="lightcontrol" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+              <item name="model" type="cbb8eebc:String" user="model" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="lightcontrol" type="cbb8eebc:String" user="lightcontrol" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+              <item name="public" type="cbb8eebc:String" user="public" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="lightcontrol" type="cbb8eebc:String" user="lightcontrol" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+              <item name="sql" type="cbb8eebc:String" user="sql" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="lightcontrol" type="cbb8eebc:String" user="lightcontrol" />
+              <item name="src" type="cbb8eebc:String" user="src" />
+              <item name="test" type="cbb8eebc:String" user="test" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="lightcontrol" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lightcontrol" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lightcontrol" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lightcontrol" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lightcontrol" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lightcontrol" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lightcontrol" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lightcontrol" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lightcontrol" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lightcontrol" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="HbShouldOpenHtmlAsHb" value="" />
@@ -172,7 +270,7 @@
     <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="settings.nodejs" />
+    <property name="settings.editor.selected.configurable" value="settings.github" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -186,8 +284,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Mocha.src\test\test.js">
-    <configuration name="dbaccess.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-js-file="dbaccess.js" working-dir="$PROJECT_DIR$/src/model" />
+  <component name="RunManager" selected="Node.js.server.js">
     <configuration name="server.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-js-file="server.js" working-dir="$PROJECT_DIR$/src" />
     <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <method />
@@ -254,6 +351,52 @@
       <arguments />
       <envs />
     </configuration>
+    <configuration name="model.rulevalidation.js.#YearIsInRuleRange()" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <working-directory>$PROJECT_DIR$</working-directory>
+      <pass-parent-env>true</pass-parent-env>
+      <ui>bdd</ui>
+      <extra-mocha-options />
+      <test-kind>SUITE</test-kind>
+      <test-file>$PROJECT_DIR$/src/test/test.js</test-file>
+      <test-names>
+        <name value="model" />
+        <name value="rulevalidation.js" />
+        <name value="#YearIsInRuleRange()" />
+      </test-names>
+    </configuration>
+    <configuration name="model.weekdays.js.Check for weekday in an integer.#HasTuesday()" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
+      <node-interpreter>C:/Programme/nodejs/node</node-interpreter>
+      <node-options />
+      <working-directory>$PROJECT_DIR$</working-directory>
+      <pass-parent-env>true</pass-parent-env>
+      <ui>bdd</ui>
+      <extra-mocha-options />
+      <test-kind>SUITE</test-kind>
+      <test-file>$PROJECT_DIR$/src/test/test.js</test-file>
+      <test-names>
+        <name value="model" />
+        <name value="weekdays.js" />
+        <name value="Check for weekday in an integer" />
+        <name value="#HasTuesday()" />
+      </test-names>
+    </configuration>
+    <configuration name="server.js.#_getDimValue().should return 0 or so" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <working-directory>$PROJECT_DIR$</working-directory>
+      <pass-parent-env>true</pass-parent-env>
+      <ui>bdd</ui>
+      <extra-mocha-options />
+      <test-kind>TEST</test-kind>
+      <test-file>$PROJECT_DIR$/src/test/test.js</test-file>
+      <test-names>
+        <name value="server.js" />
+        <name value="#_getDimValue()" />
+        <name value="should return 0 or so" />
+      </test-names>
+    </configuration>
     <configuration name="src\test\test.js" type="mocha-javascript-test-runner" factoryName="Mocha" temporary="true" nameIsGenerated="true">
       <node-interpreter>C:/Programme/nodejs/node</node-interpreter>
       <node-options />
@@ -265,15 +408,19 @@
       <test-file>$PROJECT_DIR$/src/test/test.js</test-file>
     </configuration>
     <list>
-      <item itemvalue="Node.js.dbaccess.js" />
       <item itemvalue="Node.js.server.js" />
+      <item itemvalue="Mocha.model.rulevalidation.js.#YearIsInRuleRange()" />
+      <item itemvalue="Mocha.model.weekdays.js.Check for weekday in an integer.#HasTuesday()" />
+      <item itemvalue="Mocha.server.js.#_getDimValue().should return 0 or so" />
       <item itemvalue="Mocha.src\test\test.js" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Mocha.src\test\test.js" />
+        <item itemvalue="Mocha.server.js.#_getDimValue().should return 0 or so" />
+        <item itemvalue="Mocha.model.weekdays.js.Check for weekday in an integer.#HasTuesday()" />
+        <item itemvalue="Mocha.model.rulevalidation.js.#YearIsInRuleRange()" />
         <item itemvalue="Node.js.server.js" />
-        <item itemvalue="Node.js.dbaccess.js" />
       </list>
     </recent_temporary>
   </component>
@@ -300,65 +447,83 @@
       <workItem from="1523623682096" duration="975000" />
       <workItem from="1523636158878" duration="14000" />
       <workItem from="1523636542950" duration="3134000" />
-      <workItem from="1523689382927" duration="2996000" />
+      <workItem from="1523689382927" duration="7715000" />
+      <workItem from="1523792118339" duration="1444000" />
+      <workItem from="1523852902890" duration="21000" />
+      <workItem from="1523852973248" duration="6536000" />
+      <workItem from="1523888149340" duration="10000" />
+      <workItem from="1523888173794" duration="2811000" />
+      <workItem from="1523940979952" duration="10220000" />
+      <workItem from="1523964163682" duration="2960000" />
+      <workItem from="1524026464827" duration="6000" />
+      <workItem from="1524026508326" duration="11986000" />
+      <workItem from="1524113480319" duration="7466000" />
+      <workItem from="1524140241381" duration="5950000" />
+      <workItem from="1524197621940" duration="2164000" />
+      <workItem from="1524201859416" duration="14000" />
+      <workItem from="1524201902359" duration="12123000" />
+      <workItem from="1524233785419" duration="2513000" />
+      <workItem from="1524339650262" duration="914000" />
+      <workItem from="1524395873805" duration="12000" />
+      <workItem from="1524395906110" duration="850000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="src_test_test_js - 2018.04.13 at 18h 34m 54s.xml">
+    <history-entry file="src_test_test_js - 2018.04.20 at 10h 01m 20s.xml">
       <configuration name="src\test\test.js" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="src_test_test_js - 2018.04.13 at 18h 36m 26s.xml">
+    <history-entry file="src_test_test_js - 2018.04.20 at 10h 17m 29s.xml">
       <configuration name="src\test\test.js" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="src_test_test_js - 2018.04.13 at 18h 41m 17s.xml">
+    <history-entry file="src_test_test_js - 2018.04.20 at 10h 27m 39s.xml">
       <configuration name="src\test\test.js" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="src_test_test_js - 2018.04.13 at 18h 42m 23s.xml">
+    <history-entry file="src_test_test_js - 2018.04.20 at 10h 29m 23s.xml">
       <configuration name="src\test\test.js" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="src_test_test_js - 2018.04.13 at 18h 44m 52s.xml">
+    <history-entry file="src_test_test_js - 2018.04.20 at 10h 30m 36s.xml">
       <configuration name="src\test\test.js" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="src_test_test_js - 2018.04.13 at 18h 45m 12s.xml">
+    <history-entry file="src_test_test_js - 2018.04.20 at 10h 33m 39s.xml">
       <configuration name="src\test\test.js" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="src_test_test_js - 2018.04.13 at 18h 47m 56s.xml">
+    <history-entry file="src_test_test_js - 2018.04.20 at 10h 35m 25s.xml">
       <configuration name="src\test\test.js" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="src_test_test_js - 2018.04.13 at 18h 53m 59s.xml">
+    <history-entry file="src_test_test_js - 2018.04.20 at 10h 37m 21s.xml">
       <configuration name="src\test\test.js" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="src_test_test_js - 2018.04.14 at 12h 41m 05s.xml">
+    <history-entry file="src_test_test_js - 2018.04.20 at 10h 42m 52s.xml">
       <configuration name="src\test\test.js" configurationId="mocha-javascript-test-runner" />
     </history-entry>
-    <history-entry file="src_test_test_js - 2018.04.14 at 12h 45m 34s.xml">
+    <history-entry file="src_test_test_js - 2018.04.20 at 11h 14m 45s.xml">
       <configuration name="src\test\test.js" configurationId="mocha-javascript-test-runner" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52972000" />
+    <option name="totallyTimeSpent" value="125691000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="2576" height="1416" extended-state="6" />
+    <frame x="-8" y="-8" width="2576" height="1416" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13789062" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Run" order="2" />
       <window_info id="npm" order="2" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.26911315" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" />
     </layout>
@@ -371,45 +536,21 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="16" />
+      <option name="time" value="50" />
     </breakpoint-manager>
   </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="13" lean-forward="true" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/dbaccess.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1445">
-          <caret line="85" column="21" selection-start-line="85" selection-start-column="21" selection-end-line="85" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package-lock.json" />
-    <entry file="file://$PROJECT_DIR$/src/test/test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="969">
-          <caret line="168" column="46" lean-forward="true" selection-start-line="168" selection-start-column="46" selection-end-line="168" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="46" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/model/rulevalidation.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1156">
           <caret line="68" selection-start-line="68" selection-end-line="68" />
           <folding>
             <element signature="e#0#44#0" />
+            <marker date="1524030417970" expanded="true" signature="252:347" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -421,8 +562,6 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#618#779#0" />
-            <marker date="1523637920218" expanded="true" signature="835:877" ph="{...}" />
-            <marker date="1523637920218" expanded="true" signature="1592:1595" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -461,6 +600,7 @@
           <caret line="68" lean-forward="true" selection-start-line="68" selection-end-line="68" />
           <folding>
             <element signature="e#0#44#0" />
+            <marker date="1524030417970" expanded="true" signature="252:347" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -472,8 +612,6 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#618#779#0" />
-            <marker date="1523637920218" expanded="true" signature="835:877" ph="{...}" />
-            <marker date="1523637920218" expanded="true" signature="1592:1595" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -512,6 +650,7 @@
           <caret line="84" column="2" selection-start-line="84" selection-start-column="2" selection-end-line="84" selection-end-column="2" />
           <folding>
             <element signature="e#0#44#0" />
+            <marker date="1524030417970" expanded="true" signature="252:347" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -523,8 +662,6 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#618#779#0" />
-            <marker date="1523637920218" expanded="true" signature="835:877" ph="{...}" />
-            <marker date="1523637920218" expanded="true" signature="1592:1595" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -556,6 +693,7 @@
           <caret line="65" column="2" lean-forward="true" selection-start-line="65" selection-start-column="2" selection-end-line="65" selection-end-column="2" />
           <folding>
             <element signature="e#0#44#0" />
+            <marker date="1524030417970" expanded="true" signature="252:347" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -567,8 +705,6 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#618#779#0" />
-            <marker date="1523637920218" expanded="true" signature="835:877" ph="{...}" />
-            <marker date="1523637920218" expanded="true" signature="1592:1595" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -600,6 +736,7 @@
           <caret line="75" column="25" selection-start-line="75" selection-start-column="8" selection-end-line="75" selection-end-column="25" />
           <folding>
             <element signature="e#0#44#0" />
+            <marker date="1524030417970" expanded="true" signature="252:347" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -611,8 +748,6 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#618#779#0" />
-            <marker date="1523637920218" expanded="true" signature="835:877" ph="{...}" />
-            <marker date="1523637920218" expanded="true" signature="1592:1595" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -658,6 +793,7 @@
           <caret line="10" column="36" selection-start-line="10" selection-start-column="36" selection-end-line="10" selection-end-column="36" />
           <folding>
             <element signature="e#0#44#0" />
+            <marker date="1524030417970" expanded="true" signature="252:347" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -669,8 +805,6 @@
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#618#779#0" />
-            <marker date="1523637920218" expanded="true" signature="835:877" ph="{...}" />
-            <marker date="1523637920218" expanded="true" signature="1592:1595" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -693,20 +827,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1241">
           <caret line="271" column="52" selection-start-line="271" selection-start-column="52" selection-end-line="271" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="46" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sql/dbscript5.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="935">
-          <caret line="55" column="2" selection-start-line="55" selection-start-column="2" selection-end-line="55" selection-end-column="2" />
         </state>
       </provider>
     </entry>
@@ -742,52 +862,93 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/dbaccess.js">
+    <entry file="file://$PROJECT_DIR$/src/sql/dbscript5.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2227">
-          <caret line="131" column="29" selection-start-line="131" selection-start-column="29" selection-end-line="131" selection-end-column="29" />
+        <state relative-caret-position="935">
+          <caret line="55" column="2" selection-start-line="55" selection-start-column="2" selection-end-line="55" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/node_modules/mysql/lib/protocol/Parser.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="127">
+          <caret line="73" column="13" selection-start-line="73" selection-start-column="13" selection-end-line="73" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model/rulevalidation.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1122">
-          <caret line="68" selection-start-line="68" selection-end-line="68" />
+        <state relative-caret-position="1037">
+          <caret line="63" selection-start-line="63" selection-end-line="63" />
           <folding>
             <element signature="e#0#44#0" />
+            <marker date="1524030417970" expanded="true" signature="252:347" ph="{...}" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="16" selection-start-line="1" selection-start-column="16" selection-end-line="1" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model/weekdays.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="31" column="41" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
+        <state relative-caret-position="459">
+          <caret line="29" selection-start-line="29" selection-end-line="29" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="e#618#779#0" />
-            <marker date="1523637920218" expanded="true" signature="835:877" ph="{...}" />
-            <marker date="1523637920218" expanded="true" signature="1592:1595" ph="{...}" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/dbaccess.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+          <folding>
+            <element signature="e#913#1025#0" />
+            <element signature="e#8677#8706#0" />
+            <element signature="e#9106#9150#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/calculations.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1139">
+          <caret line="67" column="56" lean-forward="true" selection-start-line="67" selection-start-column="56" selection-end-line="67" selection-end-column="56" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/test.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="893">
-          <caret line="252" column="10" lean-forward="true" selection-start-line="252" selection-start-column="10" selection-end-line="252" selection-end-column="10" />
-          <folding>
-            <element signature="e#769#6545#0" />
-            <element signature="e#7828#8040#0" />
-            <element signature="e#8087#8246#0" />
-            <element signature="e#8296#8453#0" />
-            <element signature="e#8505#8666#0" />
-            <element signature="e#8717#8876#0" />
-            <element signature="e#8925#9080#0" />
-            <element signature="e#9131#9290#0" />
-            <element signature="e#9339#9494#0" />
-            <element signature="e#8598#9823#0" />
-          </folding>
+        <state relative-caret-position="1223">
+          <caret line="420" selection-start-line="420" selection-end-line="420" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="22" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/public/client.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1223">
+          <caret line="72" selection-start-line="72" selection-end-line="72" />
         </state>
       </provider>
     </entry>
