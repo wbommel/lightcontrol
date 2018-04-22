@@ -15,6 +15,23 @@ module.exports.TimeIsInRange = function (rule) {
     //TODO: check if rule is valid
     var now = new Date(new Date().toLocaleString());
 
+    //prepare from time
+    var from = new Date(new Date().toLocaleString());
+    from.setHours(parseInt(rule.From.split(';')[3]));
+    from.setMinutes(parseInt(rule.From.split(';')[4]));
+    from.setSeconds(0);
+    from.setMilliseconds(0);
+
+    //prepare to time
+    var to = new Date(new Date().toLocaleString());
+    to.setHours(parseInt(rule.To.split(';')[3]));
+    to.setMinutes(parseInt(rule.To.split(';')[4]) + rule.DimTime); //take DimTime into account
+    to.setSeconds(0);
+    to.setMilliseconds(0);
+
+    return now >= from && now <= to;
+
+    /* old behaviour:
     var nowtimeint = parseInt(padStart(now.getHours(), 2, '0') +
         padStart(now.getMinutes(), 2, '0'));
     var rulefromint = parseInt(padStart(rule.From.split(';')[3], 2, '0') +
@@ -23,6 +40,7 @@ module.exports.TimeIsInRange = function (rule) {
         padStart(rule.To.split(';')[4], 2, '0'));
 
     return nowtimeint >= rulefromint && nowtimeint <= ruletoint;
+    */
 }
 
 
@@ -48,6 +66,7 @@ module.exports.TodayIsTheCorrectWeekday = function (rule) {
 
 /**
  * returns true if the given rule applies to today (the whole day)
+ *
  * @param rule
  * @returns {boolean}
  * @private
@@ -73,7 +92,7 @@ module.exports.TodayIsInRuleRange = function (rule) {
  * @returns {boolean}
  * @constructor
  */
-module.exports.YearIsInRuleRange=function(rule){
+module.exports.YearIsInRuleRange = function (rule) {
     var now = new Date(new Date().toLocaleString());
 
     var arr = rule.From.split(';');
