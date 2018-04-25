@@ -1,49 +1,71 @@
-﻿body{
-	margin: 0;
-	padding: 0;
-	font: 16px "Helvetica neue", Helvetica, Arial, sans-serif;
-	color: #333;
+﻿html {
+    min-height: 100%; /* make sure it is at least as tall as the viewport */
+    position: relative;
 }
-header, footer{
-	display: block;
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: auto;
-	padding: 0 0.5em;
-	background-color: #8BC84B;
-	font-size: 24px;
-	line-height: 2em;
-	height: 2em;
-	color: #fff;
+
+body {
+    height: 100%; /* force the BODY element to match the height of the HTML element */
+    margin: 0;
+    padding: 0;
+    font: 16px "Helvetica neue", Helvetica, Arial, sans-serif;
+    color: #333;
 }
-header{
-	font-weight: bold;
+
+header, footer {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    padding: 0 0.5em;
+    background-color: #8BC84B;
+    font-size: 24px;
+    line-height: 2em;
+    height: 2em;
+    color: #fff;
 }
-header > a:last-child{
-	float: right;
-	color: #fff;
-	font-weight: normal;
+
+header {
+    font-weight: bold;
 }
-footer{
-	top: auto;
-	bottom: 0;
+
+header > a:last-child {
+    float: right;
+    color: #fff;
+    font-weight: normal;
 }
-input{
-	height: 1.5em;
-	font-size: 14px;
+
+footer {
+    top: auto;
+    bottom: 0;
 }
-#content{
-	margin: 48px 0.5em;
-	list-style: none;
+
+input {
+    height: 1.5em;
+    font-size: 14px;
 }
+
+#content {
+    margin: 48px 0.5em;
+    list-style: none;
+}
+
+.divTable {
+    width: 100%;
+    border: 1px solid #00FF00;
+    font-family: 'Courier New', Courier, monospace;
+    display: block;
+    visibility: visible;
+}
+
 .slidecontainer {
     width: 100%; /* Width of the outside container */
 }
+
 /* The slider itself */
 .slider {
-    -webkit-appearance: none;  /* Override default CSS styles */
+    -webkit-appearance: none; /* Override default CSS styles */
     appearance: none;
     width: 100%; /* Full-width */
     height: 25px; /* Specified height */

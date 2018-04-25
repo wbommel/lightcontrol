@@ -1,0 +1,7 @@
+TODO: Rename current index files and create clean one
+
+TODO: structure of new approach (including server.js:
+    * create 'Connection alive' status display
+    * create 'Current mode' status display
+    * create mode switching (manual, automatic, ...)
+    * extract automatic-mode function to separate file?!

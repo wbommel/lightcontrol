@@ -5,13 +5,14 @@
     , conf = require('./config.json')
     , dbaccess = require('./model/dbaccess')
     , calculations = require('./model/calculations')
-    , util = require('util');
+    , util = require('util')
+    , fs = require('fs');
 
 
 
 server.listen(conf.port);
 
-
+var externalWebTest = fs.readFileSync('./public/webtest.html', 'UTF-8');
 
 // statische Dateien ausliefern
 app.use(express.static(__dirname + '/public'));
@@ -31,8 +32,15 @@ app.get('/', function (req, res) {
  */
 var currentRule; //create minimal rule stub
 
+var showDebugInfoInConsole = true;
+
+var mode = 1;
 
 
+
+/**
+ * socket listeners
+ */
 io.sockets.on('connection', function (socket) {
 
     // der Client ist verbunden
@@ -48,8 +56,21 @@ io.sockets.on('connection', function (socket) {
     socket.on('webtest', function (data) {
         // console.log('content requested...');
         // console.log('Data: ' + data.toString());
-        socket.emit('contentsent', {destination: 'dest', content: '<H1>YEAH! it works</H1>'});
+
+        /* example of directly sending a string */
+        //socket.emit('contentsent', {destination: 'dest', content: '<H1>YEAH! it works</H1>'});
+
+        /* example of sending th content of a variable that has been filled by reading a string out of a file */
+        /* moved reading to global so it only done once */
+        //var externalWebTest = fs.readFileSync('./public/webtest.html', 'UTF-8');
+        socket.emit('contentsent', {destination: 'dest', content: externalWebTest});
+
+        /* other than that, test switching debug info */
+        showDebugInfoInConsole = !showDebugInfoInConsole;
     });
+    /**
+     * socket listeners
+     */
 
 
 
@@ -65,6 +86,12 @@ io.sockets.on('connection', function (socket) {
      * @private
      */
     function _automaticMode() {
+
+        socket.emit('status',{
+            mode: mode
+        });
+
+
         var now = new Date(new Date().toLocaleString());
         var modulus = ((now / 1000) % 5);
 
@@ -74,7 +101,9 @@ io.sockets.on('connection', function (socket) {
                 firstRun = false;
             }
             dbaccess.GetAplyingRule(function (rule) {
-                    console.log('function called');
+                    if (showDebugInfoInConsole) {
+                        console.log('function called');
+                    }
                     currentRule = rule;
                 }
             )
@@ -82,17 +111,25 @@ io.sockets.on('connection', function (socket) {
 
         //get dimValue
         var dimValue = calculations.CalcDimValueByRule(currentRule);
-        console.log('DimValue: %d', dimValue);
+        if (showDebugInfoInConsole) {
+            console.log('DimValue: %d', dimValue);
+        }
 
 
 
-        console.log('Time: %d, (%s)', now, now);
-        console.log('Modulus: %d', modulus);
+        if (showDebugInfoInConsole) {
+            console.log('Time: %d, (%s)', now, now);
+            console.log('Modulus: %d', modulus);
+        }
+
+
+
 
         if (currentRule) {
-            //console.log('%o', currentRule);
-            console.log('active rule = rule.id: %d   rule.Priority: %d   rule.From: %s   rule.To: %s', currentRule.id, currentRule.Priority, currentRule.From, currentRule.To);
-
+            if (showDebugInfoInConsole) {
+                //console.log('%o', currentRule);
+                console.log('active rule = rule.id: %d   rule.Priority: %d   rule.From: %s   rule.To: %s', currentRule.id, currentRule.Priority, currentRule.From, currentRule.To);
+            }
 
             /**
              * testing from and to by date value including dimtime
@@ -122,16 +159,20 @@ io.sockets.on('connection', function (socket) {
                 util.format('Rule From Time: (%d) %s<br/>', from, from) +
                 util.format('Rule To Time--: (%d) %s<br/>', to, to) +
                 util.format('%o<br/>', currentRule) +
-                util.format('Dim-Value-----: %d<br/>', dimValue);
+                util.format('Dim-Value-----: %d<br/>', dimValue) +
+                util.format('Debug-Switch--: %s<br/>', showDebugInfoInConsole);
 
             socket.emit('contentsent', {
                 destination: 'rule',
-                content: message
+                content: message,
+                debug: showDebugInfoInConsole
             });
         } else {
             socket.emit('contentsent', {
                 destination: 'rule',
-                content: util.format('No rule active. Dim-Value: %d<br/>', dimValue)
+                content: util.format('No rule active. Dim-Value: %d<br/>', dimValue) +
+                util.format('Debug-Switch: %s<br/>', showDebugInfoInConsole),
+                debug: showDebugInfoInConsole
             });
         }
     }
