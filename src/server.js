@@ -1,184 +1,142 @@
-﻿var express = require('express')
-    , app = express()
-    , server = require('http').createServer(app)
-    , io = require('socket.io').listen(server)
-    , conf = require('./config.json')
-    , dbaccess = require('./model/dbaccess')
-    , calculations = require('./model/calculations')
-    , util = require('util')
-    , fs = require('fs');
+/**
+ * global requirements
+ */
+var express = require('express');                   // express library
+var app = express();                                // express Application
+var server = require('http').createServer(app);     // web server
+var io = require('socket.io').listen(server);       // websocket
+var conf = require('./config.json');                // configuration (server port etc)
+var dbaccess = require('./model/dbaccess');         // database access stuff
+var calculations = require('./model/calculations'); // calculations
+var util = require('util');                         // string formatting etc
+var fs = require('fs');                             // filesystem operations (for reading external html code i.e.
+                                                    //      for rule editor popup
 
 
+/**
+ * global variable declarations
+ */
 
-server.listen(conf.port);
+//create minimal rule stub and dimValue
+var currentRule;
+var dimValue = 0;
 
+//database check interval
+var databaseCheckInterval = 5;
+
+//global debug switch
+var showDebugInfoInConsole = true;
+
+//global mode selector (default=1)
+// 0 = manual mode
+// 1 = automatic mode
+var mode = 1;
+
+//client refresh interval in ms
+var refreshInterval = 1000;
+
+//read external html data
 var externalWebTest = fs.readFileSync('./public/webtest.html', 'UTF-8');
 
-// statische Dateien ausliefern
+
+/**
+ * global initialisations
+ */
+
+//start up web server
+server.listen(conf.port);
+
+//statische Dateien ausliefern
 app.use(express.static(__dirname + '/public'));
 
-
-
-// wenn der Pfad / aufgerufen wird
 app.get('/', function (req, res) {
+    // wenn der Pfad / aufgerufen wird
     // so wird die Datei index.html ausgegeben
     res.sendfile(__dirname + '/public/index.html');
 });
 
+if (showDebugInfoInConsole) {
+    // Portnummer in die Konsole schreiben
+    console.log('Der Server läuft nun unter http://127.0.0.1:' + conf.port + '/');
+}
 
-
-/**
- * global declarations
- */
-var currentRule; //create minimal rule stub
-
-var showDebugInfoInConsole = true;
-
-var mode = 1;
-
+//enter  automatic mode
+setInterval(_automaticMode, 1000);
 
 
 /**
  * socket listeners
  */
+//when a socket client connects
 io.sockets.on('connection', function (socket) {
 
-    // der Client ist verbunden
-    socket.emit('chat', {zeit: new Date(), text: 'Du bist nun mit dem Server verbunden!'});
+    //log to console when a client connects
+    if (showDebugInfoInConsole) {
+        console.log('client connected');
+    }
 
-    // wenn ein Benutzer einen Text senden
-    socket.on('chat', function (data) {
-        // so wird dieser Text an alle anderen Benutzer gesendet
-        io.sockets.emit('chat', {zeit: new Date(), name: data.name || 'Anonym', text: data.text});
+    //initialize client
+    socket.emit('client-initialize', {
+        Mode: mode,
+        ShowDebugInfoSwitch: showDebugInfoInConsole
+    });
+
+    //refresh clients every second or so
+    setInterval(_clientRefresh, refreshInterval);
+
+
+    //socket listeners *************************************************************************************************
+    socket.on('debugInfoChanged', function (data) {
+        showDebugInfoInConsole = data.ShowDebugInfoSwitch;
+        if (showDebugInfoInConsole) {
+            console.log('emitted by client: debugInfoChanged = %s', data.ShowDebugInfoSwitch);
+        }
     });
 
 
-    socket.on('webtest', function (data) {
-        // console.log('content requested...');
-        // console.log('Data: ' + data.toString());
-
-        /* example of directly sending a string */
-        //socket.emit('contentsent', {destination: 'dest', content: '<H1>YEAH! it works</H1>'});
-
-        /* example of sending th content of a variable that has been filled by reading a string out of a file */
-        /* moved reading to global so it only done once */
-        //var externalWebTest = fs.readFileSync('./public/webtest.html', 'UTF-8');
-        socket.emit('contentsent', {destination: 'dest', content: externalWebTest});
-
-        /* other than that, test switching debug info */
-        showDebugInfoInConsole = !showDebugInfoInConsole;
-    });
-    /**
-     * socket listeners
-     */
-
-
+    // socket dependant function declarations **************************************************************************
 
     /**
-     * automatic mode
-     */
-    setInterval(_automaticMode, 1000);
-
-    var firstRun = true;
-
-    /**
-     * automatic mode function
+     * refreshes the connected
      * @private
      */
-    function _automaticMode() {
+    function _clientRefresh() {
 
-        socket.emit('status',{
-            mode: mode
+        //send server status
+        var serverStatusMessage =
+            util.format('ClientRefreshInterval: %dms', refreshInterval) + '<br/>' +
+            util.format('DatabaseCheckInterval: %ds', databaseCheckInterval) + '<br/>' +
+            util.format('Mode&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %d', mode) + '<br/>' +
+            util.format('ShowDebugInfoSwitch&nbsp&nbsp: %s', showDebugInfoInConsole) + '<br/>' +
+            util.format('CurrentDimValue&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %d', dimValue) + '<br/>' +
+            util.format('socket.id&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', socket.id);
+        socket.emit('server-status', {
+            ClientRefreshInterval: refreshInterval,
+            DatabaseCheckInterval: databaseCheckInterval,
+            Mode: mode,
+            ShowDebugInfoSwitch: showDebugInfoInConsole,
+            CurrentDimValue: dimValue,
+            ServerStatusMessage: serverStatusMessage
         });
 
-
-        var now = new Date(new Date().toLocaleString());
-        var modulus = ((now / 1000) % 5);
-
-        //check for rules every 5 seconds
-        if (modulus === 0 || firstRun) {
-            if (firstRun) {
-                firstRun = false;
-            }
-            dbaccess.GetAplyingRule(function (rule) {
-                    if (showDebugInfoInConsole) {
-                        console.log('function called');
-                    }
-                    currentRule = rule;
-                }
-            )
-        }
-
-        //get dimValue
-        var dimValue = calculations.CalcDimValueByRule(currentRule);
+        //check if debug switch is on
         if (showDebugInfoInConsole) {
-            console.log('DimValue: %d', dimValue);
-        }
-
-
-
-        if (showDebugInfoInConsole) {
-            console.log('Time: %d, (%s)', now, now);
-            console.log('Modulus: %d', modulus);
-        }
-
-
-
-
-        if (currentRule) {
-            if (showDebugInfoInConsole) {
-                //console.log('%o', currentRule);
-                console.log('active rule = rule.id: %d   rule.Priority: %d   rule.From: %s   rule.To: %s', currentRule.id, currentRule.Priority, currentRule.From, currentRule.To);
-            }
-
-            /**
-             * testing from and to by date value including dimtime
-             * @type {Date}
-             */
-            var from = new Date(new Date().toLocaleString());
-            var to = new Date(new Date().toLocaleString());
-            from.setHours(parseInt(currentRule.From.split(';')[3]));
-            from.setMinutes(parseInt(currentRule.From.split(';')[4]));
-            from.setSeconds(0);
-            from.setMilliseconds(0);
-            to.setHours(parseInt(currentRule.To.split(';')[3]));
-            to.setMinutes(parseInt(currentRule.To.split(';')[4]) + currentRule.DimTime);
-            to.setSeconds(0);
-            to.setMilliseconds(0);
-            //console.log('jetzt   : %s', jetzt);
-            //console.log('from    : %s', from);
-            //console.log('to      : %s', to);
-            //console.log('InRange : %s', jetzt >= from && jetzt <= to);
-            /**/
-
-
+            var now = new Date(new Date().toLocaleString());
 
             // message to client
             var message =
                 util.format('Current Time--: (%d) %s<br/>', now, now) +
-                util.format('Rule From Time: (%d) %s<br/>', from, from) +
-                util.format('Rule To Time--: (%d) %s<br/>', to, to) +
                 util.format('%o<br/>', currentRule) +
                 util.format('Dim-Value-----: %d<br/>', dimValue) +
                 util.format('Debug-Switch--: %s<br/>', showDebugInfoInConsole);
-
-            socket.emit('contentsent', {
-                destination: 'rule',
-                content: message,
-                debug: showDebugInfoInConsole
-            });
-        } else {
-            socket.emit('contentsent', {
-                destination: 'rule',
-                content: util.format('No rule active. Dim-Value: %d<br/>', dimValue) +
-                util.format('Debug-Switch: %s<br/>', showDebugInfoInConsole),
-                debug: showDebugInfoInConsole
-            });
         }
     }
-
-
 });
+
+
+/**
+ * system process listeners
+ */
 
 //on ctrl+c
 process.on('SIGINT', function () {
@@ -189,6 +147,55 @@ process.on('SIGINT', function () {
 });
 
 
+// global function declarations ****************************************************************************************
 
-// Portnummer in die Konsole schreiben
-console.log('Der Server läuft nun unter http://127.0.0.1:' + conf.port + '/');
+/**
+ * automatic mode function
+ * @private
+ */
+var firstRun = true; //indicate first iteration
+function _automaticMode() {
+
+    var now = new Date(new Date().toLocaleString());
+    var modulus = ((now / 1000) % databaseCheckInterval);
+    var debugStamp = now / 1000;
+
+    //check for rules every 5 seconds
+    if (modulus === 0 || firstRun) {
+        if (firstRun) {
+            firstRun = false;
+        }
+        dbaccess.GetAplyingRule(function (rule) {
+                if (showDebugInfoInConsole) {
+                    console.log('[%d] check database for rules...', debugStamp);
+                }
+                currentRule = rule;
+            }
+        )
+    }
+
+    //get dimValue
+    dimValue = calculations.CalcDimValueByRule(currentRule);
+
+    //debugging ****************************
+    if (showDebugInfoInConsole) {
+        //show current light rule
+        console.log('[%d] current light rule:', debugStamp);
+        if (currentRule) {
+            console.log('[%d] \trule: [id:%d,Priority:%d,From:\'%s\',To:\'%s\',DimTime:%d,Weekdays:%d]', debugStamp, currentRule.id, currentRule.Priority, currentRule.From, currentRule.To, currentRule.DimTime, currentRule.Weekdays);
+        }
+        console.log('[%d] \tdimValue: %d', debugStamp, dimValue);
+
+        //check connected client info
+        console.log('[%d] connected clients:', debugStamp);
+        io.sockets.clients(function (error, clients) {
+            if (error) throw error;
+
+            clients.forEach(function (item, index) {
+                console.log('[%d] \tclient %d: %s', debugStamp, ++index, item);
+            })
+        });
+    }
+}
+
+

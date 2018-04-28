@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <title>Node.js Chat</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles/chattest_style.css" />
+        <script src="socket.io/socket.io.js"></script>
+        <!--<script src="jquery.min.js"></script>-->
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="js/chattest_client.js"></script>
+    </head>
+    <body>
+        <header>Node.js Chat <a href="http://nodecode.de/">von NodeCode</a></header>
+		<div id="content">
+			<h1>Test</h1>
+			</br></br>
+			<div class="sidemenu" id="menutest">
+                <button id="requestcontent">request</button></br>
+                <button id="removecontent">remove</button></br>
+			</div>
+			</br></br>
+            <h3>Currently active rule:</h3>
+            <div id="rule" class="divTable">
+            </div>
+            </br></br>
+			<div id="dest" class="divTable" style="border: 1px solid #000000;" >
+			</div>
+			</br></br>
+		</div>
+        <footer>
+            <input id="name" type="text" placeholder="dein Name" />
+            <input id="text" type="text" placeholder="schreibe etwas..." />
+            <input id="senden" type="submit" value="senden" />
+        </footer>
+    </body>
+</html>

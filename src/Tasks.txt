@@ -5,3 +5,8 @@ TODO: structure of new approach (including server.js:
     * create 'Current mode' status display
     * create mode switching (manual, automatic, ...)
     * extract automatic-mode function to separate file?!
+    * see if it possible to get details about clients connected to websocket and show them in debug
+
+TODO: small stuff
+    * download external js files since Internet might not be available.
+    * display text in console when a socket connects/disconnects

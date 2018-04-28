@@ -91,7 +91,7 @@
 
     /* receive server status info */
     socket.on('status', function (data) {
-        $('#dest').html('current mode: ' + data.mode);
+        $('#dest').html('current mode: ' + data.mode + '<br/>Remote Address: ' + data.remoteaddy);
     });
 
 
