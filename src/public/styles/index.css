@@ -1,3 +1,7 @@
+/**
+ * global definitions
+ */
+
 html {
     min-height: 100%; /* make sure it is at least as tall as the viewport */
     position: relative;
@@ -12,6 +16,21 @@ body {
 
     font-family: "DejaVu Sans";
     font-size: 1vh;
+}
+
+.ownCheckBox{
+    background-color: #AAAAAA;
+
+    height: 3vh;
+    width: 3vh;
+
+    border-radius: 5vh;
+
+    font-family: "Calibri";
+    font-size: 2.5vh;
+    text-align: center;
+
+    cursor: default;
 }
 
 /**
@@ -65,8 +84,21 @@ body {
     font-size: 200%;
 }
 
-#debugInfoSwitch {
-    height: 65%;
+#switchDebugInfo{
+    position: absolute;
+
+    top: 1vh;
+    left: 1vh;
+
+    font-weight: bold;
+    font-size: 2vh;
+    /*color: #000;*/
+}
+#switchDebugInfoText{
+    position: absolute;
+
+    top: 1.3vh;
+    left: 4.5vh;
 }
 
 #toggleMode {
@@ -322,19 +354,7 @@ body {
     top: 3vh;
     right: 3vw;
 
-    background-color: #AAAAAA;
-
-    height: 3vh;
-    width: 3vh;
-
-    border-radius: 5vh;
-
     float: right;
-
-    font-size: 2.5vh;
-    text-align: center;
-
-    cursor: default;
 }
 
 #fancyContainer{

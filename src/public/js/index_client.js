@@ -15,7 +15,7 @@ $(document).ready(function () {
     //client-initialize event
     socket.on('client-initialize', function (data) {
         currentMode = data.Mode; //remember current mode
-        $('#debugInfoSwitch').prop('checked', data.ShowDebugInfoSwitch); //init debug switch to current value
+        $('#switchDebugInfo').html(data.ShowDebugInfoSwitch ? '&#10004;' : '');
         showMode(data.Mode); //show mode initially
         $('#sliderValueLocal').html(data.CurrentDimValue);
     });
@@ -27,6 +27,9 @@ $(document).ready(function () {
         setTimeout(function () {
             $('#serverCommBlink').css('background-color', '#1D568D');
         }, 100);
+
+        //show debug info switch
+        $('#switchDebugInfo').html(data.ShowDebugInfoSwitch ? '&#10004;' : '');
 
         //show server status info
         $('#server-status').html(data.ServerStatusMessage);
@@ -67,6 +70,12 @@ $(document).ready(function () {
         });
     });
 
+    $('#switchDebugInfo').click(function () {
+        socket.emit('debugInfoChanged', {
+            ShowDebugInfoSwitch: $('#switchDebugInfo').html() != '' ? false : true
+        });
+    });
+
     $('#toggleMode').click(function () {
         socket.emit('toggleMode', {});
     });
@@ -87,15 +96,6 @@ $(document).ready(function () {
         $('#lightRulePopup').css('display', 'block');
         socket.emit('getLightrulesData', {});
     });
-
-    /*    $('#lightRulePopup').click(function () {
-            if (gridInstance) {
-                destroyGrid();
-            } else {
-                socket.emit('getLightrulesData', {});
-            }
-        });
-    */
 
     $('#lightRulePopupClose').click(function () {
         //TODO: Ask if really to be closed when unsaved datachanges exist

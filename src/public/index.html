@@ -22,7 +22,8 @@
     <p><h1>Lightcontrol</h1></p>
 
     <div id="controlElements">
-        <input type="checkbox" id="debugInfoSwitch" content="show debug info" value="show debug info"/>show debug info
+        <div class="ownCheckBox" id="switchDebugInfo"></div>
+        <div id="switchDebugInfoText">Debug-Info</div>
         <button id="toggleMode">Toggle Manual/Automatic Mode</button>
         <button id="showLightrulePopup">Edit Rules</button>
     </div>
@@ -59,7 +60,7 @@
     </div>
 
     <div id="lightRulePopup">
-        <div id="lightRulePopupClose">X</div>
+        <div class="ownCheckBox" id="lightRulePopupClose">X</div>
         <div id="fancyContainer"></div>
     </div>
 </div>
