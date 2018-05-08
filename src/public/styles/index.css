@@ -5,32 +5,348 @@ html {
 
 body {
     height: 100%; /* force the BODY element to match the height of the HTML element */
+
+    background-color: black;
+
+    color: beige;
+
+    font-family: "DejaVu Sans";
+    font-size: 1vh;
 }
 
-#cloud-container {
+/**
+ * page container
+ *
+ * contains everything and differs 10px from body
+ */
+#page-container H1 {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: hidden;
-    /*z-index: -1; !* Remove this line if it's not going to be a background! *!*/
+
+    top: 1vh;
+    width: 100%;
+
+    font-style: oblique;
+    font-size: 500%;
+    text-align: center;
 }
+
+#page-container {
+    position: absolute;
+
+    background-color: #AAAAAA;
+
+    top: 1vh;
+    bottom: 1vh;
+    left: 1vw;
+    right: 1vw;
+
+    overflow: auto;
+
+    z-index: 50; /* Remove this line if it's not going to be a background!*/
+}
+
+/**
+ * control elements
+ */
+
+#controlElements {
+    position: absolute;
+
+    background-color: #cccccc;
+
+    top: 12vh;
+    left: 1vw;
+    right: 1vw;
+
+    height: 7vh;
+
+    border-radius: 2vh;
+
+    font-size: 200%;
+}
+
+#debugInfoSwitch {
+    height: 65%;
+}
+
+#toggleMode {
+    position: absolute;
+
+    background-color: #aaaaaa;
+
+    top: 1vh;
+    left: 25vw;
+
+    height: 4vh;
+    width: 35vw;
+
+    font-size: 2vh;
+}
+
+#showLightrulePopup {
+    position: absolute;
+
+    background-color: #aaaaaa;
+
+    top: 1vh;
+    left: 61vw;
+
+    height: 4vh;
+    width: 15vw;
+
+    font-size: 2vh;
+}
+
+/**
+ * mode bar
+ *
+ * shows current server mode (manual, automatic, more to come?...)
+ */
+
+#mode-bar {
+    position: absolute;
+
+    background-color: white;
+
+    top: 20vh;
+    left: 1vw;
+    right: 1vw;
+
+    height: 7vh;
+
+    border-radius: 2vh;
+
+    text-align: center;
+
+    overflow: hidden;
+}
+
+#mode-bar[datamode='0'] {
+    background: #cec716;
+}
+
+#mode-bar[datamode='1'] {
+    background: #51a445;
+}
+
+#modetext {
+    position: relative;
+
+    top: 1vh;
+
+    /*font-family: Calibri;*/
+    /*font-size: 2vw;*/
+    font-size: 4vh;
+    font-weight: bold;
+
+    width: 100%;
+}
+
+/**
+ * info bar
+ *
+ * shows info about current server settings and status
+ */
 
 #info-bar {
-    min-height: 25%;
-    border: 1px solid green;
-    overflow: hidden;
+    position: absolute;
+
+    background-color: #1C6EA4;
+
+    top: 28vh;
+    left: 1vw;
+    right: 1vw;
+
+    height: 25vh;
+
+    border-radius: 2vh;
+
+    overflow: auto;
+}
+
+.boxheading {
+    margin: 15px;
+
+    font-size: 200%;
 }
 
 #server-status {
-    display: table-cell;
-    vertical-align: top;
-    height: 100%;
-    width: 25%;
-    min-width: 25%;
-    max-width: 25%;
+    position: absolute;
+
+    background-color: crimson;
+
+    top: 2vh;
+    height: 85%;
+    width: 50%;
+
+    margin-left: 10px;
+
+    border-radius: 2vh;
     border: 1px solid crimson;
+
     font-family: "Courier New", Courier, monospace;
-    font-size: 16px;
+    font-size: 200%;
+
+    overflow: auto;
+}
+
+#serverCommBlinkFrame{
+    position: absolute;
+
+    top: 1vh;
+    right: 2.5vw;
+
+    background-color: transparent;
+
+    height: 5.5vh;
+    width: 4vh;
+
+    border-radius: 0.5vh;
+    border: 1px solid beige;
+
+    text-align: center;
+
+    z-index: 0;
+}
+
+#serverCommBlink {
+    /*
+    position: absolute;
+
+    top: 2vh;
+    right: 0.5vw;
+*/
+    position: absolute;
+    top: 2vh;
+    left: 0.5vh;
+
+    background-color: #1D568D;
+
+
+    height: 3vh;
+    width: 3vh;
+
+    border-radius: 5vh;
+
+    z-index: 1;
+}
+
+/**
+ * manual control
+ *
+ * shows the cotrols to be able to manually control the light
+ */
+
+#manualControl {
+    position: absolute;
+
+    background-color: #cec716;
+
+    display: none;
+
+    top: 54vh;
+    left: 1vw;
+    right: 1vw;
+
+    height: 25vh;
+
+    border-radius: 2vh;
+
+    overflow: hidden;
+}
+
+#slidecontainer {
+    width: 100%; /* Width of the outside container */
+
+    font-size: 200%;
+}
+
+#slider { /* The slider itself */
+    -webkit-appearance: none; /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 25px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+
+.sliderValue {
+    font-weight: bold;
+    color: red
+}
+
+#switchLight {
+    position: relative;
+
+    background-color: #000000;
+
+    height: 10vh;
+    width: 10vh;
+
+    left: 10px;
+
+    border-radius: 1vh;
+
+    overflow: hidden;
+}
+
+/**
+ * light rule editing popup
+ *
+ * shows the light rule editing popup which lies above everything
+ */
+
+#lightRulePopup {
+    position: absolute;
+
+    display: none;
+
+    background-color: #1C6EA4;
+
+    top: 1vh;
+    bottom: 1vh;
+    left: 1vw;
+    right: 1vw;
+
+    overflow: auto;
+
+    z-index: 100;
+}
+
+#lightRulePopupClose{
+    position: absolute;
+
+    top: 3vh;
+    right: 3vw;
+
+    background-color: #AAAAAA;
+
+    height: 3vh;
+    width: 3vh;
+
+    border-radius: 5vh;
+
+    float: right;
+
+    font-size: 2.5vh;
+    text-align: center;
+
+    cursor: default;
+}
+
+#fancyContainer{
+    position: absolute;
+
+    background-color: #7c6800;
+
+    border-width: 1px;
+    border-color: white;
+
+    top: 7vh;
+    bottom: 1vh;
+    left: 1vw;
+    right: 1vw;
 }

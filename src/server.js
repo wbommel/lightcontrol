@@ -38,6 +38,12 @@ var refreshInterval = 1000;
 //read external html data
 var externalWebTest = fs.readFileSync('./public/webtest.html', 'UTF-8');
 
+//manual lamp switch
+var manualLampOn = false;
+
+//all db light rules
+var allLightRules;
+
 
 /**
  * global initialisations
@@ -64,38 +70,69 @@ if (showDebugInfoInConsole) {
 setInterval(_automaticMode, 1000);
 
 
-/**
- * socket listeners
- */
+/**********************************************************************************************************************
+ * socket connect listeners                                                                                           *
+ **********************************************************************************************************************/
 //when a socket client connects
 io.sockets.on('connection', function (socket) {
 
     //log to console when a client connects
-    if (showDebugInfoInConsole) {
-        console.log('client connected');
-    }
+    toLog('client connected');
 
     //initialize client
     socket.emit('client-initialize', {
+        ClientRefreshInterval: refreshInterval,
+        DatabaseCheckInterval: databaseCheckInterval,
         Mode: mode,
-        ShowDebugInfoSwitch: showDebugInfoInConsole
+        ShowDebugInfoSwitch: showDebugInfoInConsole,
+        CurrentDimValue: dimValue,
+        SocketId: socket.id,
+        ManualLampOn: manualLampOn,
+        ServerStatusMessage: 'not yet defined...'
     });
 
     //refresh clients every second or so
     setInterval(_clientRefresh, refreshInterval);
 
 
+
     //socket listeners *************************************************************************************************
     socket.on('debugInfoChanged', function (data) {
         showDebugInfoInConsole = data.ShowDebugInfoSwitch;
-        if (showDebugInfoInConsole) {
-            console.log('emitted by client: debugInfoChanged = %s', data.ShowDebugInfoSwitch);
-        }
+        toLog(util.format('emitted by client: debugInfoChanged = %s', data.ShowDebugInfoSwitch));
     });
+
+    socket.on('toggleMode', function (data) {
+        var modeOld = mode;
+        if (mode === 0) {
+            mode = 1;
+            firstRun = true;
+        } else {
+            mode = 0;
+        }
+        toLog(util.format('Mode toggled by client from %d to %d.', modeOld, mode));
+    });
+
+    socket.on('manualSliderValueChanged', function (data) {
+        dimValue = data.SliderValue;
+        toLog(util.format('\tslider.value: %d', data.SliderValue));
+    });
+
+    socket.on('manualToggleLampOnOff', function (data) {
+        manualLampOn = !manualLampOn;
+        toLog('\tLamp switched...');
+    });
+
+    socket.on('getLightrulesData', function (data) {
+        socket.emit('returnLightrulesData', {
+            AllRules: allLightRules
+        });
+    });
+    //socket listeners *************************************************************************************************
+
 
 
     // socket dependant function declarations **************************************************************************
-
     /**
      * refreshes the connected
      * @private
@@ -109,15 +146,19 @@ io.sockets.on('connection', function (socket) {
             util.format('Mode&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %d', mode) + '<br/>' +
             util.format('ShowDebugInfoSwitch&nbsp&nbsp: %s', showDebugInfoInConsole) + '<br/>' +
             util.format('CurrentDimValue&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %d', dimValue) + '<br/>' +
-            util.format('socket.id&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', socket.id);
+            util.format('socket.id&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', socket.id) + '<br/>' +
+            util.format('ManualLampOn&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', manualLampOn);
         socket.emit('server-status', {
             ClientRefreshInterval: refreshInterval,
             DatabaseCheckInterval: databaseCheckInterval,
             Mode: mode,
             ShowDebugInfoSwitch: showDebugInfoInConsole,
             CurrentDimValue: dimValue,
+            SocketId: socket.id,
+            ManualLampOn: manualLampOn,
             ServerStatusMessage: serverStatusMessage
-        });
+        })
+        ;
 
         //check if debug switch is on
         if (showDebugInfoInConsole) {
@@ -156,46 +197,89 @@ process.on('SIGINT', function () {
 var firstRun = true; //indicate first iteration
 function _automaticMode() {
 
-    var now = new Date(new Date().toLocaleString());
-    var modulus = ((now / 1000) % databaseCheckInterval);
-    var debugStamp = now / 1000;
-
-    //check for rules every 5 seconds
-    if (modulus === 0 || firstRun) {
-        if (firstRun) {
-            firstRun = false;
+    //check mode first
+    if (mode === 0) { // Manual mode
+        if (currentRule) {
+            currentRule = null;
         }
-        dbaccess.GetAplyingRule(function (rule) {
-                if (showDebugInfoInConsole) {
-                    console.log('[%d] check database for rules...', debugStamp);
-                }
-                currentRule = rule;
+    }
+    else if (mode === 1) { //Automatic mode
+        var now = new Date(new Date().toLocaleString());
+        var modulus = ((now / 1000) % databaseCheckInterval);
+        var debugStamp = now / 1000;
+
+        //check for rules every 5 seconds
+        if (modulus === 0 || firstRun) {
+            if (firstRun) {
+                firstRun = false;
             }
-        )
+            dbaccess.GetAplyingRule(function (rules, rule) {
+                    toLog('\tcheck database for rules...');
+                    currentRule = rule;
+                    //toLog(util.format('\trules: %o', rules));
+
+                    allLightRules = [];
+                    for (var i in rules) {
+                        //toLog(util.format('\tsingleRule: %o', rules[i]));
+                        allLightRules.push({
+                            id: rules[i].id,
+                            Priority: rules[i].Priority,
+                            From: rules[i].From,
+                            To: rules[i].To,
+                            DimTime: rules[i].DimTime,
+                            Weekdays: rules[i].Weekdays
+                        });
+                    }
+
+                    /*
+                    rulesLength = rules.length;
+                    for (i = 0; i < rulesLength; i++) {
+                        toLog(util.format('rules[%d].RowDataPacket: %o', i, rules[i][i]));
+                        allLightRules.push(rules[i]);
+                    }*/
+                    //allLightRules = rules;
+                }
+            )
+        }
+
+        if (currentRule) {
+            //get dimValue
+            dimValue = calculations.CalcDimValueByRule(currentRule);
+        }
     }
 
-    //get dimValue
-    dimValue = calculations.CalcDimValueByRule(currentRule);
 
     //debugging ****************************
+    toLog('current light rule:');
+    if (currentRule) {
+        toLog(util.format('\trule: [id:%d,Priority:%d,From:\'%s\',To:\'%s\',DimTime:%d,Weekdays:%d]', currentRule.id, currentRule.Priority, currentRule.From, currentRule.To, currentRule.DimTime, currentRule.Weekdays));
+    }
+    toLog(util.format('dimValue: %d', dimValue));
+    //toLog(util.format('dbaccess.Rules: %o', dbaccess.Rules));//TODO: not working since undefined, why?
+    //toLog(util.format('allLightRules : %o', allLightRules));
+    toLog('connected clients:');
     if (showDebugInfoInConsole) {
-        //show current light rule
-        console.log('[%d] current light rule:', debugStamp);
-        if (currentRule) {
-            console.log('[%d] \trule: [id:%d,Priority:%d,From:\'%s\',To:\'%s\',DimTime:%d,Weekdays:%d]', debugStamp, currentRule.id, currentRule.Priority, currentRule.From, currentRule.To, currentRule.DimTime, currentRule.Weekdays);
-        }
-        console.log('[%d] \tdimValue: %d', debugStamp, dimValue);
-
-        //check connected client info
-        console.log('[%d] connected clients:', debugStamp);
         io.sockets.clients(function (error, clients) {
             if (error) throw error;
 
             clients.forEach(function (item, index) {
-                console.log('[%d] \tclient %d: %s', debugStamp, ++index, item);
+                toLog(util.format('\tclient %d: %s', ++index, item));
             })
         });
     }
 }
 
 
+
+/**
+ * logs to console with a timestamp and only if the global debug switch is set
+ * @param Message
+ */
+function toLog(Message) {
+    if (showDebugInfoInConsole) {
+        var now = new Date(new Date().toLocaleString());
+        var debugStamp = now / 1000;
+
+        console.log('[%d]\t' + Message, debugStamp);
+    }
+}

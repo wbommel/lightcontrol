@@ -16,16 +16,19 @@ var TABLE_RULES = 'lightrulesgeneral';
  To  : 9999;12;31;11;00
 
  Weekdays format:
- |S|S|F | T|W|T|M
- |u|a|r | h|e|u|o
- ---------------
+   S|F|T|W | T|M|S
+   a|r|h|e | u|o|u
+ -----------------
  0|1|1|1 | 1|1|1|1
+
  Example: Every work day Mo-Fr
- 31  = 0001 1111
+ 62  = 0011 1110
+
  Example: Every day
  127 = 0111 1111
+
  Example: Weekends
- 96  = 0110 0000
+ 65  = 0010 0001
  */
 var weekdays = require('./weekdays.js');
 // var padStart = require('string.prototype.padstart');
@@ -41,6 +44,7 @@ var connection = mysql.createConnection({
 
 connection.query('use ' + DATABASE);
 
+connection.con
 
 var rules;
 
@@ -213,43 +217,46 @@ var rules;
 // console.log(timetest);
 
 
-module.exports.GetAplyingRule = function (resultCallback) {
-    // var connection = mysql.createConnection({
-    //     host: HOST,
-    //     port: PORT,
-    //     user: MYSQL_USER,
-    //     password: MYSQL_PASS
-    // });
+module.exports = {
+    Rules: rules,
+    GetAplyingRule: function (resultCallback) {
+        // var connection = mysql.createConnection({
+        //     host: HOST,
+        //     port: PORT,
+        //     user: MYSQL_USER,
+        //     password: MYSQL_PASS
+        // });
 
-    //connection.query('use ' + DATABASE);
+        //connection.query('use ' + DATABASE);
 
-    connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
-        var ruleFound = false;
+        connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
+            var ruleFound = false;
 
-        if (err) {
-            console.log(err);
-        } else {
-            rules = results;
+            if (err) {
+                console.log(err);
+            } else {
+                this.Rules = results;//TODO: not working since undefined, why?
+                rules = results;//TODO: not working since undefined, why?
 
-            for (var i in results) {
-                var rule = results[i];
+                for (var i in results) {
+                    var rule = results[i];
 
-                if (_ruleApplies(rule)) {
-                    ruleFound = true;
-                    if (typeof resultCallback === "function") {
-                        resultCallback(rule);
-                        break;
+                    if (_ruleApplies(rule)) {
+                        ruleFound = true;
+                        if (typeof resultCallback === "function") {
+                            resultCallback(results, rule);
+                            break;
+                        }
                     }
                 }
             }
-        }
 
-        if(!ruleFound){
-            resultCallback(null);//return null if no rule is active
-        }
-    });
+            if (!ruleFound) {
+                resultCallback(results, null);//return null if no rule is active
+            }
+        });
+    }
 }
-
 
 function _ruleApplies(rule) {
     return rulevalidation.YearIsInRuleRange(rule) &&
