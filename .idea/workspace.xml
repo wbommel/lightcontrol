@@ -4,20 +4,7 @@
     <bookmark url="file://$PROJECT_DIR$/src/model/dbaccess.js" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="396a0020-0d88-4ce6-8bfa-4f732a076419" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/public/playground.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/public/styles/playground.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/dbaccess.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/dbaccess.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public/js/index_client.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/public/js/index_client.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/public/styles/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/public/styles/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/server.js" afterDir="false" />
-    </list>
+    <list default="true" id="396a0020-0d88-4ce6-8bfa-4f732a076419" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -42,11 +29,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
+      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="19" column="22" lean-forward="true" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
+            <state relative-caret-position="85">
+              <caret line="5" column="55" selection-start-line="5" selection-start-column="55" selection-end-line="5" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -72,11 +59,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.css" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/public/styles/index.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="219" column="10" selection-start-line="219" selection-start-column="10" selection-end-line="219" selection-end-column="10" />
+            <state relative-caret-position="411">
+              <caret line="222" column="27" selection-start-line="222" selection-start-column="27" selection-end-line="222" selection-end-column="27" />
               <folding>
                 <element signature="e#3106#3299#0" />
                 <element signature="e#3317#3396#0" />
@@ -151,9 +138,9 @@
         <option value="$PROJECT_DIR$/src/server.js" />
         <option value="$PROJECT_DIR$/src/public/index.html" />
         <option value="$PROJECT_DIR$/src/model/dbaccess.js" />
-        <option value="$PROJECT_DIR$/src/package.json" />
         <option value="$PROJECT_DIR$/src/public/js/index_client.js" />
         <option value="$PROJECT_DIR$/src/public/styles/index.css" />
+        <option value="$PROJECT_DIR$/src/package.json" />
       </list>
     </option>
   </component>
@@ -470,7 +457,7 @@
       <workItem from="1525690240542" duration="486000" />
       <workItem from="1525753764561" duration="51000" />
       <workItem from="1525753942423" duration="83000" />
-      <workItem from="1525754342079" duration="4249000" />
+      <workItem from="1525754342079" duration="4424000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
@@ -508,7 +495,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="291616000" />
+    <option name="totallyTimeSpent" value="291791000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -520,11 +507,11 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
+    <frame x="0" y="0" width="960" height="1160" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Remote Host" order="3" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49918434" visible="true" weight="0.15991472" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49918434" visible="true" weight="0.33333334" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -534,7 +521,7 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32908913" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.39960822" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.40597016" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -828,13 +815,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="22" lean-forward="true" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
@@ -858,8 +838,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/public/styles/index.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="219" column="10" selection-start-line="219" selection-start-column="10" selection-end-line="219" selection-end-column="10" />
+        <state relative-caret-position="411">
+          <caret line="222" column="27" selection-start-line="222" selection-start-column="27" selection-end-line="222" selection-end-column="27" />
           <folding>
             <element signature="e#3106#3299#0" />
             <element signature="e#3317#3396#0" />
@@ -870,6 +850,13 @@
             <element signature="e#4411#4648#0" />
             <element signature="e#4665#4836#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="55" selection-start-line="5" selection-start-column="55" selection-end-line="5" selection-end-column="55" />
         </state>
       </provider>
     </entry>
