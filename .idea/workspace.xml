@@ -82,7 +82,7 @@
         <entry file="file://$PROJECT_DIR$/src/public/js/index_client.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="494">
-              <caret line="177" column="16" lean-forward="true" selection-start-line="177" selection-start-column="16" selection-end-line="177" selection-end-column="16" />
+              <caret line="177" column="16" selection-start-line="177" selection-start-column="16" selection-end-line="177" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -163,7 +163,6 @@
     </layout>
   </component>
   <component name="NodeModulesDirectoryManager">
-    <handled-path value="$PROJECT_DIR$/node_modules" />
     <handled-path value="$PROJECT_DIR$/src/node_modules" />
   </component>
   <component name="NodePackageJsonFileManager">
@@ -198,16 +197,7 @@
             <path>
               <item name="Root" type="cbb8eebc:String" user="Root" />
               <item name="lightcontrol" type="cbb8eebc:String" user="lightcontrol" />
-              <item name="node_modules" type="cbb8eebc:String" user="node_modules" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="lightcontrol" type="cbb8eebc:String" user="lightcontrol" />
               <item name="src" type="cbb8eebc:String" user="src" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="node_modules" type="cbb8eebc:String" user="node_modules" />
             </path>
           </expand>
           <select />
@@ -457,7 +447,7 @@
       <workItem from="1525690240542" duration="486000" />
       <workItem from="1525753764561" duration="51000" />
       <workItem from="1525753942423" duration="83000" />
-      <workItem from="1525754342079" duration="4424000" />
+      <workItem from="1525754342079" duration="4687000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
@@ -495,7 +485,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="291791000" />
+    <option name="totallyTimeSpent" value="292054000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -508,7 +498,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="960" height="1160" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Remote Host" order="3" />
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49918434" visible="true" weight="0.33333334" />
@@ -825,7 +814,7 @@
     <entry file="file://$PROJECT_DIR$/src/public/js/index_client.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="494">
-          <caret line="177" column="16" lean-forward="true" selection-start-line="177" selection-start-column="16" selection-end-line="177" selection-end-column="16" />
+          <caret line="177" column="16" selection-start-line="177" selection-start-column="16" selection-end-line="177" selection-end-column="16" />
         </state>
       </provider>
     </entry>
