@@ -7,6 +7,65 @@ var MYSQL_PASS = '';
 var DATABASE = ' lightcontrol';
 var TABLE_RULES = 'lightrulesgeneral';
 
+var weekdays = require('./weekdays.js');
+
+var rulevalidation = require('./rulevalidation');
+
+//TODO: Don't create Connection only at load module load time
+var connection = mysql.createConnection({
+    host : HOST,
+    port : PORT,
+    user : MYSQL_USER,
+    password : MYSQL_PASS,
+    insecureAuth : true
+});
+
+connection.query('use ' + DATABASE);
+
+var rules;
+
+module.exports = {
+    Rules: rules,
+    GetAplyingRule: function (resultCallback) {
+        connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
+            var ruleFound = false;
+
+            if (err) {
+                console.log(err);
+            } else {
+                this.Rules = results;//TODO: not working since undefined, why?
+                rules = results;//TODO: not working since undefined, why?
+
+                for (var i in results) {
+                    var rule = results[i];
+
+                    if (_ruleApplies(rule)) {
+                        ruleFound = true;
+                        if (typeof resultCallback === "function") {
+                            resultCallback(results, rule);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!ruleFound) {
+                resultCallback(results, null);//return null if no rule is active
+            }
+        });
+    }
+}
+
+function _ruleApplies(rule) {
+    return rulevalidation.YearIsInRuleRange(rule) &&
+        rulevalidation.TodayIsInRuleRange(rule) &&
+        rulevalidation.TodayIsTheCorrectWeekday(rule) &&
+        rulevalidation.TimeIsInRange(rule);
+}
+
+
+
+
 /*
  From / To format:
  12345678901234567890
@@ -30,25 +89,12 @@ var TABLE_RULES = 'lightrulesgeneral';
  Example: Weekends
  65  = 0010 0001
  */
-var weekdays = require('./weekdays.js');
-// var padStart = require('string.prototype.padstart');
-
-var rulevalidation = require('./rulevalidation');
-
-var connection = mysql.createConnection({
-    host: HOST,
-    port: PORT,
-    user: MYSQL_USER,
-    password: MYSQL_PASS
-});
-
-connection.query('use ' + DATABASE);
-
-connection.con
-
-var rules;
 
 
+
+/**
+ * Old testing stuff. maybe there is still something useful in there.
+ */
 // connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC', function (err, results, fields) {
 //     if (err) {
 //         console.log(err);
@@ -217,50 +263,11 @@ var rules;
 // console.log(timetest);
 
 
-module.exports = {
-    Rules: rules,
-    GetAplyingRule: function (resultCallback) {
-        // var connection = mysql.createConnection({
-        //     host: HOST,
-        //     port: PORT,
-        //     user: MYSQL_USER,
-        //     password: MYSQL_PASS
-        // });
+// var connection = mysql.createConnection({
+//     host: HOST,
+//     port: PORT,
+//     user: MYSQL_USER,
+//     password: MYSQL_PASS
+// });
 
-        //connection.query('use ' + DATABASE);
-
-        connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
-            var ruleFound = false;
-
-            if (err) {
-                console.log(err);
-            } else {
-                this.Rules = results;//TODO: not working since undefined, why?
-                rules = results;//TODO: not working since undefined, why?
-
-                for (var i in results) {
-                    var rule = results[i];
-
-                    if (_ruleApplies(rule)) {
-                        ruleFound = true;
-                        if (typeof resultCallback === "function") {
-                            resultCallback(results, rule);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (!ruleFound) {
-                resultCallback(results, null);//return null if no rule is active
-            }
-        });
-    }
-}
-
-function _ruleApplies(rule) {
-    return rulevalidation.YearIsInRuleRange(rule) &&
-        rulevalidation.TodayIsInRuleRange(rule) &&
-        rulevalidation.TodayIsTheCorrectWeekday(rule) &&
-        rulevalidation.TimeIsInRange(rule);
-}
+//connection.query('use ' + DATABASE);

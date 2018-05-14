@@ -10,6 +10,8 @@ $(document).ready(function () {
     // remember current mode
     var currentMode = -1;
 
+    // constants
+    var MaxDimValue = 255;
 
     // socket listeners ************************************************************************************************
     //client-initialize event
@@ -28,8 +30,19 @@ $(document).ready(function () {
             $('#serverCommBlink').css('background-color', '#1D568D');
         }, 100);
 
+        //show light status
+        $('#lightStatusCalculatedValue').html(getDimValuePercentage(data.CurrentDimValue) + '%');
+        $('#lightStatusHardwareValue').html(getDimValuePercentage(data.HardwareDimValue) + '%');
+        $('#lightStatusCalculatedVisual').css('background-color', 'rgb(' + data.CurrentDimValue + ',' + data.CurrentDimValue + ',' + data.CurrentDimValue + ')');
+        $('#lightStatusHardwareVisual').css('background-color', 'rgb(' + data.HardwareDimValue + ',' + data.HardwareDimValue + ',' + data.HardwareDimValue + ')');
+
         //show debug info switch
         $('#switchDebugInfo').html(data.ShowDebugInfoSwitch ? '&#10004;' : '');
+        if (data.ShowDebugInfoSwitch) {
+            $('#server-status').show('scale', {}, 1000); // https://jqueryui.com/show/
+        } else {
+            $('#server-status').hide('highlight', {}, 1000); // https://jqueryui.com/hide/
+        }
 
         //show server status info
         $('#server-status').html(data.ServerStatusMessage);
@@ -115,11 +128,11 @@ $(document).ready(function () {
         $('#mode-bar').attr('datamode', mode);
         if (mode === 0) {
             $('#modetext').html('Manual Mode');
-            $('#manualControl').show(2000);
+            $('#manualControl').show(2000); // https://jqueryui.com/show/
         }
         if (mode === 1) {
             $('#modetext').html('Automatic Mode');
-            $('#manualControl').hide('slide', {}, 2000);
+            $('#manualControl').hide('slide', {}, 2000); // https://jqueryui.com/hide/
         }
     }
 
@@ -137,6 +150,28 @@ $(document).ready(function () {
         $('#slider').attr('value', dimValue);
         $('#sliderValueServer').html(dimValue);
     }
+
+    /**
+     * calculates percentage value
+     * @param value
+     * @returns {number}
+     */
+    function getDimValuePercentage(value) {
+        if (value > MaxDimValue || value < 0) {
+            return -1;
+        }
+        return Math.trunc((100 / MaxDimValue) * value);
+    }
+
+    /**
+     * testing slick grid **********************************************************************************************
+     * https://github.com/mleibman/SlickGrid
+     */
+
+    /**
+     * testing slick grid **********************************************************************************************
+     * https://github.com/mleibman/SlickGrid
+     */
 
     /**
      * testing FancyGrid ***********************************************************************************************

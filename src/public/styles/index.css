@@ -18,7 +18,7 @@ body {
     font-size: 1vh;
 }
 
-.ownCheckBox{
+.ownCheckBox {
     background-color: #AAAAAA;
 
     height: 3vh;
@@ -84,7 +84,7 @@ body {
     font-size: 200%;
 }
 
-#switchDebugInfo{
+#switchDebugInfo {
     position: absolute;
 
     top: 1vh;
@@ -92,9 +92,9 @@ body {
 
     font-weight: bold;
     font-size: 2vh;
-    /*color: #000;*/
 }
-#switchDebugInfoText{
+
+#switchDebugInfoText {
     position: absolute;
 
     top: 1.3vh;
@@ -189,7 +189,7 @@ body {
     left: 1vw;
     right: 1vw;
 
-    height: 25vh;
+    height: 30vh;
 
     border-radius: 2vh;
 
@@ -208,10 +208,11 @@ body {
     background-color: crimson;
 
     top: 2vh;
+    left: 20vh;
     height: 85%;
     width: 50%;
 
-    margin-left: 10px;
+    /*margin-left: 10px;*/
 
     border-radius: 2vh;
     border: 1px solid crimson;
@@ -222,11 +223,11 @@ body {
     overflow: auto;
 }
 
-#serverCommBlinkFrame{
+#serverCommBlinkFrame {
     position: absolute;
 
-    top: 1vh;
-    right: 2.5vw;
+    top: 3vh;
+    left: 1vh;
 
     background-color: transparent;
 
@@ -234,7 +235,7 @@ body {
     width: 4vh;
 
     border-radius: 0.5vh;
-    border: 1px solid beige;
+    border: 2px solid beige;
 
     text-align: center;
 
@@ -242,18 +243,11 @@ body {
 }
 
 #serverCommBlink {
-    /*
-    position: absolute;
-
-    top: 2vh;
-    right: 0.5vw;
-*/
     position: absolute;
     top: 2vh;
     left: 0.5vh;
 
     background-color: #1D568D;
-
 
     height: 3vh;
     width: 3vh;
@@ -261,6 +255,53 @@ body {
     border-radius: 5vh;
 
     z-index: 1;
+}
+
+#lightStatusFrame {
+    position: absolute;
+
+    top: 10vh;
+    left: 1vh;
+    height: 10vh;
+    width: 15vh;
+
+    background-color: #AAAAAA;
+
+    border-radius: 0.5vh;
+
+    text-align: center;
+}
+
+.lightStatus {
+    position: absolute;
+
+    top: 20%;
+    height: 80%;
+    width: 50%;
+
+    border-bottom-left-radius: 0.5vh;
+    border-bottom-right-radius: 0.5vh;
+}
+
+#lightStatusCalculated {
+    left: 0px;
+}
+
+#lightStatusHardware {
+    right: 0px;
+}
+
+.lightStatusVisual {
+    position: absolute;
+
+    top: 30%;
+    left: 5%;
+    height: 60%;
+    width: 90%;
+
+    background-color: black;
+
+    border-radius: 5vh;
 }
 
 /**
@@ -276,7 +317,7 @@ body {
 
     display: none;
 
-    top: 54vh;
+    top: 59vh;
     left: 1vw;
     right: 1vw;
 
@@ -348,7 +389,7 @@ body {
     z-index: 100;
 }
 
-#lightRulePopupClose{
+#lightRulePopupClose {
     position: absolute;
 
     top: 3vh;
@@ -357,7 +398,7 @@ body {
     float: right;
 }
 
-#fancyContainer{
+#fancyContainer {
     position: absolute;
 
     background-color: #7c6800;

@@ -13,6 +13,10 @@ var fs = require('fs');                             // filesystem operations (fo
                                                     //      for rule editor popup
 
 
+
+
+
+
 /**
  * global variable declarations
  */
@@ -43,6 +47,37 @@ var manualLampOn = false;
 
 //all db light rules
 var allLightRules;
+
+
+
+/**
+ * initialize hardware relevant stuff
+ */
+var Gpio;
+var LED1;
+var LED2;
+try {
+    Gpio = require('onoff').Gpio;
+    LED1 = new Gpio(23, 'out');
+    LED2 = new Gpio(24, 'out');
+} catch (e) {
+    toLog('Could not create \'onoff\'...');
+}
+
+var i2c;
+var i2c1;
+try {
+    i2c = require('i2c-bus');		//package to communicate via i2c
+    i2c1 = i2c.openSync(1);		//open i2c bus 1
+} catch (e) {
+    toLog('Could not create \'i2c-bus\'...');
+}
+var PCF8591_ADDR = 0x48;		//adress of PCF8591 on i2c bus (i2cdetect -y 1)
+var CMD_ACCESS_CONFIG = 0x41;	//'adress' of DAC in the PCF8591
+var dacValue = 0;
+
+
+
 
 
 /**
@@ -134,7 +169,7 @@ io.sockets.on('connection', function (socket) {
 
     // socket dependant function declarations **************************************************************************
     /**
-     * refreshes the connected
+     * refreshes the connected clients
      * @private
      */
     function _clientRefresh() {
@@ -154,6 +189,7 @@ io.sockets.on('connection', function (socket) {
             Mode: mode,
             ShowDebugInfoSwitch: showDebugInfoInConsole,
             CurrentDimValue: dimValue,
+            HardwareDimValue: dacValue,
             SocketId: socket.id,
             ManualLampOn: manualLampOn,
             ServerStatusMessage: serverStatusMessage
@@ -206,7 +242,6 @@ function _automaticMode() {
     else if (mode === 1) { //Automatic mode
         var now = new Date(new Date().toLocaleString());
         var modulus = ((now / 1000) % databaseCheckInterval);
-        var debugStamp = now / 1000;
 
         //check for rules every 5 seconds
         if (modulus === 0 || firstRun) {
@@ -216,11 +251,9 @@ function _automaticMode() {
             dbaccess.GetAplyingRule(function (rules, rule) {
                     toLog('\tcheck database for rules...');
                     currentRule = rule;
-                    //toLog(util.format('\trules: %o', rules));
 
                     allLightRules = [];
                     for (var i in rules) {
-                        //toLog(util.format('\tsingleRule: %o', rules[i]));
                         allLightRules.push({
                             id: rules[i].id,
                             Priority: rules[i].Priority,
@@ -230,14 +263,6 @@ function _automaticMode() {
                             Weekdays: rules[i].Weekdays
                         });
                     }
-
-                    /*
-                    rulesLength = rules.length;
-                    for (i = 0; i < rulesLength; i++) {
-                        toLog(util.format('rules[%d].RowDataPacket: %o', i, rules[i][i]));
-                        allLightRules.push(rules[i]);
-                    }*/
-                    //allLightRules = rules;
                 }
             )
         }
@@ -245,6 +270,21 @@ function _automaticMode() {
         if (currentRule) {
             //get dimValue
             dimValue = calculations.CalcDimValueByRule(currentRule);
+
+            //write to hardware
+            if (i2c1 && LED1 && LED2) {
+                manualLampOn = dimValue > 0;
+                if (LED1.readSync() != manualLampOn) {
+                    LED1.writeSync(manualLampOn);
+                }
+                if (LED2.readSync() != manualLampOn) {
+                    LED2.writeSync(manualLampOn);
+                }
+                if (dacValue != dimValue) {
+                    dacValue = dimValue;
+                    writeDAC(dacValue);
+                }
+            }
         }
     }
 
@@ -282,4 +322,11 @@ function toLog(Message) {
 
         console.log('[%d]\t' + Message, debugStamp);
     }
+}
+
+
+
+//function to write a value to the DAC
+function writeDAC(value) {
+    i2c1.writeByteSync(PCF8591_ADDR, CMD_ACCESS_CONFIG, value);
 }
