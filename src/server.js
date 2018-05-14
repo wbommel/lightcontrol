@@ -14,6 +14,11 @@ var fs = require('fs');                             // filesystem operations (fo
 
 
 
+/**
+ * constants
+ */
+const ledTrueValue = 0;
+const ledFalseValue = 1;
 
 
 
@@ -45,6 +50,9 @@ var externalWebTest = fs.readFileSync('./public/webtest.html', 'UTF-8');
 //manual lamp switch
 var manualLampOn = false;
 
+//LED switch value
+var ledValue = ledFalseValue;
+
 //all db light rules
 var allLightRules;
 
@@ -60,6 +68,11 @@ try {
     Gpio = require('onoff').Gpio;
     LED1 = new Gpio(23, 'out');
     LED2 = new Gpio(24, 'out');
+
+    LED1.writeSync(ledFalseValue);
+    LED2.writeSync(ledFalseValue);
+
+    toLog('Created and initialized \'onoff\' LED1=GPIO23, LED2=GPIO24');
 } catch (e) {
     toLog('Could not create \'onoff\'...');
 }
@@ -67,16 +80,17 @@ try {
 var i2c;
 var i2c1;
 try {
-    i2c = require('i2c-bus');		//package to communicate via i2c
+    i2c = require('i2c-bus');	//package to communicate via i2c
     i2c1 = i2c.openSync(1);		//open i2c bus 1
+    writeDAC(0);
+
+    toLog('Created and initialized \'i2c-bus\' i2c1');
 } catch (e) {
     toLog('Could not create \'i2c-bus\'...');
 }
 var PCF8591_ADDR = 0x48;		//adress of PCF8591 on i2c bus (i2cdetect -y 1)
 var CMD_ACCESS_CONFIG = 0x41;	//'adress' of DAC in the PCF8591
 var dacValue = 0;
-
-
 
 
 
@@ -120,7 +134,7 @@ io.sockets.on('connection', function (socket) {
         DatabaseCheckInterval: databaseCheckInterval,
         Mode: mode,
         ShowDebugInfoSwitch: showDebugInfoInConsole,
-        CurrentDimValue: dimValue,
+        CalculatedDimValue: dimValue,
         SocketId: socket.id,
         ManualLampOn: manualLampOn,
         ServerStatusMessage: 'not yet defined...'
@@ -144,18 +158,16 @@ io.sockets.on('connection', function (socket) {
             firstRun = true;
         } else {
             mode = 0;
+            dimValue = 0;
+            setHardware();
         }
         toLog(util.format('Mode toggled by client from %d to %d.', modeOld, mode));
     });
 
     socket.on('manualSliderValueChanged', function (data) {
-        dimValue = data.SliderValue;
+        dimValue = parseInt(data.SliderValue);
+        setHardware();
         toLog(util.format('\tslider.value: %d', data.SliderValue));
-    });
-
-    socket.on('manualToggleLampOnOff', function (data) {
-        manualLampOn = !manualLampOn;
-        toLog('\tLamp switched...');
     });
 
     socket.on('getLightrulesData', function (data) {
@@ -180,18 +192,23 @@ io.sockets.on('connection', function (socket) {
             util.format('DatabaseCheckInterval: %ds', databaseCheckInterval) + '<br/>' +
             util.format('Mode&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %d', mode) + '<br/>' +
             util.format('ShowDebugInfoSwitch&nbsp&nbsp: %s', showDebugInfoInConsole) + '<br/>' +
-            util.format('CurrentDimValue&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %d', dimValue) + '<br/>' +
+            util.format('CalculatedDimValue&nbsp&nbsp&nbsp: %d', dimValue) + '<br/>' +
+            util.format('HardwareDimValue&nbsp&nbsp&nbsp&nbsp&nbsp: %d', dacValue) + '<br/>' +
+            util.format('GpioValue&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %d', ledValue) + '<br/>' +
             util.format('socket.id&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', socket.id) + '<br/>' +
-            util.format('ManualLampOn&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', manualLampOn);
+            util.format('ManualLampOn&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', manualLampOn) + '<br/>' +
+            util.format('CurrentRule&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', currentRule ? util.format('rule: [id:%d, Priority:%d, From:\'%s\', To:\'%s\', DimTime:%d, Weekdays:%d]', currentRule.id, currentRule.Priority, currentRule.From, currentRule.To, currentRule.DimTime, currentRule.Weekdays) : 'null');
         socket.emit('server-status', {
             ClientRefreshInterval: refreshInterval,
             DatabaseCheckInterval: databaseCheckInterval,
             Mode: mode,
             ShowDebugInfoSwitch: showDebugInfoInConsole,
-            CurrentDimValue: dimValue,
+            CalculatedDimValue: dimValue,
             HardwareDimValue: dacValue,
+            GpioValue: ledValue,
             SocketId: socket.id,
             ManualLampOn: manualLampOn,
+            CurrentRule: currentRule,
             ServerStatusMessage: serverStatusMessage
         })
         ;
@@ -267,25 +284,13 @@ function _automaticMode() {
             )
         }
 
-        if (currentRule) {
+        //if (currentRule) {
             //get dimValue
             dimValue = calculations.CalcDimValueByRule(currentRule);
 
             //write to hardware
-            if (i2c1 && LED1 && LED2) {
-                manualLampOn = dimValue > 0;
-                if (LED1.readSync() != manualLampOn) {
-                    LED1.writeSync(manualLampOn);
-                }
-                if (LED2.readSync() != manualLampOn) {
-                    LED2.writeSync(manualLampOn);
-                }
-                if (dacValue != dimValue) {
-                    dacValue = dimValue;
-                    writeDAC(dacValue);
-                }
-            }
-        }
+            setHardware();
+        //}
     }
 
 
@@ -326,7 +331,63 @@ function toLog(Message) {
 
 
 
-//function to write a value to the DAC
+/**
+ *
+ */
+function setHardware() {
+    if (i2c1 && LED1 && LED2) {
+        manualLampOn = dimValue > 0;
+        ledValue = manualLampOn ? ledTrueValue : ledFalseValue;
+
+        toLog(util.format('\t\tledValue: %d', ledValue));
+
+//        LED1.writeSync(ledValue);
+//        LED2.writeSync(ledValue);
+
+        toLog(util.format('\t\tLED1.readSync(): %d', LED1.readSync()));
+        toLog(util.format('\t\tLED2.readSync(): %d', LED2.readSync()));
+
+        if (LED1.readSync() !== ledValue) {
+            LED1.writeSync(ledValue);
+        }
+        if (LED2.readSync() !== ledValue) {
+            LED2.writeSync(ledValue);
+        }
+        if (dacValue !== dimValue) {
+            dacValue = dimValue;
+            writeDAC(dacValue);
+        }
+    }
+}
+
+
+
+/**
+ * function to write a value to the DAC
+ * @param value
+ */
 function writeDAC(value) {
-    i2c1.writeByteSync(PCF8591_ADDR, CMD_ACCESS_CONFIG, value);
+
+    if (!Number.isInteger(value)) {
+        toLog('writeDAC: value not integer');
+    }
+    if (value < 0) {
+        toLog('writeDAC: value < 0');
+    }
+    if (value > 0xff) {
+        toLog('writeDAC: value > 0xff');
+    }
+
+    //only write when legal
+    if (Number.isInteger(value) && value >= 0 && value <= 0xff) {
+        i2c1.writeByteSync(PCF8591_ADDR, CMD_ACCESS_CONFIG, value);
+    }
+
+    /*
+    i2c1.writeByte(PCF8591_ADDR, CMD_ACCESS_CONFIG, value, function (e) {
+       if(e){
+           toLog('Error in writeDAC() -> writeByte')
+       }
+    });
+    */
 }

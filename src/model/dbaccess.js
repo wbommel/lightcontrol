@@ -2,8 +2,8 @@ var mysql = require('mysql');
 
 var HOST = 'localhost';
 var PORT = 3306;
-var MYSQL_USER = 'root';
-var MYSQL_PASS = '';
+var MYSQL_USER = 'root';    //your mysql/mariadb user. Do not use root. User your own user. ;-)
+var MYSQL_PASS = 'Warlock'; //your mysql/mariadb root pw. Do not use this example. Create your onw secure pw. ;-)
 var DATABASE = ' lightcontrol';
 var TABLE_RULES = 'lightrulesgeneral';
 
@@ -11,7 +11,9 @@ var weekdays = require('./weekdays.js');
 
 var rulevalidation = require('./rulevalidation');
 
-//TODO: Don't create Connection only at load module load time
+//TODO: Don't create Connection only at module load time.
+//TODO: Use some kind of reconnect algorythm.
+//TODO: Implement exception handling (i.e. server not runing, db not found, ...)
 var connection = mysql.createConnection({
     host : HOST,
     port : PORT,

@@ -351,21 +351,6 @@ body {
     color: red
 }
 
-#switchLight {
-    position: relative;
-
-    background-color: #000000;
-
-    height: 10vh;
-    width: 10vh;
-
-    left: 10px;
-
-    border-radius: 1vh;
-
-    overflow: hidden;
-}
-
 /**
  * light rule editing popup
  *

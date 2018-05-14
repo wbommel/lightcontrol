@@ -12,7 +12,8 @@
     "mysql": "^2.15.0",
     "node-gyp": "^3.6.2",
     "on-finished": "^2.3.0",
-    "onoff": "^3.1.0",
+    "onoff": "latest",
+	"i2c-bus":"latest",
     "rebuild": "^0.1.2",
     "socket.io": "latest"
   },

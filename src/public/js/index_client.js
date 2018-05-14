@@ -19,7 +19,7 @@ $(document).ready(function () {
         currentMode = data.Mode; //remember current mode
         $('#switchDebugInfo').html(data.ShowDebugInfoSwitch ? '&#10004;' : '');
         showMode(data.Mode); //show mode initially
-        $('#sliderValueLocal').html(data.CurrentDimValue);
+        $('#sliderValueLocal').html(data.CalculatedDimValue);
     });
 
     //server-status event
@@ -31,9 +31,9 @@ $(document).ready(function () {
         }, 100);
 
         //show light status
-        $('#lightStatusCalculatedValue').html(getDimValuePercentage(data.CurrentDimValue) + '%');
+        $('#lightStatusCalculatedValue').html(getDimValuePercentage(data.CalculatedDimValue) + '%');
         $('#lightStatusHardwareValue').html(getDimValuePercentage(data.HardwareDimValue) + '%');
-        $('#lightStatusCalculatedVisual').css('background-color', 'rgb(' + data.CurrentDimValue + ',' + data.CurrentDimValue + ',' + data.CurrentDimValue + ')');
+        $('#lightStatusCalculatedVisual').css('background-color', 'rgb(' + data.CalculatedDimValue + ',' + data.CalculatedDimValue + ',' + data.CalculatedDimValue + ')');
         $('#lightStatusHardwareVisual').css('background-color', 'rgb(' + data.HardwareDimValue + ',' + data.HardwareDimValue + ',' + data.HardwareDimValue + ')');
 
         //show debug info switch
@@ -51,12 +51,12 @@ $(document).ready(function () {
         if (currentMode != data.Mode) {
             currentMode = data.Mode;
             showMode(data.Mode);
-            $('#sliderValueLocal').html(data.CurrentDimValue);
+            $('#sliderValueLocal').html(data.CalculatedDimValue);
         }
 
         //show manual values when applicable
         if (currentMode === 0) {
-            showManualValues(data.ManualLampOn, data.CurrentDimValue);
+            showManualValues(data.ManualLampOn, data.CalculatedDimValue);
         }
     });
 
@@ -100,10 +100,6 @@ $(document).ready(function () {
         });
     };
 
-    $('#switchLight').click(function () {
-        socket.emit('manualToggleLampOnOff', {});
-    });
-
     $('#showLightrulePopup').click(function () {
         //socket.emit('getLightrulesData', {});
         $('#lightRulePopup').css('display', 'block');
@@ -142,11 +138,6 @@ $(document).ready(function () {
      * @param dimValue
      */
     function showManualValues(lightOn, dimValue) {
-        if (lightOn) {
-            $('#switchLight').css('background-color', 'white');
-        } else {
-            $('#switchLight').css('background-color', 'black');
-        }
         $('#slider').attr('value', dimValue);
         $('#sliderValueServer').html(dimValue);
     }
