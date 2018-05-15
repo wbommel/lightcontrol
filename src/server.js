@@ -34,7 +34,7 @@ var dimValue = 0;
 var databaseCheckInterval = 5;
 
 //global debug switch
-var showDebugInfoInConsole = true;
+var showDebugInfo = false;
 
 //global mode selector (default=1)
 // 0 = manual mode
@@ -110,10 +110,10 @@ app.get('/', function (req, res) {
     res.sendfile(__dirname + '/public/index.html');
 });
 
-if (showDebugInfoInConsole) {
-    // Portnummer in die Konsole schreiben
-    console.log('Der Server läuft nun unter http://127.0.0.1:' + conf.port + '/');
-}
+
+// Portnummer in die Konsole schreiben
+console.log('Der Server läuft nun unter http://127.0.0.1:' + conf.port + '/');
+
 
 //enter  automatic mode
 setInterval(_automaticMode, 1000);
@@ -133,7 +133,7 @@ io.sockets.on('connection', function (socket) {
         ClientRefreshInterval: refreshInterval,
         DatabaseCheckInterval: databaseCheckInterval,
         Mode: mode,
-        ShowDebugInfoSwitch: showDebugInfoInConsole,
+        ShowDebugInfoSwitch: showDebugInfo,
         CalculatedDimValue: dimValue,
         SocketId: socket.id,
         ManualLampOn: manualLampOn,
@@ -147,7 +147,7 @@ io.sockets.on('connection', function (socket) {
 
     //socket listeners *************************************************************************************************
     socket.on('debugInfoChanged', function (data) {
-        showDebugInfoInConsole = data.ShowDebugInfoSwitch;
+        showDebugInfo = data.ShowDebugInfoSwitch;
         toLog(util.format('emitted by client: debugInfoChanged = %s', data.ShowDebugInfoSwitch));
     });
 
@@ -185,24 +185,27 @@ io.sockets.on('connection', function (socket) {
      * @private
      */
     function _clientRefresh() {
+        var now = new Date(new Date().toLocaleString());
 
         //send server status
         var serverStatusMessage =
+            util.format('Server Time&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', now) + '<br/>' +
             util.format('ClientRefreshInterval: %dms', refreshInterval) + '<br/>' +
             util.format('DatabaseCheckInterval: %ds', databaseCheckInterval) + '<br/>' +
             util.format('Mode&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %d', mode) + '<br/>' +
-            util.format('ShowDebugInfoSwitch&nbsp&nbsp: %s', showDebugInfoInConsole) + '<br/>' +
+            util.format('ShowDebugInfoSwitch&nbsp&nbsp: %s', showDebugInfo) + '<br/>' +
             util.format('CalculatedDimValue&nbsp&nbsp&nbsp: %d', dimValue) + '<br/>' +
             util.format('HardwareDimValue&nbsp&nbsp&nbsp&nbsp&nbsp: %d', dacValue) + '<br/>' +
             util.format('GpioValue&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %d', ledValue) + '<br/>' +
             util.format('socket.id&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', socket.id) + '<br/>' +
             util.format('ManualLampOn&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', manualLampOn) + '<br/>' +
             util.format('CurrentRule&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', currentRule ? util.format('rule: [id:%d, Priority:%d, From:\'%s\', To:\'%s\', DimTime:%d, Weekdays:%d]', currentRule.id, currentRule.Priority, currentRule.From, currentRule.To, currentRule.DimTime, currentRule.Weekdays) : 'null');
-        socket.emit('server-status', {
+        socket.emit('debugInfo', {
+            ServerTime: now,
             ClientRefreshInterval: refreshInterval,
             DatabaseCheckInterval: databaseCheckInterval,
             Mode: mode,
-            ShowDebugInfoSwitch: showDebugInfoInConsole,
+            ShowDebugInfoSwitch: showDebugInfo,
             CalculatedDimValue: dimValue,
             HardwareDimValue: dacValue,
             GpioValue: ledValue,
@@ -210,20 +213,7 @@ io.sockets.on('connection', function (socket) {
             ManualLampOn: manualLampOn,
             CurrentRule: currentRule,
             ServerStatusMessage: serverStatusMessage
-        })
-        ;
-
-        //check if debug switch is on
-        if (showDebugInfoInConsole) {
-            var now = new Date(new Date().toLocaleString());
-
-            // message to client
-            var message =
-                util.format('Current Time--: (%d) %s<br/>', now, now) +
-                util.format('%o<br/>', currentRule) +
-                util.format('Dim-Value-----: %d<br/>', dimValue) +
-                util.format('Debug-Switch--: %s<br/>', showDebugInfoInConsole);
-        }
+        });
     }
 });
 
@@ -284,13 +274,11 @@ function _automaticMode() {
             )
         }
 
-        //if (currentRule) {
-            //get dimValue
-            dimValue = calculations.CalcDimValueByRule(currentRule);
+        //get dimValue
+        dimValue = calculations.CalcDimValueByRule(currentRule);
 
-            //write to hardware
-            setHardware();
-        //}
+        //write to hardware
+        setHardware();
     }
 
 
@@ -303,7 +291,7 @@ function _automaticMode() {
     //toLog(util.format('dbaccess.Rules: %o', dbaccess.Rules));//TODO: not working since undefined, why?
     //toLog(util.format('allLightRules : %o', allLightRules));
     toLog('connected clients:');
-    if (showDebugInfoInConsole) {
+    if (showDebugInfo) {
         io.sockets.clients(function (error, clients) {
             if (error) throw error;
 
@@ -321,7 +309,7 @@ function _automaticMode() {
  * @param Message
  */
 function toLog(Message) {
-    if (showDebugInfoInConsole) {
+    if (showDebugInfo) {
         var now = new Date(new Date().toLocaleString());
         var debugStamp = now / 1000;
 

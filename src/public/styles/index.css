@@ -107,10 +107,10 @@ body {
     background-color: #aaaaaa;
 
     top: 1vh;
-    left: 25vw;
+    left: 12vw;
 
     height: 4vh;
-    width: 35vw;
+    width: 12vw;
 
     font-size: 2vh;
 }
@@ -121,7 +121,7 @@ body {
     background-color: #aaaaaa;
 
     top: 1vh;
-    left: 61vw;
+    left: 30vw;
 
     height: 4vh;
     width: 15vw;
@@ -202,23 +202,21 @@ body {
     font-size: 200%;
 }
 
-#server-status {
+#debugInfo {
     position: absolute;
 
-    background-color: crimson;
+    background-color: #1D568D;
 
     top: 2vh;
     left: 20vh;
     height: 85%;
     width: 50%;
 
-    /*margin-left: 10px;*/
+    border-radius: 0.5vh;
+    /*border: 1px solid crimson;*/
 
-    border-radius: 2vh;
-    border: 1px solid crimson;
-
-    font-family: "Courier New", Courier, monospace;
-    font-size: 200%;
+    /*font-family: "Courier New", Courier, monospace;*/
+    font-size: 110%;
 
     overflow: auto;
 }
@@ -302,6 +300,25 @@ body {
     background-color: black;
 
     border-radius: 5vh;
+}
+
+.debugInfoParent {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    width: 100%;
+    background-color: #2b542c;
+}
+
+.debugInfoChildDesc {
+    grid-column: 1;
+    background-color: transparent;
+    border-bottom: 1px solid black;
+}
+
+.debugInfoChildValue {
+    grid-column: 2;
+    background-color: transparent;
+    border-bottom: 1px solid black;
 }
 
 /**
