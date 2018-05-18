@@ -320,7 +320,8 @@ function toLog(Message) {
 
 
 /**
- *
+ * sets the hardware stuff
+ * TODO: refactor this to a separate class to have more control over the hardware connections (i.e. implement a timer after switching a GPIO to avoid flickering relais.
  */
 function setHardware() {
     if (i2c1 && LED1 && LED2) {
@@ -328,9 +329,6 @@ function setHardware() {
         ledValue = manualLampOn ? ledTrueValue : ledFalseValue;
 
         toLog(util.format('\t\tledValue: %d', ledValue));
-
-//        LED1.writeSync(ledValue);
-//        LED2.writeSync(ledValue);
 
         toLog(util.format('\t\tLED1.readSync(): %d', LED1.readSync()));
         toLog(util.format('\t\tLED2.readSync(): %d', LED2.readSync()));

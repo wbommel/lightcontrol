@@ -1,9 +1,4 @@
 $(document).ready(function () {
-    // testing FancyGrid ***********************************************************************************************
-    var gridInstance = null;
-    var gridData = [];
-    // testing FancyGrid ***********************************************************************************************
-
     // WebSocket: create connection to server
     var socket = io.connect();
 
@@ -60,17 +55,20 @@ $(document).ready(function () {
         }
     });
 
+    //
     socket.on('returnLightrulesData', function (data) {
-        //alert('data: '+ data.AllRules);
-        gridData = data.AllRules;
-        //$('#info-bar').html(gridData.toString());
-        //gridInstance.update();
-        if (gridInstance) {
-            destroyGrid();
-            createGrid();
-        } else {
-            createGrid();
-        }
+        //testing SlickGrid
+        slickGridData = data.AllRules;
+        createSlickGrid();
+
+        //testing FancyGrid
+        // fancyGridData = data.AllRules;
+        // if (fancyGridInstance) {
+        //     destroyFancyGrid();
+        //     createFancyGrid();
+        // } else {
+        //     createFancyGrid();
+        // }
     });
     // socket listeners ************************************************************************************************
 
@@ -108,7 +106,14 @@ $(document).ready(function () {
 
     $('#lightRulePopupClose').click(function () {
         //TODO: Ask if really to be closed when unsaved datachanges exist
-        destroyGrid();
+
+        //testing SlickGrid
+
+
+        //testing FancyGrid
+        //destroyFancyGrid();
+
+        //close div
         $('#lightRulePopup').css('display', 'none');
     });
     // frontend events *************************************************************************************************
@@ -205,22 +210,67 @@ $(document).ready(function () {
 
     /**
      * testing slick grid **********************************************************************************************
-     * https://github.com/mleibman/SlickGrid
+     * https://github.com/6pac/SlickGrid (fork of: https://github.com/mleibman/SlickGrid)
      */
+    var slickGridInstance;
+    var slickGridData = [];
+    var slickGridColumns = [
+        {id: "id", name: "ID", field: "id", width: 30 },
+        {
+            id: "Priority",
+            name: "Priority",
+            field: "Priority",
+            editor: Slick.Editors.Integer,
+            validator: priorityFieldValidator
+        },
+        {id: "From", name: "From", field: "From"},
+        {id: "To", name: "To", field: "To"},
+        {id: "DimTime", name: "DimTime", field: "DimTime"},
+        {id: "Weekdays", name: "Weekdays", field: "Weekdays"}
+    ];
+    var slickGridOptions = {
+        editable: true,
+        enableAddRow: true,
+        asyncEditorLoading: false,
+        autoEdit: false,
+        enableCellNavigation: true,
+        enableColumnReorder: false
+    };
+
+    function priorityFieldValidator(value) {
+        if (value == null || value == undefined || value > 9999 || value < 0) {
+            return {valid: false, msg: "Please insert a priority between 0 and 9999"};
+        } else {
+            return {valid: true, msg: null};
+        }
+    }
+
+    function createSlickGrid() {
+        if (!slickGridInstance) {
+            slickGridInstance = new Slick.Grid("#gridContainer", slickGridData, slickGridColumns, slickGridOptions);
+
+            slickGridInstance.onValidationError.subscribe(function (e, args) {
+                alert(args.validationResults.msg);
+            });
+        }
+    }
 
     /**
      * testing slick grid **********************************************************************************************
-     * https://github.com/mleibman/SlickGrid
+     * https://github.com/6pac/SlickGrid (fork of: https://github.com/mleibman/SlickGrid)
      */
 
     /**
      * testing FancyGrid ***********************************************************************************************
      */
-    function createGrid() {
-        gridInstance = $('#fancyContainer').FancyGrid({
+    var fancyGridInstance = null;
+    var fancyGridData = [];
+
+    function createFancyGrid() {
+        fancyGridInstance = $('#gridContainer').FancyGrid({
             /*window: true,
             model: true,*/
-            renderTo: 'fancyContainer',
+            renderTo: 'gridContainer',
             resizeable: true,
 
             title: {
@@ -274,7 +324,7 @@ $(document).ready(function () {
                 allowDeselect: true
             },
 
-            data: gridData,
+            data: fancyGridData,
             columns: [{
                 index: 'id',
                 title: 'ID',
@@ -309,9 +359,9 @@ $(document).ready(function () {
         });
     }
 
-    function destroyGrid() {
-        gridInstance.destroy();
-        gridInstance = null;
+    function destroyFancyGrid() {
+        fancyGridInstance.destroy();
+        fancyGridInstance = null;
     }
 
     // testing FancyGrid ***********************************************************************************************
