@@ -14,21 +14,63 @@ var rulevalidation = require('./rulevalidation');
 //TODO: Don't create Connection only at module load time.
 //TODO: Use some kind of reconnect algorythm.
 //TODO: Implement exception handling (i.e. server not runing, db not found, ...)
-var connection = mysql.createConnection({
-    host : HOST,
-    port : PORT,
-    user : MYSQL_USER,
-    password : MYSQL_PASS,
-    insecureAuth : true
-});
+// var connection = mysql.createConnection({
+//     host : HOST,
+//     port : PORT,
+//     user : MYSQL_USER,
+//     password : MYSQL_PASS,
+//     insecureAuth : true
+// });
+//
+// connection.query('use ' + DATABASE);
 
-connection.query('use ' + DATABASE);
+
+
+// var connection;
+//
+// function getConnection(ecb) {
+//
+//     connection = mysql.createConnection({
+//         host: HOST,
+//         port: PORT,
+//         user: MYSQL_USER,
+//         password: MYSQL_PASS,
+//         insecureAuth: true
+//     }, function (e) {
+//         ecb(e);
+//     });
+//
+//     if (connection.state !== 'disconnected') {
+//         connection.query('use ' + DATABASE);
+//     }
+// }
+//
+// getConnection(function (e) {
+//     //error handling here
+//     console.log('dbaccess.js error connecting...\n' + e);
+// });
 
 var rules;
 
 module.exports = {
     Rules: rules,
     GetAplyingRule: function (resultCallback) {
+
+        //create connection object
+        var connection = mysql.createConnection({
+            host: HOST,
+            port: PORT,
+            user: MYSQL_USER,
+            password: MYSQL_PASS,
+            insecureAuth: true
+        }, function (e) {
+            resultCallback(null, null, e);
+        });
+
+        connection.query('use ' + DATABASE);
+
+        console.log('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
+
         connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
             var ruleFound = false;
 
@@ -55,6 +97,8 @@ module.exports = {
                 resultCallback(results, null);//return null if no rule is active
             }
         });
+
+        connection.end();
     }
 }
 
@@ -64,7 +108,6 @@ function _ruleApplies(rule) {
         rulevalidation.TodayIsTheCorrectWeekday(rule) &&
         rulevalidation.TimeIsInRange(rule);
 }
-
 
 
 
