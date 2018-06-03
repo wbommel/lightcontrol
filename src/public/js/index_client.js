@@ -35,8 +35,10 @@ $(document).ready(function () {
         $('#switchDebugInfo').html(data.ShowDebugInfoSwitch ? '&#10004;' : '');
         if (data.ShowDebugInfoSwitch) {
             $('#debugInfo').show('scale', {}, 1000); // https://jqueryui.com/show/
+            $('#debugMessages').show('scale', {}, 1000); // https://jqueryui.com/show/
         } else {
             $('#debugInfo').hide('highlight', {}, 1000); // https://jqueryui.com/hide/
+            $('#debugMessages').hide('highlight', {}, 1000); // https://jqueryui.com/hide/
         }
 
         //show debug info
@@ -69,6 +71,10 @@ $(document).ready(function () {
         // } else {
         //     createFancyGrid();
         // }
+    });
+
+    socket.on('debugLogMessage', function (data) {
+        $('#debugMessages').append(data.Message + '<br/>');
     });
     // socket listeners ************************************************************************************************
 
@@ -215,7 +221,7 @@ $(document).ready(function () {
     var slickGridInstance;
     var slickGridData = [];
     var slickGridColumns = [
-        {id: "id", name: "ID", field: "id", width: 30 },
+        {id: "id", name: "ID", field: "id", width: 30},
         {
             id: "Priority",
             name: "Priority",

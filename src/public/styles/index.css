@@ -221,6 +221,25 @@ body {
     overflow: auto;
 }
 
+#debugMessages{
+    position: absolute;
+
+    background-color: #1D568D;
+
+    top: 2vh;
+    right: 2vh;
+    height: 85%;
+    width: 30%;
+
+    border-radius: 0.5vh;
+    /*border: 1px solid crimson;*/
+
+    /*font-family: "Courier New", Courier, monospace;*/
+    font-size: 110%;
+
+    overflow: auto;
+}
+
 #serverCommBlinkFrame {
     position: absolute;
 
