@@ -11,7 +11,8 @@ var calculations = require('./model/calculations'); // calculations
 var util = require('util');                         // string formatting etc
 var fs = require('fs');                             // filesystem operations (for reading external html code i.e.
                                                     //      for rule editor popup
-
+var winston = require('winston');                   // winston logger (https://github.com/winstonjs/winston)
+var logger = require('./logger.js');                // test own logger class
 
 
 /**
@@ -19,6 +20,13 @@ var fs = require('fs');                             // filesystem operations (fo
  */
 const ledTrueValue = 0;
 const ledFalseValue = 1;
+
+//winston logger
+// const logger = winston.createLogger({
+//     transports: [
+//         new winston.transports.Console()
+//     ]
+// });
 
 
 
@@ -34,7 +42,7 @@ var dimValue = 0;
 var databaseCheckInterval = 5;
 
 //global debug switch
-var showDebugInfo = false;
+var showDebugInfo = true;
 
 //global mode selector (default=1)
 // 0 = manual mode
@@ -45,7 +53,7 @@ var mode = 1;
 var refreshInterval = 1000;
 
 //read external html data
-var externalWebTest = fs.readFileSync('./public/webtest.html', 'UTF-8');
+var externalWebTest = fs.readFileSync(__dirname + '/public/webtest.html', 'UTF-8');
 
 //manual lamp switch
 var manualLampOn = false;
@@ -55,6 +63,29 @@ var ledValue = ledFalseValue;
 
 //all db light rules
 var allLightRules;
+
+
+
+/**
+ * global initialisations
+ */
+logger.DoLogMessages = showDebugInfo;
+logger.UseUnixTimeStampPrefix = true;
+
+//start up web server
+server.listen(conf.port);
+
+//statische Dateien ausliefern
+app.use(express.static(__dirname + '/public'));
+
+app.get('/', function (req, res) {
+    // wenn der Pfad / aufgerufen wird
+    // so wird die Datei index.html ausgegeben
+    res.sendfile(__dirname + '/public/index.html');
+});
+
+// Portnummer in die Konsole schreiben
+console.log('Der Server läuft nun unter http://127.0.0.1:' + conf.port + '/');
 
 
 
@@ -94,27 +125,6 @@ var dacValue = 0;
 
 
 
-/**
- * global initialisations
- */
-
-//start up web server
-server.listen(conf.port);
-
-//statische Dateien ausliefern
-app.use(express.static(__dirname + '/public'));
-
-app.get('/', function (req, res) {
-    // wenn der Pfad / aufgerufen wird
-    // so wird die Datei index.html ausgegeben
-    res.sendfile(__dirname + '/public/index.html');
-});
-
-
-// Portnummer in die Konsole schreiben
-console.log('Der Server läuft nun unter http://127.0.0.1:' + conf.port + '/');
-
-
 //enter  automatic mode
 setInterval(_automaticMode, 1000);
 
@@ -124,6 +134,8 @@ setInterval(_automaticMode, 1000);
  **********************************************************************************************************************/
 //when a socket client connects
 io.sockets.on('connection', function (socket) {
+    //register logger callback
+    logger.LoggerCallbackFunction = loggerCB;
 
     //log to console when a client connects
     toLog('client connected');
@@ -148,6 +160,7 @@ io.sockets.on('connection', function (socket) {
     //socket listeners *************************************************************************************************
     socket.on('debugInfoChanged', function (data) {
         showDebugInfo = data.ShowDebugInfoSwitch;
+        logger.DoLogMessages = showDebugInfo;
         toLog(util.format('emitted by client: debugInfoChanged = %s', data.ShowDebugInfoSwitch));
     });
 
@@ -215,6 +228,12 @@ io.sockets.on('connection', function (socket) {
             ServerStatusMessage: serverStatusMessage
         });
     }
+
+
+
+    function loggerCB(data) {
+        socket.emit('debugLogMessage', {Message: data.Message});
+    }
 });
 
 
@@ -255,8 +274,13 @@ function _automaticMode() {
             if (firstRun) {
                 firstRun = false;
             }
-            dbaccess.GetAplyingRule(function (rules, rule) {
+            dbaccess.GetAplyingRule(function (rules, rule, e) {
                     toLog('\tcheck database for rules...');
+
+                    if (e) {
+                        toLog('\terror connecting to db...');
+                    }
+
                     currentRule = rule;
 
                     allLightRules = [];
@@ -309,11 +333,16 @@ function _automaticMode() {
  * @param Message
  */
 function toLog(Message) {
-    if (showDebugInfo) {
-        var now = new Date(new Date().toLocaleString());
-        var debugStamp = now / 1000;
+    logger.LogIt(Message);
+    //logger.ToConsole(Message);
 
-        console.log('[%d]\t' + Message, debugStamp);
+    if (showDebugInfo) {
+        // var now = new Date(new Date().toLocaleString());
+        // var debugStamp = now / 1000;
+        // console.log('[%d]\t' + Message, debugStamp);
+
+        //testing winston
+        //logger.log({ level: 'info', message: Message });
     }
 }
 

@@ -1,5 +1,9 @@
 var mysql = require('mysql');
 
+var logger = require('../logger.js'); // test own logger class (only reference it here since the detail settings are done in main server.js)
+
+
+
 var HOST = 'localhost';
 var PORT = 3306;
 var MYSQL_USER = 'root';    //your mysql/mariadb user. Do not use root. User your own user. ;-)
@@ -11,9 +15,6 @@ var weekdays = require('./weekdays.js');
 
 var rulevalidation = require('./rulevalidation');
 
-//TODO: Don't create Connection only at module load time.
-//TODO: Use some kind of reconnect algorythm.
-//TODO: Implement exception handling (i.e. server not runing, db not found, ...)
 // var connection = mysql.createConnection({
 //     host : HOST,
 //     port : PORT,
@@ -69,13 +70,15 @@ module.exports = {
 
         connection.query('use ' + DATABASE);
 
-        console.log('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
+        logger.LogIt('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
+        //console.log('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
 
         connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
             var ruleFound = false;
 
             if (err) {
-                console.log(err);
+                logger.ToConsole(err);
+                //console.log(err);
             } else {
                 this.Rules = results;//TODO: not working since undefined, why?
                 rules = results;//TODO: not working since undefined, why?
