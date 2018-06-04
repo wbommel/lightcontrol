@@ -42,7 +42,7 @@ var dimValue = 0;
 var databaseCheckInterval = 5;
 
 //global debug switch
-var showDebugInfo = true;
+var showDebugInfo = false;
 
 //global mode selector (default=1)
 // 0 = manual mode
