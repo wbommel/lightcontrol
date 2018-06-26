@@ -3,7 +3,11 @@
 <head>
     <title>Lightcontrol</title>
     <meta charset="UTF-8">
+
+    <!-- only set default styles here -->
     <link rel="stylesheet" href="styles/index.css"/>
+    <link rel="stylesheet" href="styles/range_input_style.css"/>
+
     <script src="socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -37,11 +41,19 @@
     <p>
     <h1>Lightcontrol</h1></p>
 
+    <div id="page-heading">Lightcontrol</div>
+
     <div id="controlElements">
         <div class="ownCheckBox" id="switchDebugInfo"></div>
         <div id="switchDebugInfoText">Debug-Info</div>
-        <button id="toggleMode">Toggle Mode</button>
-        <button id="showLightrulePopup">Edit Rules</button>
+
+        <div id="showLightrulePopup">Regeln</div>
+        <div id="modeToggle" backgroundmode="-1"><span>Modus</span></div>
+        <div id="modeManual"></div>
+        <div id="modeAutomatic"></div>
+
+        <!--<button id="toggleMode">Toggle Mode</button>-->
+        <!--<button id="showLightrulePopup">Edit Rules</button>-->
     </div>
 
     <br/>
@@ -89,10 +101,17 @@
         <div id="switchLight"></div>
     </div>
 
+    <div class="styleChangerContainer">
+        <div class="styleChanger" id="styleSelectNormal">Normal Style</div>
+        <div class="styleChanger" id="styleSelectLCARS">LCARS Style</div>
+    </div>
+
+    <!-- should be at the end so it is always on top of everything -->
     <div id="lightRulePopup">
         <div class="ownCheckBox" id="lightRulePopupClose">X</div>
         <div id="gridContainer"></div>
     </div>
+
 </div>
 </body>
 </html>

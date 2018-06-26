@@ -64,6 +64,41 @@ body {
     z-index: 50; /* Remove this line if it's not going to be a background!*/
 }
 
+#page-heading {
+    display: none;
+}
+
+/**
+ * style changer
+ */
+.styleChangerContainer {
+    position: absolute;
+
+    top: 34vh;
+    left: 2vh;
+    width: 5vw;
+    height: 2vh;
+
+    background-color: #aaaaaa;
+    border-radius: 2vh;
+}
+
+.styleChanger {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    font-weight: bold;
+}
+
+#styleSelectNormal {
+    display: none;
+}
+
+#styleSelectLCARS {
+    top: 20%;
+    left: 10%;
+}
+
 /**
  * control elements
  */
@@ -77,7 +112,7 @@ body {
     left: 1vw;
     right: 1vw;
 
-    height: 7vh;
+    height: 25vh;
 
     border-radius: 2vh;
 
@@ -101,18 +136,33 @@ body {
     left: 4.5vh;
 }
 
-#toggleMode {
+#toggleMode, #modeToggle {
     position: absolute;
 
-    background-color: #aaaaaa;
+    /*background-color: #aaaaaa;*/
+
+    border-radius: 2vh;
 
     top: 1vh;
-    left: 12vw;
+    left: 25vw;
 
-    height: 4vh;
-    width: 12vw;
+    height: 23vh;
+    width: 23vh;
 
-    font-size: 2vh;
+    font-size: 4vh;
+    text-align: center;
+}
+
+#modeToggle[backgroundmode='-1'] {
+    background-color: #aaaaaa;
+}
+
+#modeToggle[backgroundmode='0'] {
+    background-color: #aaaaaa;
+}
+
+#modeToggle[backgroundmode='1'] {
+    background-color: white;
 }
 
 #showLightrulePopup {
@@ -120,13 +170,16 @@ body {
 
     background-color: #aaaaaa;
 
+    border-radius: 2vh;
+
     top: 1vh;
-    left: 30vw;
+    left: 60vw;
 
-    height: 4vh;
-    width: 15vw;
+    height: 23vh;
+    width: 23vh;
 
-    font-size: 2vh;
+    font-size: 4vh;
+    text-align: center;
 }
 
 /**
@@ -140,7 +193,7 @@ body {
 
     background-color: white;
 
-    top: 20vh;
+    top: 38vh;
     left: 1vw;
     right: 1vw;
 
@@ -185,11 +238,11 @@ body {
 
     background-color: #1C6EA4;
 
-    top: 28vh;
+    top: 46vh;
     left: 1vw;
     right: 1vw;
 
-    height: 30vh;
+    height: 23vh;
 
     border-radius: 2vh;
 
@@ -221,7 +274,7 @@ body {
     overflow: auto;
 }
 
-#debugMessages{
+#debugMessages {
     position: absolute;
 
     background-color: #1D568D;
@@ -353,7 +406,7 @@ body {
 
     display: none;
 
-    top: 59vh;
+    top: 70vh;
     left: 1vw;
     right: 1vw;
 
@@ -365,7 +418,12 @@ body {
 }
 
 #slidecontainer {
-    width: 100%; /* Width of the outside container */
+    position: absolute;
+
+    left: 2%;
+    width: 96%; /* Width of the outside container */
+
+    /*  border: black 1px solid;  */
 
     font-size: 200%;
 }

@@ -49,6 +49,12 @@ $(document).ready(function () {
             currentMode = data.Mode;
             showMode(data.Mode);
             $('#sliderValueLocal').html(data.CalculatedDimValue);
+
+            //set background after ACK from server
+            //$('#toggleMode,#modeToggle').css('background-color', '#aaaaaa');
+            //set responsive background
+            $('#modeToggle').attr('backgroundmode', 0);
+
         }
 
         //show manual values when applicable
@@ -93,8 +99,11 @@ $(document).ready(function () {
         });
     });
 
-    $('#toggleMode').click(function () {
+    $('#toggleMode,#modeToggle').click(function () {
         socket.emit('toggleMode', {});
+
+        //set responsive background
+        $('#modeToggle').attr('backgroundmode', 1);
     });
 
     slider.oninput = function () {
@@ -122,7 +131,29 @@ $(document).ready(function () {
         //close div
         $('#lightRulePopup').css('display', 'none');
     });
-    // frontend events *************************************************************************************************
+
+
+    /**
+     * change styles on the fly
+     */
+    $('#styleSelectNormal').click(function () {
+        changeCSS('styles/index.css', 0)
+    });
+    $('#styleSelectLCARS').click(function () {
+        changeCSS('styles/index_lcars.css', 0)
+    });
+
+    function changeCSS(cssFile, cssLinkIndex) {
+
+        var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
+
+        var newlink = document.createElement("link");
+        newlink.setAttribute("rel", "stylesheet");
+        newlink.setAttribute("type", "text/css");
+        newlink.setAttribute("href", cssFile);
+
+        document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
+    }    // frontend events *************************************************************************************************
 
 
 
