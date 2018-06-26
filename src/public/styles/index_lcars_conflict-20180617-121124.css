@@ -1,0 +1,152 @@
+@font-face {
+    font-family: "lcarsgtj3";
+    src: url('../fonts/lcarsgtj3-webfont.woff2') format('woff2');
+}
+
+body {
+    /*
+    background-color: #000000;
+    background-image: url(background_lcars.svg);
+    background-size: 1920px 1200px;
+    overflow: auto;
+    background-position: 0 0;
+    */
+
+    font-family: "lcarsgtj3", serif;
+}
+
+/**
+ * style changer
+ */
+.styleChangerContainer {
+    position: fixed;
+
+    top: 1vh;
+    left: 1vw;
+    width: 5vw;
+    height: 1vh;
+
+    background-color: #4cae4c;
+}
+
+#styleSelectLCARS {
+    display: none;
+}
+
+/**
+ * page container
+ *
+ * contains everything and differs 10px from body
+ */
+#page-container {
+    position: fixed;
+
+    top: 0px;
+    left: 0px;
+    height: 1200px;
+    width: 1920px;
+
+    border: 1px solid greenyellow;
+
+    background-color: #000000;
+    background-image: url(background_lcars.svg);
+    background-size: 1920px 1200px;
+    overflow: scroll;
+    background-position: 0 0;
+}
+
+#page-container H1 {
+    display: none;
+}
+
+#page-heading {
+    position: fixed;
+    top: 5px;
+    left: 1200px;
+
+    font-size: 55px;
+}
+
+/**
+ * control elements
+ */
+
+#controlElements {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 1080px;
+    width: 1920px;
+
+    border: 1px solid white;
+}
+
+/*
+#switchDebugInfo {
+    position: absolute;
+
+    top: 1vh;
+    left: 1vh;
+
+    font-weight: bold;
+    font-size: 2vh;
+}
+
+#switchDebugInfoText {
+    position: absolute;
+
+    top: 1.3vh;
+    left: 4.5vh;
+}
+*/
+
+#toggleMode, #modeToggle {
+    position: fixed;
+
+    top: 160px;
+    left: 11px;
+    height: 54px;
+    width: 127px;
+
+    /*border: 1px solid white;*/
+}
+
+#modeToggle span{
+    position: absolute;
+    top: 8px;
+    height: 100%;
+    width: 100%;
+    font-size: 38px;
+    text-align: center;
+}
+
+#modeToggle[backgroundmode='-1'] {
+    background-color: transparent;
+}
+
+#modeToggle[backgroundmode='0'] {
+    background-color: transparent;
+}
+
+#modeToggle[backgroundmode='1'] {
+    background-color: white;
+}
+
+/*
+#showLightrulePopup {
+    position: absolute;
+
+    background-color: #aaaaaa;
+
+    border-radius: 2vh;
+
+    top: 1vh;
+    left: 60vw;
+
+    height: 23vh;
+    width: 23vh;
+
+    font-size: 4vh;
+    text-align: center;
+}
+*/
