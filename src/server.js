@@ -1,18 +1,18 @@
 /**
  * global requirements
  */
-var express = require('express');                   // express library
-var app = express();                                // express Application
-var server = require('http').createServer(app);     // web server
-var io = require('socket.io').listen(server);       // websocket
-var conf = require('./config.json');                // configuration (server port etc)
-var dbaccess = require('./model/dbaccess');         // database access stuff
-var calculations = require('./model/calculations'); // calculations
-var util = require('util');                         // string formatting etc
-var fs = require('fs');                             // filesystem operations (for reading external html code i.e.
-                                                    //      for rule editor popup
-var winston = require('winston');                   // winston logger (https://github.com/winstonjs/winston)
-var logger = require('./logger.js');                // test own logger class
+const express = require('express');                   // express library
+const app = express();                                // express Application
+const server = require('http').createServer(app);     // web server
+const io = require('socket.io').listen(server);       // websocket
+const conf = require('./config.json');                // configuration (server port etc)
+const dbaccess = require('./model/dbaccess');         // database access stuff
+const calculations = require('./model/calculations'); // calculations
+const util = require('util');                         // string formatting etc
+const fs = require('fs');                             // filesystem operations (for reading external html code i.e.
+                                                      //      for rule editor popup
+const winston = require('winston');                   // winston logger (https://github.com/winstonjs/winston)
+const logger = require('./logger.js');                // test own logger class
 
 
 /**
@@ -35,34 +35,34 @@ const ledFalseValue = 1;
  */
 
 //create minimal rule stub and dimValue
-var currentRule;
-var dimValue = 0;
+let currentRule;
+let dimValue = 0;
 
 //database check interval
-var databaseCheckInterval = 5;
+let databaseCheckInterval = 5;
 
 //global debug switch
-var showDebugInfo = false;
+let showDebugInfo = false;
 
 //global mode selector (default=1)
 // 0 = manual mode
 // 1 = automatic mode
-var mode = 1;
+let mode = 1;
 
 //client refresh interval in ms
-var refreshInterval = 1000;
+let refreshInterval = 1000;
 
 //read external html data
-var externalWebTest = fs.readFileSync(__dirname + '/public/webtest.html', 'UTF-8');
+let externalWebTest = fs.readFileSync(__dirname + '/public/webtest.html', 'UTF-8');
 
 //manual lamp switch
-var manualLampOn = false;
+let manualLampOn = false;
 
 //LED switch value
-var ledValue = ledFalseValue;
+let ledValue = ledFalseValue;
 
 //all db light rules
-var allLightRules;
+let allLightRules;
 
 
 
@@ -92,9 +92,9 @@ console.log('Der Server läuft nun unter http://127.0.0.1:' + conf.port + '/');
 /**
  * initialize hardware relevant stuff
  */
-var Gpio;
-var LED1;
-var LED2;
+let Gpio;
+let LED1;
+let LED2;
 try {
     Gpio = require('onoff').Gpio;
     LED1 = new Gpio(23, 'out');
@@ -108,8 +108,8 @@ try {
     toLog('Could not create \'onoff\'...');
 }
 
-var i2c;
-var i2c1;
+let i2c;
+let i2c1;
 try {
     i2c = require('i2c-bus');	//package to communicate via i2c
     i2c1 = i2c.openSync(1);		//open i2c bus 1
@@ -119,9 +119,9 @@ try {
 } catch (e) {
     toLog('Could not create \'i2c-bus\'...');
 }
-var PCF8591_ADDR = 0x48;		//adress of PCF8591 on i2c bus (i2cdetect -y 1)
-var CMD_ACCESS_CONFIG = 0x41;	//'adress' of DAC in the PCF8591
-var dacValue = 0;
+const PCF8591_ADDR = 0x48;		//adress of PCF8591 on i2c bus (i2cdetect -y 1)
+const CMD_ACCESS_CONFIG = 0x41;	//'adress' of DAC in the PCF8591
+let dacValue = 0;
 
 
 
@@ -165,7 +165,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('toggleMode', function (data) {
-        var modeOld = mode;
+        let modeOld = mode;
         if (mode === 0) {
             mode = 1;
             firstRun = true;
@@ -198,10 +198,10 @@ io.sockets.on('connection', function (socket) {
      * @private
      */
     function _clientRefresh() {
-        var now = new Date(new Date().toLocaleString());
+        let now = new Date(new Date().toLocaleString());
 
         //send server status
-        var serverStatusMessage =
+        let serverStatusMessage =
             util.format('Server Time&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: %s', now) + '<br/>' +
             util.format('ClientRefreshInterval: %dms', refreshInterval) + '<br/>' +
             util.format('DatabaseCheckInterval: %ds', databaseCheckInterval) + '<br/>' +
@@ -256,7 +256,7 @@ process.on('SIGINT', function () {
  * automatic mode function
  * @private
  */
-var firstRun = true; //indicate first iteration
+let firstRun = true; //indicate first iteration
 function _automaticMode() {
 
     //check mode first
@@ -266,8 +266,8 @@ function _automaticMode() {
         }
     }
     else if (mode === 1) { //Automatic mode
-        var now = new Date(new Date().toLocaleString());
-        var modulus = ((now / 1000) % databaseCheckInterval);
+        let now = new Date(new Date().toLocaleString());
+        let modulus = ((now / 1000) % databaseCheckInterval);
 
         //check for rules every 5 seconds
         if (modulus === 0 || firstRun) {
@@ -284,7 +284,7 @@ function _automaticMode() {
                     currentRule = rule;
 
                     allLightRules = [];
-                    for (var i in rules) {
+                    for (let i in rules) {
                         allLightRules.push({
                             id: rules[i].id,
                             Priority: rules[i].Priority,
@@ -356,6 +356,8 @@ function setHardware() {
     if (i2c1 && LED1 && LED2) {
         manualLampOn = dimValue > 0;
         ledValue = manualLampOn ? ledTrueValue : ledFalseValue;
+
+
 
         toLog(util.format('\t\tledValue: %d', ledValue));
 
