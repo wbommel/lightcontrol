@@ -93,17 +93,46 @@ console.log('Der Server läuft nun unter http://127.0.0.1:' + conf.port + '/');
  * initialize hardware relevant stuff
  */
 let Gpio;
-let LED1;
-let LED2;
+let Relais1;
+let Relais2;
+let ButtonAutomatic;
+let Button100Percent;
+let Button50Percent;
 try {
     Gpio = require('onoff').Gpio;
-    LED1 = new Gpio(23, 'out');
-    LED2 = new Gpio(24, 'out');
+    Relais1 = new Gpio(23, 'out');
+    Relais2 = new Gpio(24, 'out');
+    ButtonAutomatic = new Gpio(4, 'in', 'both');
+    Button100Percent = new Gpio(17, 'in', 'both');
+    Button50Percent = new Gpio(27, 'in', 'both');
 
-    LED1.writeSync(ledFalseValue);
-    LED2.writeSync(ledFalseValue);
+    Relais1.writeSync(ledFalseValue);
+    Relais2.writeSync(ledFalseValue);
 
-    toLog('Created and initialized \'onoff\' LED1=GPIO23, LED2=GPIO24');
+    ButtonAutomatic.watch(function (err, value) {
+        if (mode === 0) {
+            mode = 1;
+            firstRun = true;
+        }
+    });
+    Button100Percent.watch(function (err, value) {
+        if (mode === 1) {
+            mode = 0;
+        }
+        if (dimValue !== 255) {
+            dimValue = 255;
+        }
+    });
+    Button50Percent.watch(function (err, value) {
+        if (mode === 1) {
+            mode = 0;
+        }
+        if (dimValue !== 127) {
+            dimValue = 127;
+        }
+    });
+
+    toLog('Created and initialized \'onoff\' Relais1=GPIO23, Relais2=GPIO24');
 } catch (e) {
     toLog('Could not create \'onoff\'...');
 }
@@ -353,7 +382,7 @@ function toLog(Message) {
  * TODO: refactor this to a separate class to have more control over the hardware connections (i.e. implement a timer after switching a GPIO to avoid flickering relais.
  */
 function setHardware() {
-    if (i2c1 && LED1 && LED2) {
+    if (i2c1 && Relais1 && Relais2) {
         manualLampOn = dimValue > 0;
         ledValue = manualLampOn ? ledTrueValue : ledFalseValue;
 
@@ -361,14 +390,14 @@ function setHardware() {
 
         toLog(util.format('\t\tledValue: %d', ledValue));
 
-        toLog(util.format('\t\tLED1.readSync(): %d', LED1.readSync()));
-        toLog(util.format('\t\tLED2.readSync(): %d', LED2.readSync()));
+        toLog(util.format('\t\tRelais1.readSync(): %d', Relais1.readSync()));
+        toLog(util.format('\t\tRelais2.readSync(): %d', Relais2.readSync()));
 
-        if (LED1.readSync() !== ledValue) {
-            LED1.writeSync(ledValue);
+        if (Relais1.readSync() !== ledValue) {
+            Relais1.writeSync(ledValue);
         }
-        if (LED2.readSync() !== ledValue) {
-            LED2.writeSync(ledValue);
+        if (Relais2.readSync() !== ledValue) {
+            Relais2.writeSync(ledValue);
         }
         if (dacValue !== dimValue) {
             dacValue = dimValue;
@@ -399,12 +428,4 @@ function writeDAC(value) {
     if (Number.isInteger(value) && value >= 0 && value <= 0xff) {
         i2c1.writeByteSync(PCF8591_ADDR, CMD_ACCESS_CONFIG, value);
     }
-
-    /*
-    i2c1.writeByte(PCF8591_ADDR, CMD_ACCESS_CONFIG, value, function (e) {
-       if(e){
-           toLog('Error in writeDAC() -> writeByte')
-       }
-    });
-    */
 }
