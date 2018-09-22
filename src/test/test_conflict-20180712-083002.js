@@ -2,11 +2,10 @@
  * Created by Bommel on 03.04.2018.
  */
 //var describe = require("mocha");
-//var assert = require('assert');
-const padStart = require('string.prototype.padstart');
-const expect = require("chai").expect;
-const util = require('util');
-const mocha = require('mocha');
+var assert = require('assert');
+var padStart = require('string.prototype.padstart');
+//var expect = require("chai").expect;
+var util = require('util');
 
 var weekdays = require('../model/weekdays');
 var rulevalidation = require('../model/rulevalidation');
@@ -37,7 +36,7 @@ describe('model', function () {
     var Saturday = Math.pow(2, 6);
 
     // create rule stub
-    var rule = { id: 1, Priority: 9999, From: '', To: '', DimTime: 30, Weekdays: 127 };
+    var rule = {id: 1, Priority: 9999, From: '', To: '', DimTime: 30, Weekdays: 127};
 
 
     describe('weekdays.js', function () {

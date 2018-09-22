@@ -41,10 +41,7 @@ module.exports = {
      * @returns {number}
      * @constructor
      */
-    WeekdaysToInt: function (Mo, Tu, We, Th, Fr, Sa, Su) {
-        return (Mo ? this.Monday : 0) + (Tu ? this.Tuesday : 0) + (We ? this.Wednesday : 0) + (Th ? this.Thursday : 0) + (Fr ? this.Friday : 0) + (Sa ? this.Saturday : 0) + (Su ? this.Sunday : 0);
-    },
-
+    WeekdaysToInt: function (Mo, Tu, We, Th, Fr, Sa, Su) { return (Mo ? this.Monday : 0) + (Tu ? this.Tuesday : 0) + (We ? this.Wednesday : 0) + (Th ? this.Thursday : 0) + (Fr ? this.Friday : 0) + (Sa ? this.Saturday : 0) + (Su ? this.Sunday : 0); },
 
     /**
      *
@@ -52,9 +49,7 @@ module.exports = {
      * @returns {boolean}
      * @constructor
      */
-    HasSunday: function (WeekdayInteger) {
-        return (WeekdayInteger & this.Sunday) === Math.pow(2, 0);
-    },
+    HasSunday: function (WeekdayInteger) { return (WeekdayInteger & this.Sunday) === Math.pow(2, 0); },
 
     /**
      *
@@ -62,9 +57,7 @@ module.exports = {
      * @returns {boolean}
      * @constructor
      */
-    HasMonday: function (WeekdayInteger) {
-        return (WeekdayInteger & this.Monday) === Math.pow(2, 1);
-    },
+    HasMonday: function (WeekdayInteger) { return (WeekdayInteger & this.Monday) === Math.pow(2, 1); },
 
     /**
      *
@@ -72,9 +65,7 @@ module.exports = {
      * @returns {boolean}
      * @constructor
      */
-    HasTuesday: function (WeekdayInteger) {
-        return (WeekdayInteger & this.Tuesday) === Math.pow(2, 2);
-    },
+    HasTuesday: function (WeekdayInteger) { return (WeekdayInteger & this.Tuesday) === Math.pow(2, 2); },
 
     /**
      *
@@ -82,9 +73,7 @@ module.exports = {
      * @returns {boolean}
      * @constructor
      */
-    HasWednesday: function (WeekdayInteger) {
-        return (WeekdayInteger & this.Wednesday) === Math.pow(2, 3);
-    },
+    HasWednesday: function (WeekdayInteger) { return (WeekdayInteger & this.Wednesday) === Math.pow(2, 3); },
 
     /**
      *
@@ -92,9 +81,7 @@ module.exports = {
      * @returns {boolean}
      * @constructor
      */
-    HasThursday: function (WeekdayInteger) {
-        return (WeekdayInteger & this.Thursday) === Math.pow(2, 4);
-    },
+    HasThursday: function (WeekdayInteger) { return (WeekdayInteger & this.Thursday) === Math.pow(2, 4); },
 
     /**
      *
@@ -102,9 +89,7 @@ module.exports = {
      * @returns {boolean}
      * @constructor
      */
-    HasFriday: function (WeekdayInteger) {
-        return (WeekdayInteger & this.Friday) === Math.pow(2, 5);
-    },
+    HasFriday: function (WeekdayInteger) { return (WeekdayInteger & this.Friday) === Math.pow(2, 5); },
 
     /**
      *
@@ -112,7 +97,5 @@ module.exports = {
      * @returns {boolean}
      * @constructor
      */
-    HasSaturday: function (WeekdayInteger) {
-        return (WeekdayInteger & this.Saturday) === Math.pow(2, 6);
-    }
+    HasSaturday: function (WeekdayInteger) { return (WeekdayInteger & this.Saturday) === Math.pow(2, 6); }
 };

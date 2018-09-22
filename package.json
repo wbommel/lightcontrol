@@ -1,5 +1,5 @@
 {
-  "name": "LightControl",
+  "name": "lightcontrol",
   "description": "controls switching on and of and diming the light.",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "mysql": "^2.15.0",
     "node-gyp": "^3.6.2",
     "on-finished": "^2.3.0",
-    "onoff": "latest",
+    "onoff": "^3.2.1",
     "rebuild": "^0.1.2",
     "socket.io": "latest",
     "winston": "^2.4.2"

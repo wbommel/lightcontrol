@@ -1,102 +1,4 @@
 /**
- *
- *
- *
- *
- *
- *
- */
-
-
-
-/**
- * requirements
- */
-const mysql = require('mysql');
-const logger = require('../logger.js'); // test own logger class (only reference it here since the detail settings are done in main server.js)
-const rulevalidation = require('./rulevalidation');
-
-
-
-/**
- * database server settings
- */
-const HOST = 'localhost';
-const PORT = 3306;
-const MYSQL_USER = 'root';    //your mysql/mariadb user. Do not use root. User your own user. ;-)
-const MYSQL_PASS = 'Warlock'; //your mysql/mariadb root pw. Do not use this example. Create your onw secure pw. ;-)
-const DATABASE = ' lightcontrol';
-const TABLE_RULES = 'lightrulesgeneral';
-
-
-
-/**
- * global declarations
- */
-let rules;
-
-module.exports = {
-    Rules: rules,
-    GetAplyingRule: function (resultCallback) {
-
-        //create connection object
-        let connection = mysql.createConnection({
-            host: HOST,
-            port: PORT,
-            user: MYSQL_USER,
-            password: MYSQL_PASS,
-            insecureAuth: true
-        }, function (e) {
-            resultCallback(null, null, e);
-        });
-
-        connection.query('use ' + DATABASE);
-
-        logger.LogIt('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
-        //console.log('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
-
-        connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
-            let ruleFound = false;
-
-            if (err) {
-                logger.ToConsole(err);
-                //console.log(err);
-            } else {
-                this.Rules = results;//TODO: not working since undefined, why?
-                rules = results;//TODO: not working since undefined, why?
-
-                for (let i in results) {
-                    let rule = results[i];
-
-                    if (_ruleApplies(rule)) {
-                        ruleFound = true;
-                        if (typeof resultCallback === "function") {
-                            resultCallback(results, rule);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (!ruleFound) {
-                resultCallback(results, null);//return null if no rule is active
-            }
-        });
-
-        connection.end();
-    }
-};
-
-function _ruleApplies(rule) {
-    return rulevalidation.YearIsInRuleRange(rule) &&
-        rulevalidation.TodayIsInRuleRange(rule) &&
-        rulevalidation.TodayIsTheCorrectWeekday(rule) &&
-        rulevalidation.TimeIsInRange(rule);
-}
-
-
-
-/**
  * Database format descriptions
  *
  * From / To format:
@@ -110,20 +12,181 @@ function _ruleApplies(rule) {
  *
  *
  * Weekdays format:
- *  ---------------------------------
- *  Weekday --|Sa|Fr|Th| |We|Tu|Mo|Su
- *  ---------------------------------
- *  Value  128|64|32|16| | 8| 4| 2| 1
- *  =================================
- *  Bitmask  0| 1| 1| 1| | 1| 1| 1| 1
- *  ---------------------------------
+ *  ----------------------------------
+ *  Weekday Su|Mo|Tu|We| |Th|Fr|Sa|---
+ *  ----------------------------------
+ *  Value    1| 2| 4| 8| |16|32|64|128
+ *  ==================================
+ *  Bitmask  1| 1| 1| 1| | 1| 1| 1|  0
+ *  ----------------------------------
  *
  * Example: Every work day Mo-Fr
- *  0011 1110 = 62
+ *  0111 1100 = 62
  *
  * Example: Every day
  *  0111 1111 = 127
  *
  * Example: Weekends
- *  0100 0001 = 65
+ *  1000 0010 = 65
  */
+
+
+
+/**
+ * requirements
+ */
+const util = require('util')
+const mysql = require('mysql')
+const rv = require('./rulevalidation')
+
+
+/**
+ * database server default settings
+ */
+let HOST = 'localhost';
+let PORT = 3306;
+let MYSQL_USER = 'root';    //your mysql/mariadb user. Do not use root. User your own user. ;-)
+let MYSQL_PASS = 'Warlock'; //your mysql/mariadb root pw. Do not use this example. Create your onw secure pw. ;-)
+let DATABASE = 'lightcontrol';
+let TABLE_RULES = 'lightrulesgeneral';
+
+
+
+/**
+ * global declarations
+ */
+let ruleValidation
+let loggerCallback
+let rules = []
+
+
+
+/**
+* main module object declaration
+*/
+module.exports = {
+    /**
+     * initialize datbase handler object
+     * @param {*} loggerFunc    callback function of the main logger class 
+     * @param {*} dbHost        database hostname (mysql default: localhost)
+     * @param {*} dbPort        datapase port (mysql default: 3306)
+     * @param {*} dbUser        database user
+     * @param {*} dbPass        database password
+     * @param {*} dbName        database name
+     * @param {*} dbRulesTable  database rules table name
+     */
+    Init: function (loggerFunc, dbHost, dbPort, dbUser, dbPass, dbName, dbRulesTable) {
+        loggerCallback = loggerFunc
+        ruleValidation = rv.Init(loggerFunc)
+        _initDatabaseVars(dbHost, dbPort, dbUser, dbPass, dbName, dbRulesTable)
+        return this
+    },
+
+    Rules: rules,
+
+    /**
+     * reads db rules and gets the current rule if one applies now
+     * @param {*} resultCallback function that will be executed when database query is done
+     */
+    AnalyzeRules: function (resultCallback) { _analyzeRules(resultCallback) },
+}
+
+
+/**********************************************************************************************************************
+ * private functions
+ *********************************************************************************************************************/
+
+/**
+ * initiate datbase variables
+ * @param {*} dbHost 
+ * @param {*} dbPort 
+ * @param {*} dbUser 
+ * @param {*} dbPass 
+ * @param {*} dbName 
+ * @param {*} dbRulesTable 
+ */
+function _initDatabaseVars(dbHost, dbPort, dbUser, dbPass, dbName, dbRulesTable) {
+    if (dbHost) { HOST = dbHost }
+    if (dbPort) { PORT = dbPort }
+    if (dbUser) { MYSQL_USER = dbUser }
+    if (dbPass) { MYSQL_PASS = dbPass }
+    if (dbName) { DATABASE = dbName }
+    if (dbRulesTable) { TABLE_RULES = dbRulesTable }
+}
+
+/**
+ * reads db rules and gets the current rule if one applies now
+ * @param {*} resultCallback 
+ */
+function _analyzeRules(resultCallback) {
+
+    //create connection object
+    let connection = mysql.createConnection({
+        host: HOST,
+        port: PORT,
+        user: MYSQL_USER,
+        password: MYSQL_PASS,
+        insecureAuth: true
+    }, function (e) {
+        if (typeof resultCallback === 'function') {
+            resultCallback(null, null, e);
+        }
+    });
+
+    connection.query('use ' + DATABASE);
+
+    toLogger(util.format('dbaccess.js: Connection successful. (connection.state: %s', connection.state))
+
+    connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
+        let ruleFound = false;
+
+        if (err) {
+            toLogger(util.format('dbaccess.js: %o', err))
+        } else {
+            this.Rules = results;//TODO: not working since undefined, why?
+            rules = results;//TODO: not working since undefined, why?
+
+            for (let i in results) {
+                let rule = results[i];
+
+                if (_ruleApplies(rule)) {
+                    ruleFound = true;
+                    if (typeof resultCallback === "function") {
+                        resultCallback(results, rule);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!ruleFound) {
+            if (typeof resultCallback === 'function') {
+                resultCallback(results, null);//return null if no rule is active
+            }
+        }
+    });
+
+    connection.end();
+}
+
+/**
+ * checks with rule-validation module if rule applies now
+ */
+function _ruleApplies(rule) {
+    return ruleValidation.YearIsInRuleRange(rule) &&
+        ruleValidation.TodayIsInRuleRange(rule) &&
+        ruleValidation.TodayIsTheCorrectWeekday(rule) &&
+        ruleValidation.TimeIsInRange(rule);
+}
+
+/**
+ * logs everything to the logger callback function if exists
+ * wrapper of the callback delegate
+ * @param {*} message
+ */
+function toLogger(message) {
+    if (typeof loggerCallback === 'function') {
+        loggerCallback(message)
+    }
+}
+
