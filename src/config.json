@@ -1,3 +1,27 @@
 ﻿{
-	"port": 8083
+	"port": 8083,
+	"logging": {
+		"LogLevel": 15,
+		"UseUnixTimeStampPrefix": true,
+		"DoLogMessages": true,
+		"OutputToConsole": true,
+		"OutputToCallback": true
+	},
+	"database": {
+		"host": "localhost",
+		"port": "3306",
+		"username": "root",
+		"dbname": "lightcontrol",
+		"rulestable": "lightrulesgeneral"
+	},
+	"hardware": {
+		"gpios": {
+			"Relais1": 23,
+			"Relais2": 24,
+			"ButtonAutomatic": 4,
+			"ButtonManualLightOn": 17,
+			"ButtonManualLightOff": 27
+		},
+		"Pcf8591Address": "0x48"
+	}
 }

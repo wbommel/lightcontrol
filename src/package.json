@@ -1,0 +1,39 @@
+{
+  "name": "lightcontrol",
+  "version": "2.0.0",
+  "description": "controls switching on and of and diming the light.",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wbommel/lightcontrol.git"
+  },
+  "keywords": [
+    "i2c",
+    "GPIO",
+    "RaspberryPi",
+    "dim",
+    "light",
+    "10V"
+  ],
+  "author": "Volker Broemmel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wbommel/lightcontrol/issues"
+  },
+  "homepage": "https://github.com/wbommel/lightcontrol#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "i2c-bus": "^4.0.1",
+    "mysql": "^2.16.0",
+    "onoff": "^3.2.1",
+    "socket.io": "^2.1.1",
+    "string.prototype.padstart": "^3.0.0",
+    "util": "^0.11.0"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  }
+}
