@@ -98,7 +98,7 @@ let hardwareIO = Object.create(moduleGpio).Init({ gpio, logger, conf: conf.hardw
 logger.LogIt('initializing HardwareIO module successful', logger.LogLevelInformation)
 
 logger.LogIt('initializing lightcontrol module', logger.LogLevelInformation)
-let lightcontrol = Object.create(moduleLightControl).Init({ logger, conf, websocket })
+let lightcontrol = Object.create(moduleLightControl).Init({ logger, conf, websocket, util })
 logger.LogIt('initializing lightcontrol module successful', logger.LogLevelInformation)
 
 
