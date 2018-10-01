@@ -2,14 +2,15 @@
  *
  */
 let maxValue = 255;
-let loggerCallback
+let logger
 let isInitialized = false
 
 
 module.exports = {
-    Init: function (loggerFunc) {
-        loggerCallback = loggerFunc;
-        isInitialized = true
+    Init: function (diContainer) {
+        logger = diContainer.logger;
+        
+        isInitialized = logger !== undefined
         return this;
     },
     CalcDimValueByRule: function (rule) {
@@ -42,7 +43,7 @@ module.exports = {
         var isDimDown = now >= to && now <= toDim;      //dim down phase
         var isMaxValue = now >= fromDim && now <= to;   //max phase
 
-        toLogger('CalcDimValueByRule.isMaxValue = ' + isMaxValue);
+        toLogger('CalcDimValueByRule.isMaxValue = ' + isMaxValue, logger.LogLevelInformation);
 
         //we really only need calculation if we are in dim up or dim down phase
         if (isDimUp || isDimDown) {
@@ -71,9 +72,10 @@ module.exports = {
  * logs everything to the logger callback function if exists
  * wrapper of the callback delegate
  * @param {*} message
+ * @param {*} level 
  */
-function toLogger(message) {
-    if (typeof loggerCallback === 'function') {
-        loggerCallback(message)
+function toLogger(message, level) {
+    if (logger) {
+        logger.LogIt(message, level)
     }
 }

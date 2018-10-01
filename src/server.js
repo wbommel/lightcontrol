@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /************************************************************************************************************************
  * requirements
@@ -23,11 +23,11 @@ const express = require('express');                     // express library http 
 const app = express();                                  // express Application
 const server = require('http').createServer(app);       // web server
 
-const io = require('socket.io').listen(server);         // websocket library
+const websocket = require('socket.io').listen(server);  // websocket library
 
 // instanciate logger to be able to ... well, .. log something. :-)
 const moduleLogger = require('./model/logger.js')
-let logger = moduleLogger.Init(util)
+let logger = Object.create(moduleLogger).Init(util)
 logger.LogLevel = conf.logging.LogLevel
 logger.UseUnixTimeStampPrefix = conf.logging.UseUnixTimeStampPrefix
 logger.DoLogMessages = conf.logging.DoLogMessages
@@ -36,7 +36,11 @@ logger.OutputToCallback = conf.logging.OutputToCallback
 
 
 /**
-* hardware dependant global requirements
+* hardware dependant requirements which can fail when the hardware is not present
+*
+*   i.e. this module is for a RaspberryPi developed on a PC lacking i2c and GPIO hardware,
+*   so it should be a good practice to create those instances within a try/catch to
+*   be able to make a valid development even on a PC.
 */
 let i2c                                                 // i2c library
 logger.LogIt('try to create i2c-bus instance', logger.LogLevelInformation)
@@ -58,6 +62,8 @@ try {
     logger.LogIt('error creating onoff instance. ' + error, logger.LogLevelError)
 }
 
+
+
 /**
  * project modules
  */
@@ -66,29 +72,40 @@ const weekdays = require('./model/weekdays.js')                     // weekday c
 const moduleRuleValidation = require('./model/rulevalidation.js')   // light rule validation library
 const moduleDbaccess = require('./model/dbaccess.js')               // database access layer
 const moduleCalculations = require('./model/calculations.js')       // 
-const moduleSocketIo = require('./model/webservice.js')             //
+const moduleWebservice = require('./model/webservice.js')             //
 const moduleGpio = require('./model/gpio.js')                       //
+const moduleLightControl = require('./model/lightcontrol.js')       // main control module
 logger.LogIt('creating instances of further project modules successful', logger.LogLevelInformation)
 
-logger.LogIt('initializing RuleValidation module',logger.LogLevelInformation)
-let rv = moduleRuleValidation.Init(weekdays, padStart, logger.LogIt)
-logger.LogIt('initializing RuleValidation module successful',logger.LogLevelInformation)
-logger.LogIt('initializing DbAccess module',logger.LogLevelInformation)
-let dbaccess = moduleDbaccess.Init(util, rv, mysql, logger.LogIt)
-logger.LogIt('initializing DbAccess module successful',logger.LogLevelInformation)
-logger.LogIt('initializing Calculations module',logger.LogLevelInformation)
-let calculations = moduleCalculations.Init(logger.LogIt)
-logger.LogIt('initializing Calculations module successful',logger.LogLevelInformation)
-logger.LogIt('initializing SocketIo module',logger.LogLevelInformation)
-let socketIo = moduleSocketIo.Init(express, app, server, io, logger.LogIt)
-logger.LogIt('initializing SocketIo module successful',logger.LogLevelInformation)
-logger.LogIt('initializing HardwareIO module',logger.LogLevelInformation)
-let hardwareIO = moduleGpio.Init(gpio, logger.LogIt, conf.hardware.gpios.Relais1, conf.hardware.gpios.Relais2, conf.hardware.gpios.ButtonAutomatic, conf.hardware.gpios.ButtonManualLightOn, conf.hardware.gpios.ButtonManualLightOff, conf.hardware.Pcf8591Address)
-logger.LogIt('initializing HardwareIO module successful',logger.LogLevelInformation)
+logger.LogIt('initializing RuleValidation module', logger.LogLevelInformation)
+let rv = Object.create(moduleRuleValidation).Init({ weekdays, padStart, logger })
+logger.LogIt('initializing RuleValidation module successful', logger.LogLevelInformation)
+
+logger.LogIt('initializing DbAccess module', logger.LogLevelInformation)
+let dbaccess = Object.create(moduleDbaccess).Init({ util, rv, mysql, logger, conf: conf.database })
+logger.LogIt('initializing DbAccess module successful', logger.LogLevelInformation)
+
+logger.LogIt('initializing Calculations module', logger.LogLevelInformation)
+let calculations = Object.create(moduleCalculations).Init({ logger })
+logger.LogIt('initializing Calculations module successful', logger.LogLevelInformation)
+
+logger.LogIt('initializing Webservice module', logger.LogLevelInformation)
+let webservice = Object.create(moduleWebservice).Init({ express, app, server, websocket, logger })
+logger.LogIt('initializing Webservice module successful', logger.LogLevelInformation)
+
+logger.LogIt('initializing HardwareIO module', logger.LogLevelInformation)
+let hardwareIO = Object.create(moduleGpio).Init({ gpio, logger, conf: conf.hardware.gpios })
+logger.LogIt('initializing HardwareIO module successful', logger.LogLevelInformation)
+
+logger.LogIt('initializing lightcontrol module', logger.LogLevelInformation)
+let lightcontrol = Object.create(moduleLightControl).Init({ logger, conf, websocket })
+logger.LogIt('initializing lightcontrol module successful', logger.LogLevelInformation)
+
+
 
 //dbaccess.AnalyzeRules(function () { console.log('Success!!!') })
 //calculations.CalcDimValueByRule(rule)
-socketIo.StartServer(conf.port)
+webservice.StartServer(conf.port)
 //hardwareIO.GetRelais1Value()
 
 

@@ -16,7 +16,7 @@ let cbButtonManualLightOff
 let gpioInitialized
 let relaisReadyToWrite
 
-let cbLogger
+let logger
 
 /**
  * constants
@@ -30,13 +30,16 @@ const relaisFalseValue = 1;
  * main module object declaration
  */
 module.exports = {
-  Init: function (diGpio, loggerFunc, ButtonAutomaticFunc, ButtonManualLightOnFunc, ButtonManualLightOffFunc, gpioRelais1, gpioRelais2, gpioButtonAutomatic, gpioButtonManualLightOn, gpioButtonManualLightOff) {
-    GPIO = diGpio
-    cbLogger = loggerFunc
-    cbButtonAutomatic = ButtonAutomaticFunc
-    cbButtonManualLightOn = ButtonManualLightOnFunc
-    cbButtonManualLightOff = ButtonManualLightOffFunc
-    _initHardware(gpioRelais1, gpioRelais2, gpioButtonAutomatic, gpioButtonManualLightOn, gpioButtonManualLightOff)
+  Init: function (diContainer) {
+    GPIO = diContainer.gpio
+    logger = diContainer.logger
+    conf = diContainer.conf
+
+    // cbButtonAutomatic = ButtonAutomaticFunc
+    // cbButtonManualLightOn = ButtonManualLightOnFunc
+    // cbButtonManualLightOff = ButtonManualLightOffFunc
+
+    _initHardware(conf.Relais1, conf.Relais2, conf.ButtonAutomatic, conf.ButtonManualLightOn, conf.ButtonManualLightOff)
     return this
   },
   WriteRelais1: function (value) {
@@ -87,15 +90,15 @@ module.exports = {
  */
 function _buttonAutomaticWatch(err, value) {
   if (typeof cbButtonAutomatic === 'function') { cbButtonAutomatic() }
-  toLogger('button automatic clicked...')
+  toLogger('button automatic clicked...', logger.LogLevelInformation)
 }
 function _buttonManualLightOnWatch(err, value) {
   if (typeof cbButtonManualLightOn === 'function') { cbButtonManualLightOn() }
-  toLogger('button light on clicked...')
+  toLogger('button light on clicked...', logger.LogLevelInformation)
 }
 function _buttonManualLightOffWatch(err, value) {
   if (typeof cbButtonManualLightOff === 'function') { cbButtonManualLightOff() }
-  toLogger('button light off clicked...')
+  toLogger('button light off clicked...', logger.LogLevelInformation)
 }
 
 /***********************
@@ -122,10 +125,10 @@ function _initHardware(gpioRelais1, gpioRelais2, gpioButtonAutomatic, gpioButton
 
     gpioInitialized = true
     relaisReadyToWrite = true
-    toLogger("Created and initialized 'onoff' GPIO")
+    toLogger("Created and initialized 'onoff' GPIO", logger.LogLevelInformation)
   } catch (error) {
     gpioInitialized = false
-    toLogger("Error creating 'onoff' GPIO")
+    toLogger("Error creating 'onoff' GPIO", logger.LogLevelError)
   }
 }
 
@@ -133,10 +136,11 @@ function _initHardware(gpioRelais1, gpioRelais2, gpioButtonAutomatic, gpioButton
  * logs everything to the logger callback function if exists
  * wrapper of the callback delegate
  * @param {*} message
+ * @param {*} level 
  */
-function toLogger(message) {
-  if (typeof cbLogger === 'function') {
-    cbLogger(message)
+function toLogger(message, level) {
+  if (logger) {
+    logger.LogIt(message, level)
   }
 }
 

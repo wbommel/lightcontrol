@@ -61,7 +61,7 @@ let TABLE_RULES = 'lightrulesgeneral';
  * global declarations
  */
 let ruleValidation
-let loggerCallback
+let logger
 let rules = []
 let isInitialized = false
 
@@ -82,19 +82,18 @@ module.exports = {
      * @param {*} dbName        database name
      * @param {*} dbRulesTable  database rules table name
      */
-    Init: function (diUtil, diRuleValidation, diMysql, loggerFunc, dbHost, dbPort, dbUser, dbPass, dbName, dbRulesTable) {
+    Init: function (diContainer) {
         //handle dependency injection objects
-        util = diUtil
-        rv = diRuleValidation
-        mysql = diMysql
-        loggerCallback = loggerFunc;
+        util = diContainer.util
+        rv = diContainer.rv
+        mysql = diContainer.mysql
+        logger = diContainer.logger
+        conf = diContainer.conf
 
-        //create internally used object
-        ruleValidation = rv.Init(loggerFunc);
+        isInitialized = util !== undefined && rv !== undefined && mysql !== undefined && logger !== undefined && conf !== undefined
 
         //initialization
-        _initDatabaseVars(dbHost, dbPort, dbUser, dbPass, dbName, dbRulesTable);
-        isInitialized = true;
+        _initDatabaseVars(conf.host, conf.port, conf.username, '', conf.dbname, conf.rulestable)
 
         //end factory pattern correctly
         return this;
@@ -153,13 +152,13 @@ function _analyzeRules(resultCallback) {
 
     connection.query('use ' + DATABASE);
 
-    toLogger(util.format('dbaccess.js: Connection successful. (connection.state: %s', connection.state))
+    toLogger(util.format('dbaccess.js: Connection successful. (connection.state: %s', connection.state), logger.LogLevelInformation)
 
     connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
         let ruleFound = false;
 
         if (err) {
-            toLogger(util.format('dbaccess.js: %o', err))
+            toLogger(util.format('dbaccess.js: %o', err), logger.LogLevelError)
         } else {
             this.Rules = results;//TODO: not working since undefined, why?
             rules = results;//TODO: not working since undefined, why?
@@ -201,10 +200,11 @@ function _ruleApplies(rule) {
  * logs everything to the logger callback function if exists
  * wrapper of the callback delegate
  * @param {*} message
+ * @param {*} level 
  */
-function toLogger(message) {
-    if (typeof loggerCallback === 'function') {
-        loggerCallback(message)
+function toLogger(message, level) {
+    if (logger) {
+        logger.LogIt(message, level)
     }
 }
 

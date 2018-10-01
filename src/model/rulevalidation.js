@@ -8,7 +8,7 @@ let weekdays
 let padStart
 
 
-let loggerCallback
+let logger
 let isInitialized = false
 
 
@@ -17,11 +17,12 @@ let isInitialized = false
  * declare a descent "interface"
  */
 module.exports = {
-    Init: function (diWeekdays, diPadStart, loggerFunc) {
-        weekdays = diWeekdays
-        padStart = diPadStart
-        loggerCallback = loggerFunc
-        isInitialized = true
+    Init: function (diContainer) {
+        weekdays = diContainer.weekdays
+        padStart = diContainer.padStart
+        logger = diContainer.logger
+
+        isInitialized = weekdays !== undefined && padStart !== undefined && logger !== undefined
         return this
     },
 
@@ -87,7 +88,7 @@ function _timeIsInRange(rule) {
     to.setMilliseconds(0);
 
     let retVal = now >= from && now <= to;
-    toLogger('ruleValidation._timeIsInRange: ' + retVal)
+    toLogger('ruleValidation._timeIsInRange: ' + retVal, logger.LogLevelInformation)
     return retVal ? true : false;
 }
 
@@ -105,7 +106,7 @@ function _todayIsTheCorrectWeekday(rule) {
         (now.getDay() === weekdays.DayFriday && weekdays.HasFriday(rule.Weekdays)) ||
         (now.getDay() === weekdays.DaySaturday && weekdays.HasSaturday(rule.Weekdays));
 
-    toLogger('ruleValidation._todayIsTheCorrectWeekday: ' + retVal)
+    toLogger('ruleValidation._todayIsTheCorrectWeekday: ' + retVal, logger.LogLevelInformation)
     return retVal ? true : false;
 }
 
@@ -122,7 +123,7 @@ function _todayIsInRuleRange(rule) {
     let to = arr[1] + arr[2];
 
     let retVal = parseInt(concatnowstr) >= parseInt(from) && parseInt(concatnowstr) <= parseInt(to);
-    toLogger('ruleValidation._todayIsInRuleRange: ' + retVal)
+    toLogger('ruleValidation._todayIsInRuleRange: ' + retVal, logger.LogLevelInformation)
     return retVal ? true : false;
 }
 
@@ -138,7 +139,7 @@ function _yearIsInRuleRange(rule) {
     let to = arr[0];
 
     let retVal = now.getFullYear() >= parseInt(from) && now.getFullYear() <= parseInt(to);
-    toLogger('ruleValidation._yearIsInRuleRange: ' + retVal)
+    toLogger('ruleValidation._yearIsInRuleRange: ' + retVal, logger.LogLevelInformation)
     return retVal ? true : false;
 }
 
@@ -146,9 +147,10 @@ function _yearIsInRuleRange(rule) {
  * logs everything to the logger callback function if exists
  * wrapper of the callback delegate
  * @param {*} message
- */
-function toLogger(message) {
-    if (typeof loggerCallback === 'function') {
-        loggerCallback(message)
+ * @param {*} level 
+*/
+function toLogger(message, level) {
+    if (logger) {
+        logger.LogIt(message, level)
     }
 }
