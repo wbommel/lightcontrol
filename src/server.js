@@ -72,7 +72,7 @@ const weekdays = require('./model/weekdays.js')                     // weekday c
 const moduleRuleValidation = require('./model/rulevalidation.js')   // light rule validation library
 const moduleDbaccess = require('./model/dbaccess.js')               // database access layer
 const moduleCalculations = require('./model/calculations.js')       // 
-const moduleWebservice = require('./model/webservice.js')             //
+const moduleWebservice = require('./model/webservice.js')           //
 const moduleGpio = require('./model/gpio.js')                       //
 const moduleLightControl = require('./model/lightcontrol.js')       // main control module
 logger.LogIt('creating instances of further project modules successful', logger.LogLevelInformation)
@@ -94,14 +94,17 @@ let webservice = Object.create(moduleWebservice).Init({ express, app, server, we
 logger.LogIt('initializing Webservice module successful', logger.LogLevelInformation)
 
 logger.LogIt('initializing HardwareIO module', logger.LogLevelInformation)
-let hardwareIO = Object.create(moduleGpio).Init({ gpio, logger, conf: conf.hardware.gpios })
+let hardwareGpio = Object.create(moduleGpio).Init({ gpio, logger, conf: conf.hardware.gpios })
 logger.LogIt('initializing HardwareIO module successful', logger.LogLevelInformation)
 
 logger.LogIt('initializing lightcontrol module', logger.LogLevelInformation)
 let lightcontrol = Object.create(moduleLightControl).Init({ logger, conf, websocket, util })
 logger.LogIt('initializing lightcontrol module successful', logger.LogLevelInformation)
 
-
+// hardwareGpio.on('relaisWriteReceived', function () {
+//     logger.LogIt('event fired successfully (relaisWriteReceived)', logger.LogLevelInformation)
+// })
+hardwareGpio.SetPower(1)
 
 //dbaccess.AnalyzeRules(function () { console.log('Success!!!') })
 //calculations.CalcDimValueByRule(rule)
