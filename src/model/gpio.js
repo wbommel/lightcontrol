@@ -3,7 +3,9 @@
 /**
  * set up hardware objects and variables
  */
+let logger
 let GPIO
+
 let Relais1
 let Relais2
 let ButtonAutomatic
@@ -16,7 +18,6 @@ let cbButtonManualLightOff
 let gpioInitialized
 let relaisReadyToWrite
 
-let logger
 
 /**
  * constants
@@ -29,7 +30,7 @@ const relaisFalseValue = 1;
 /**
  * main module object declaration
  */
-module.exports = {
+const hwGPIO = {
   Init: function (diContainer) {
     GPIO = diContainer.gpio
     logger = diContainer.logger
@@ -40,6 +41,7 @@ module.exports = {
     // cbButtonManualLightOff = ButtonManualLightOffFunc
 
     _initHardware(conf.Relais1, conf.Relais2, conf.ButtonAutomatic, conf.ButtonManualLightOn, conf.ButtonManualLightOff)
+
     return this
   },
   WriteRelais1: function (value) {
@@ -53,6 +55,7 @@ module.exports = {
     }
   },
   SetPower: function (value) {
+    //this.emit('relaisWriteReceived')
     this.WriteRelais1(value)
     this.WriteRelais2(value)
   },
@@ -73,6 +76,7 @@ module.exports = {
     return null
   }
 }
+
 
 
 
@@ -149,7 +153,7 @@ function toLogger(message, level) {
  * @param {*} value 
  */
 function _writeRelais(relais, value) {
-  if (!relaisReadyToWrite) { return }
+  if (!relaisReadyToWrite || !gpioInitialized) { return }
 
   relaisValue = value ? relaisTrueValue : relaisFalseValue;
 
@@ -160,3 +164,7 @@ function _writeRelais(relais, value) {
     setTimeout(function () { relaisReadyToWrite = true }, 2000)
   }
 }
+
+
+
+module.exports = hwGPIO
