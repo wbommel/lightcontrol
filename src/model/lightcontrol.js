@@ -6,6 +6,9 @@ let websocket
 let util
 
 let _isInitialized = false;
+let _clientHandlers = []
+
+
 
 module.exports = {
     Init: function (diContainer) {
@@ -16,35 +19,22 @@ module.exports = {
 
         _isInitialized = logger !== undefined && websocket !== undefined
 
-        _createSocketListeners()
+        _createClientConnectListeners()
         return this
     },
     GetSocketHandlers: function () {
-        return socketHandlers
+        return _clientHandlers
     }
 }
 
 
 
-function createSocketHandler() {
-    return {
-        Init: function (socket) {
-            this.socket = socket
-            _registerSocketListeners(socket)
-
-            return this
-        }
-    };
-}
-let socketHandlers = []
-
-
-function _createSocketListeners() {
+function _createClientConnectListeners() {
     if (!_isInitialized) { return; }
 
     websocket.sockets.on('connection', (socket) => {
-        let socketHandler = createSocketHandler().Init(socket)
-        socketHandlers.push(socketHandler)
+        let clientHandler = _createClientHandler().Init(socket)
+        _clientHandlers.push(clientHandler)
 
         logger.LogIt('client connected...', logger.LogLevelInformation)
         logger.LogIt('client id: ' + socket.id, logger.LogLevelInformation)
@@ -53,24 +43,43 @@ function _createSocketListeners() {
     })
 }
 
-function _registerSocketListeners(socket) {
+
+
+function _createClientHandler() {
+    return {
+        Init: function (socket) {
+            this.socket = socket
+            _registerClientSocketListeners(socket)
+
+            return this
+        }
+    };
+}
+
+
+
+function _registerClientSocketListeners(socket) {
     socket.on('debugInfoChanged', (data) => {
-        _socketListenerDebugInfoChanged(socket, data)
+        _clientListenerDebugInfoChanged(socket, data)
     })
     socket.on('disconnect', (reason) => {
-        _socketListenerDisconnect(socket, reason)
+        _clientListenerDisconnect(socket, reason)
     })
 }
 
 
 
-function _socketListenerDebugInfoChanged(sender, data) {
+function _clientListenerDebugInfoChanged(sender, data) {
     logger.LogIt(util.format('Debug Info Changed received from client "%s"', sender.id), logger.LogLevelInformation)
 }
 
-function _socketListenerDisconnect(sender, reason) {
+function _clientListenerDisconnect(sender, reason) {
     logger.LogIt(util.format('client "%s" disconnected. Reason: %s', sender.id, reason), logger.LogLevelInformation)
 
     //TODO: remove sender from array by array.splice?
+    _clientHandlers.forEach(function (client, index) {
+        logger.LogIt(util.format('client \=\=\= sender: %s', client.socket === sender), logger.LogLevelInformation)
+    })
+    //logger.LogIt('', logger.LogLevelInformation)
+
 }
-//TODO: renamings to make clearer which function is doing what exactly
