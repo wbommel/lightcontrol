@@ -1,3 +1,5 @@
+'use strict'
+
 /**
  * requirements
  */
@@ -6,6 +8,7 @@ let webApp
 let webServer
 let webSocket
 let util
+let lightcontrol
 
 
 
@@ -13,7 +16,7 @@ let util
  * global declarations
  */
 let logger
-let isInitialized = false
+let _isInitialized = false
 
 
 
@@ -24,9 +27,13 @@ module.exports = {
         webServer = diContainer.server
         webSocket = diContainer.websocket
         util = diContainer.util
+        lightcontrol = diContainer.lightcontrol
         logger = diContainer.logger
 
-        isInitialized = express !== undefined && webApp !== undefined && webServer !== undefined && logger !== undefined
+        _isInitialized = express !== undefined && webApp !== undefined && webServer !== undefined && webSocket !== undefined && util !== undefined && lightcontrol !== undefined && logger !== undefined
+
+        _createClientConnectListeners()
+
         return this
     },
     StartServer: function (portNumber) {
@@ -43,6 +50,8 @@ module.exports = {
  * 
  */
 function _startServer(portNumber) {
+    if (!_isInitialized) { return; }
+
     //start up web server
     webServer.listen(portNumber)
 
@@ -56,13 +65,15 @@ function _startServer(portNumber) {
     });
 
     // Portnummer in die Konsole schreiben
-    _toLogger('Der Server läuft nun unter http://127.0.0.1:' + portNumber + '/', logger.LogLevelStatus + logger.LogLevelInformation)
+    logger.LogIt('Der Server läuft nun unter http://127.0.0.1:' + portNumber + '/', logger.LogLevelStatus + logger.LogLevelInformation)
 }
 
 /**
  * 
  */
 function _logConnectedClients() {
+    if (!_isInitialized) { return; }
+
     webSocket.sockets.clients(function (error, clients) {
         if (error || clients.length === 0) { logger.LogIt(util.format('no clients'), logger.LogLevelInformation) }
 
@@ -73,14 +84,70 @@ function _logConnectedClients() {
     })
 }
 
-/**
- * logs everything to the logger callback function if exists
- * wrapper of the callback delegate
- * @param {*} message
- * @param {*} level 
- */
-function _toLogger(message, level) {
-    if (logger) {
-        logger.LogIt(message, level)
-    }
+
+
+/******************************************************************************
+ * socket handling 
+ ******************************************************************************/
+function _createClientConnectListeners() {
+    if (!_isInitialized) { return; }
+
+    webSocket.sockets.on('connection', (socket) => {
+        logger.LogIt('client connected...', logger.LogLevelInformation)
+        logger.LogIt('client id: ' + socket.id, logger.LogLevelInformation)
+        logger.LogIt(util.format('client: %s', socket), logger.LogLevelInformation)
+        logger.LogIt(util.format('handshake: %o', socket.handshake), logger.LogLevelInformation)
+
+
+        socket.on('SendLogToClient_Toggle', (data) => { _clientListenerSendLogToClient_Toggle(socket, data) })
+        socket.on('SendLogToClient_On', (data) => { })
+        socket.on('SendLogToClient_Off', (data) => { })
+        socket.on('AutomaticMode_Toggle', (data) => { })
+        socket.on('AutomaticMode_On', (data) => { })
+        socket.on('AutomaticMode_Off', (data) => { })
+
+        socket.on('', (data) => { })
+
+        socket.on('disconnect', (reason) => {
+            _clientListenerDisconnect(socket, reason)
+        })
+
+        _logConnectedClients()
+    })
 }
+/**
+ * socket.on decriptions
+ * 
+ * - disconnect
+ * 
+ * - SendLogToClient_Toggle
+ * - SendLogToClient_On
+ * - SendLogToClient_Off
+ * - AutomaticMode_Toggle
+ * - AutomaticMode_On
+ * - AutomaticMode_Off
+ * - ManualValue_Changed
+ * - ManualValue_100
+ * - ManualValue_0
+ * 
+ * 
+ * 
+ * socket.emit descriptions
+ * 
+ */
+
+
+
+function _clientListenerSendLogToClient_Toggle(sender, data) {
+    logger.LogIt(util.format('SendLogToClient_Toggle received from client "%s"', sender.id), logger.LogLevelInformation)
+}
+
+function _clientListenerDisconnect(sender, reason) {
+    logger.LogIt(util.format('client "%s" disconnected. Reason: %s', sender.id, reason), logger.LogLevelInformation)
+    _logConnectedClients()
+}
+
+
+
+
+
