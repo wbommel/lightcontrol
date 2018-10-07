@@ -4,6 +4,8 @@
 let express
 let webApp
 let webServer
+let webSocket
+let util
 
 
 
@@ -20,6 +22,8 @@ module.exports = {
         express = diContainer.express
         webApp = diContainer.app
         webServer = diContainer.server
+        webSocket = diContainer.websocket
+        util = diContainer.util
         logger = diContainer.logger
 
         isInitialized = express !== undefined && webApp !== undefined && webServer !== undefined && logger !== undefined
@@ -27,7 +31,9 @@ module.exports = {
     },
     StartServer: function (portNumber) {
         _startServer(portNumber)
-        logger.LogIt('Hooray...')
+    },
+    LogConnectedClients: function () {
+        _logConnectedClients()
     }
 }
 
@@ -51,6 +57,20 @@ function _startServer(portNumber) {
 
     // Portnummer in die Konsole schreiben
     _toLogger('Der Server läuft nun unter http://127.0.0.1:' + portNumber + '/', logger.LogLevelStatus + logger.LogLevelInformation)
+}
+
+/**
+ * 
+ */
+function _logConnectedClients() {
+    webSocket.sockets.clients(function (error, clients) {
+        if (error || clients.length === 0) { logger.LogIt(util.format('no clients'), logger.LogLevelInformation) }
+
+        clients.forEach(function (item, index) {
+            logger.LogIt(util.format('client %d: %s', ++index, item), logger.LogLevelInformation)
+        })
+
+    })
 }
 
 /**
