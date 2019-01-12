@@ -30,6 +30,9 @@ module.exports = {
         lightcontrol = diContainer.lightcontrol
         logger = diContainer.logger
 
+        logger.LoggerCallbackFunction = _sendLogMessage
+        lightcontrol.SetHeartbeatCallback(_sendHeartbeat)
+
         _isInitialized = express !== undefined && webApp !== undefined && webServer !== undefined && webSocket !== undefined && util !== undefined && lightcontrol !== undefined && logger !== undefined
 
         _createClientConnectListeners()
@@ -46,8 +49,37 @@ module.exports = {
 
 
 
+function _sendToClients(callback) {
+    if (! typeof callback === 'function' || !_isInitialized) { return }
+
+    webSocket.sockets.clients(function (error, clients) {
+        clients.forEach(function (item, index) {
+            callback(webSocket.sockets.connected[item])
+        })
+    })
+}
+
 /**
  * 
+ */
+let _sendHeartbeat = function (socket) {
+    _sendToClients(function (socket) {
+        socket.emit('heartbeat', {})
+    })
+}
+
+/**
+ * 
+ */
+let _sendLogMessage = function (data) {
+    _sendToClients(function (socket) {
+        socket.emit('debugLogMessage', { Message: data.Message })
+    })
+}
+
+/**
+ * 
+ * @param {*} portNumber 
  */
 function _startServer(portNumber) {
     if (!_isInitialized) { return; }
@@ -86,6 +118,8 @@ function _logConnectedClients() {
 
 
 
+
+
 /******************************************************************************
  * socket handling 
  ******************************************************************************/
@@ -99,18 +133,18 @@ function _createClientConnectListeners() {
         logger.LogIt(util.format('handshake: %o', socket.handshake), logger.LogLevelInformation)
 
 
+        socket.on('disconnect', (reason) => { _clientListenerDisconnect(socket, reason) })
         socket.on('SendLogToClient_Toggle', (data) => { _clientListenerSendLogToClient_Toggle(socket, data) })
-        socket.on('SendLogToClient_On', (data) => { })
-        socket.on('SendLogToClient_Off', (data) => { })
-        socket.on('AutomaticMode_Toggle', (data) => { })
-        socket.on('AutomaticMode_On', (data) => { })
-        socket.on('AutomaticMode_Off', (data) => { })
+        socket.on('SendLogToClient_On', (data) => { _clientListenerSendLogToClient_On(socket, data) })
+        socket.on('SendLogToClient_Off', (data) => { _clientListenerSendLogToClient_Off(socket, data) })
+        socket.on('AutomaticMode_Toggle', (data) => { _clientListenerAutomaticMode_Toggle(socket, data) })
+        socket.on('AutomaticMode_On', (data) => { _clientListenerAutomaticMode_On(socket, data) })
+        socket.on('AutomaticMode_Off', (data) => { _clientListenerAutomaticMode_Off(socket, data) })
+        socket.on('ManualValue_Changed', (data) => { _clientListenerManualValue_Changed(socket, data) })
+        socket.on('ManualValue_100', (data) => { _clientListenerManualValue_100(socket, data) })
+        socket.on('ManualValue_0', (data) => { _clientListenerManualValue_0(socket, data) })
 
         socket.on('', (data) => { })
-
-        socket.on('disconnect', (reason) => {
-            _clientListenerDisconnect(socket, reason)
-        })
 
         _logConnectedClients()
     })
@@ -138,14 +172,48 @@ function _createClientConnectListeners() {
 
 
 
-function _clientListenerSendLogToClient_Toggle(sender, data) {
-    logger.LogIt(util.format('SendLogToClient_Toggle received from client "%s"', sender.id), logger.LogLevelInformation)
-}
-
 function _clientListenerDisconnect(sender, reason) {
     logger.LogIt(util.format('client "%s" disconnected. Reason: %s', sender.id, reason), logger.LogLevelInformation)
     _logConnectedClients()
 }
+
+function _clientListenerSendLogToClient_Toggle(sender, data) {
+    logger.LogIt(util.format('SendLogToClient_Toggle received from client "%s"', sender.id), logger.LogLevelInformation)
+}
+
+function _clientListenerSendLogToClient_On(sender, data) {
+    logger.LogIt(util.format('SendLogToClient_On received from client "%s"', sender.id), logger.LogLevelInformation)
+}
+
+function _clientListenerSendLogToClient_Off(sender, data) {
+    logger.LogIt(util.format('SendLogToClient_Off received from client "%s"', sender.id), logger.LogLevelInformation)
+}
+
+function _clientListenerAutomaticMode_Toggle(sender, data) {
+    logger.LogIt(util.format('AutomaticMode_Toggle received from client "%s"', sender.id), logger.LogLevelInformation)
+    lightcontrol.TestFunction()
+}
+
+function _clientListenerAutomaticMode_On(sender, data) {
+    logger.LogIt(util.format('AutomaticMode_On received from client "%s"', sender.id), logger.LogLevelInformation)
+}
+
+function _clientListenerAutomaticMode_Off(sender, data) {
+    logger.LogIt(util.format('AutomaticMode_Off received from client "%s"', sender.id), logger.LogLevelInformation)
+}
+
+function _clientListenerManualValue_Changed(sender, data) {
+    logger.LogIt(util.format('ManualValue_Changed received from client "%s"', sender.id), logger.LogLevelInformation)
+}
+
+function _clientListenerManualValue_100(sender, data) {
+    logger.LogIt(util.format('ManualValue_100 received from client "%s"', sender.id), logger.LogLevelInformation)
+}
+
+function _clientListenerManualValue_0(sender, data) {
+    logger.LogIt(util.format('ManualValue_0 received from client "%s"', sender.id), logger.LogLevelInformation)
+}
+
 
 
 
