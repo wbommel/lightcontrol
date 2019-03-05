@@ -38,54 +38,62 @@ let rules;
 module.exports = {
     Rules: rules,
     GetAplyingRule: function (resultCallback) {
-
-        //create connection object
-        let connection = mysql.createConnection({
-            host: HOST,
-            port: PORT,
-            user: MYSQL_USER,
-            password: MYSQL_PASS,
-            insecureAuth: true
-        }, function (e) {
-            resultCallback(null, null, e);
-        });
-
-        connection.query('use ' + DATABASE);
-
-        logger.LogIt('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
-        //console.log('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
-
-        connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
-            let ruleFound = false;
-
-            if (err) {
-                logger.ToConsole(err);
-                //console.log(err);
-            } else {
-                this.Rules = results;//TODO: not working since undefined, why?
-                rules = results;//TODO: not working since undefined, why?
-
-                for (let i in results) {
-                    let rule = results[i];
-
-                    if (_ruleApplies(rule)) {
-                        ruleFound = true;
-                        if (typeof resultCallback === "function") {
-                            resultCallback(results, rule);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (!ruleFound) {
-                resultCallback(results, null);//return null if no rule is active
-            }
-        });
-
-        connection.end();
+      _readRulesfromDB(resultCallback)
     }
 };
+
+
+
+function _readRulesfromDB(resultCallback){
+
+          //create connection object
+          let connection = mysql.createConnection({
+              host: HOST,
+              port: PORT,
+              user: MYSQL_USER,
+              password: MYSQL_PASS,
+              insecureAuth: true
+          }, function (e) {
+              resultCallback(null, null, e);
+          });
+
+          connection.query('use ' + DATABASE);
+
+          logger.LogIt('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
+          //console.log('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
+
+          connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
+              let ruleFound = false;
+
+              if (err) {
+                  logger.ToConsole(err);
+                  //console.log(err);
+              } else {
+                  this.Rules = results;//TODO: not working since undefined, why?
+                  rules = results;//TODO: not working since undefined, why?
+
+                  for (let i in results) {
+                      let rule = results[i];
+
+                      if (_ruleApplies(rule)) {
+                          ruleFound = true;
+                          if (typeof resultCallback === "function") {
+                              resultCallback(results, rule);
+                              break;
+                          }
+                      }
+                  }
+              }
+
+              if (!ruleFound) {
+                  resultCallback(results, null);//return null if no rule is active
+              }
+          });
+
+          connection.end();
+}
+
+
 
 function _ruleApplies(rule) {
     return rulevalidation.YearIsInRuleRange(rule) &&
@@ -93,6 +101,7 @@ function _ruleApplies(rule) {
         rulevalidation.TodayIsTheCorrectWeekday(rule) &&
         rulevalidation.TimeIsInRange(rule);
 }
+
 
 
 
