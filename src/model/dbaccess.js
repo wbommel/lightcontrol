@@ -12,10 +12,10 @@
 /**
  * requirements
  */
-const mysql = require('mysql');
-const logger = require('../logger.js'); // test own logger class (only reference it here since the detail settings are done in main server.js)
-const rulevalidation = require('./rulevalidation');
-
+const mysql = require('mysql')
+const logger = require('../logger.js') // test own logger class (only reference it here since the detail settings are done in main server.js)
+const rulevalidation = require('./rulevalidation')
+const conf = require('../config.json')
 
 
 /**
@@ -38,7 +38,8 @@ let rules;
 module.exports = {
     Rules: rules,
     GetAplyingRule: function (resultCallback) {
-      _readRulesfromDB(resultCallback)
+      //_readRulesfromDB(resultCallback)
+      _readRulesFromConfig(resultCallback)
     }
 };
 
@@ -95,6 +96,36 @@ function _readRulesfromDB(resultCallback){
 
 
 
+function _readRulesFromConfig(resultCallback){
+      if (typeof resultCallback !== "function") { return }
+
+      if (!conf.rules) {
+        resultCallback(null, null, "ERROR no rules...")
+        return
+      }
+
+      let ruleFound = false
+      this.Rules = conf.rules
+      rules = conf.rules
+
+      for (let i in rules) {
+          rules.id = i
+          let rule = rules[i]
+
+          if (_ruleApplies(rule)) {
+              ruleFound = true;
+              resultCallback(rules, rule);
+              break;
+          }
+      }
+
+      if (!ruleFound) {
+          resultCallback(results, null);//return null if no rule is active
+      }
+}
+
+
+
 function _ruleApplies(rule) {
     return rulevalidation.YearIsInRuleRange(rule) &&
         rulevalidation.TodayIsInRuleRange(rule) &&
@@ -112,11 +143,17 @@ function _ruleApplies(rule) {
  *  12345678901234567890
  *  YYYY;MM;DD;hh;mm
  *
- * Example: Every day (depending on Weekdays field) from 08:00 to 11:00
- *  From: "0000;01;01;08;00"
- *  To  : "9999;12;31;11;00"
+ * Example: Every date from 01.01.0000 to 31.12.9999
+ *          Every week day from 08:00 to 11:00
+ *  From    : "0000;01;01;08;00"
+ *  To      : "9999;12;31;11;00"
+ *  Weekdays: 127 (see below)
  *
- *
+ * Example: Every date from 01.01.0000 to 31.12.9999
+ *          Saturdays and Sundays from 09:00 to 11:00
+ *  From    : "0000;01;01;09;00"
+ *  To      : "9999;12;31;11;00"
+ *  Weekdays: 65 (see below)
  *
  * Weekdays format:
  *  ---------------------------------
