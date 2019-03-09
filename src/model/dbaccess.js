@@ -109,7 +109,6 @@ function _readRulesFromConfig(resultCallback){
       rules = conf.rules
 
       for (let i in rules) {
-          rules.id = i
           let rule = rules[i]
 
           if (_ruleApplies(rule)) {
@@ -120,7 +119,7 @@ function _readRulesFromConfig(resultCallback){
       }
 
       if (!ruleFound) {
-          resultCallback(results, null);//return null if no rule is active
+          resultCallback(rules, null);//return null if no rule is active
       }
 }
 
