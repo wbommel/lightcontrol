@@ -109,28 +109,33 @@ try {
     Relais1.writeSync(ledFalseValue);
     Relais2.writeSync(ledFalseValue);
 
+   
     ButtonAutomatic.watch(function (err, value) {
-        if (mode === 0) {
+        if (value===0 && mode === 0) {
             mode = 1;
             firstRun = true;
+            setHardware();
         }
     });
     Button100Percent.watch(function (err, value) {
-        if (mode === 1) {
+        if (value===0 && mode === 1) {
             mode = 0;
         }
-        if (dimValue !== 255) {
+        if (value===0 && dimValue !== 255) {
             dimValue = 255;
+            setHardware();
         }
     });
     Button50Percent.watch(function (err, value) {
-        if (mode === 1) {
+        if (value===0 && mode === 1) {
             mode = 0;
         }
-        if (dimValue !== 127) {
-            dimValue = 127;
+        if (value===0 && dimValue !== 0) {
+            dimValue = 0;
+            setHardware();
         }
     });
+
 
     toLog('Created and initialized \'onoff\' Relais1=GPIO23, Relais2=GPIO24');
 } catch (e) {
