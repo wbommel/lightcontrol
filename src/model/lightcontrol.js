@@ -3,6 +3,7 @@
 let logger
 let conf
 let util
+let webservice
 
 let _isInitialized = false
 
@@ -18,8 +19,11 @@ module.exports = {
         logger = diContainer.logger
         conf = diContainer.conf
         util = diContainer.util
+        webservice = diContainer.webservice
 
-        _isInitialized = logger !== undefined && util !== undefined
+        _heartbeatCallBack = webservice.SendHeartBeat
+
+        _isInitialized = logger !== undefined && conf !== undefined && util !== undefined && webservice !== undefined
 
         //enter  automatic mode
         setInterval(_automaticMode, 1000);

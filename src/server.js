@@ -93,13 +93,13 @@ logger.LogIt('initializing HardwareIO module', logger.LogLevelInformation)
 let hardwareGpio = Object.create(moduleGpio).Init({ gpio, logger, conf: conf.hardware.gpios })
 logger.LogIt('initializing HardwareIO module successful', logger.LogLevelInformation)
 
-logger.LogIt('initializing lightcontrol module', logger.LogLevelInformation)
-let lightcontrol = Object.create(moduleLightControl).Init({ logger, conf, util })
-logger.LogIt('initializing lightcontrol module successful', logger.LogLevelInformation)
-
 logger.LogIt('initializing Webservice module', logger.LogLevelInformation)
-let webservice = Object.create(moduleWebservice).Init({ express, app, server, websocket, util, lightcontrol, logger })
+let webservice = Object.create(moduleWebservice).Init({ express, app, server, websocket, util, logger })
 logger.LogIt('initializing Webservice module successful', logger.LogLevelInformation)
+
+logger.LogIt('initializing lightcontrol module', logger.LogLevelInformation)
+let lightcontrol = Object.create(moduleLightControl).Init({ logger, conf, util, webservice })
+logger.LogIt('initializing lightcontrol module successful', logger.LogLevelInformation)
 
 
 

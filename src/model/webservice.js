@@ -8,7 +8,6 @@ let webApp
 let webServer
 let webSocket
 let util
-let lightcontrol
 
 
 
@@ -27,13 +26,11 @@ module.exports = {
         webServer = diContainer.server
         webSocket = diContainer.websocket
         util = diContainer.util
-        lightcontrol = diContainer.lightcontrol
         logger = diContainer.logger
 
         logger.LoggerCallbackFunction = _sendLogMessage
-        lightcontrol.SetHeartbeatCallback(_sendHeartbeat)
 
-        _isInitialized = express !== undefined && webApp !== undefined && webServer !== undefined && webSocket !== undefined && util !== undefined && lightcontrol !== undefined && logger !== undefined
+        _isInitialized = express !== undefined && webApp !== undefined && webServer !== undefined && webSocket !== undefined && util !== undefined && logger !== undefined
 
         _createClientConnectListeners()
 
@@ -44,6 +41,9 @@ module.exports = {
     },
     LogConnectedClients: function () {
         _logConnectedClients()
+    },
+    SendHeartBeat: function(){
+        _sendHeartbeat()
     }
 }
 
