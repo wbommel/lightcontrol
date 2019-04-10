@@ -23,5 +23,39 @@
 			"ButtonManualLightOff": 27
 		},
 		"Pcf8591Address": "0x48"
-	}
+	},
+	"rules": [
+		{
+			"id": 1,
+			"Priority": 9999,
+			"From": "0000;01;01;08;00",
+			"To": "9999;12;31;11;00",
+			"DimTime": 30,
+			"Weekdays": 62
+		},
+		{
+			"id": 2,
+			"Priority": 9999,
+			"From": "0000;01;01;16;00",
+			"To": "9999;12;31;20;00",
+			"DimTime": 30,
+			"Weekdays": 62
+		},
+		{
+			"id": 3,
+			"Priority": 9999,
+			"From": "0000;01;01;09;00",
+			"To": "9999;12;31;11;00",
+			"DimTime": 30,
+			"Weekdays": 65
+		},
+		{
+			"id": 4,
+			"Priority": 9999,
+			"From": "0000;01;01;16;00",
+			"To": "9999;12;31;20;00",
+			"DimTime": 30,
+			"Weekdays": 65
+		}
+	]
 }
