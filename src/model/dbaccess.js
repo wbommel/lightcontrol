@@ -111,7 +111,7 @@ module.exports = {
      * @param {*} resultCallback function that will be executed when database query is done
      */
     AnalyzeRules: function (resultCallback) {
-        //_analyzeRules(resultCallback)
+        //_analyzeRulesFromDB(resultCallback)
         _analyzeRulesFromConfig(resultCallback)
     }
 }
@@ -154,7 +154,7 @@ function _initDatabaseVars(dbHost, dbPort, dbUser, dbPass, dbName, dbRulesTable)
  * reads db rules and gets the current rule if one applies now
  * @param {*} resultCallback 
  */
-function _analyzeRules(resultCallback) {
+function _analyzeRulesFromDB(resultCallback) {
     if (!isInitialized) {
         throw NotInitializedException(this)
     }

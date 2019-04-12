@@ -120,3 +120,12 @@ webservice.StartServer(conf.port)
 
 
 logger.LogIt('Hooray...')
+
+
+/**
+ * This part should be commented out in production environment
+ */
+logger.LogIt('')
+logger.LogIt('Now for the integration tests...')
+
+
