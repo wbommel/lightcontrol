@@ -1,4 +1,6 @@
 
+//Old tries (no real tests):
+/*
 const util = require('util')
 let moduleLogger = require('../model/logger.js')
 let logger = Object.create(moduleLogger).Init(util)
@@ -31,3 +33,5 @@ logger.LogIt('TestStatus', logger.LogLevelStatus)
 console.log(4 & 1)
 console.log(5 & 1)
 console.log(6 & 1)
+
+*/

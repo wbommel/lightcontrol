@@ -1,3 +1,5 @@
+//just a simple example test
+/*
 var assert = require('assert');
 
 describe('Array', function() {
@@ -7,5 +9,5 @@ describe('Array', function() {
     });
   });
 });
-
+*/
 //Testetstetste
