@@ -7,10 +7,19 @@
 
 <body>
     <H1>Lightcontrol Configuration</H1>
-    <div>
+    
+    <div class="configframe" id="general">
         <label>Port:</label>
         <input type="text" onchange="onChangePort()" />
     </div>
+
+    <div class="configframe" id="logging">
+        <div>
+            <label for="">Loglevel:</label>
+            <input type="text" onchange="onChangeLogLevel()" />
+        </div>
+    </div>
+
 </body>
 
 </html>
