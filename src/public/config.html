@@ -1,6 +1,9 @@
 <!doctype html>
 <html>
 
+<link rel="stylesheet" href="config.css">
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="config.js"></script>
 
 <title>Lightcontrol Configuration</title>
@@ -10,13 +13,13 @@
     
     <div class="configframe" id="general">
         <label>Port:</label>
-        <input type="text" onchange="onChangePort()" />
+        <input type="text" id="settingsGeneralPort" onchange="onChangePort()" />
     </div>
 
     <div class="configframe" id="logging">
         <div>
             <label for="">Loglevel:</label>
-            <input type="text" onchange="onChangeLogLevel()" />
+            <input type="text" id="settingsLoggingLogLevel" onchange="onChangeLogLevel()" />
         </div>
     </div>
 

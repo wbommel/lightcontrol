@@ -344,9 +344,6 @@ $(document).on('ready', function () {
         $(nemesisUI).createObject({ appendTo: 'body' });
         //$(bommelLightControlUI).createObject({ appendTo: 'body' });
 
-
-
-
         // WebSocket: create connection to server
         var socket = io.connect();
 
