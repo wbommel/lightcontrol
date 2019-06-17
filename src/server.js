@@ -75,6 +75,7 @@ const moduleCalculations = require('./model/calculations.js')       //
 const moduleWebservice = require('./model/webservice.js')           //
 const moduleGpio = require('./model/gpio.js')                       //
 const moduleLightControl = require('./model/lightcontrol.js')       // main control module
+const moduleConfigEditor=require('./model/configeditor.js')         // config editor functionality
 logger.LogIt('creating instances of further project modules successful', logger.LogLevelInformation)
 
 logger.LogIt('initializing RuleValidation module', logger.LogLevelInformation)
@@ -101,6 +102,9 @@ logger.LogIt('initializing lightcontrol module', logger.LogLevelInformation)
 let lightcontrol = Object.create(moduleLightControl).Init({ logger, conf, util, webservice })
 logger.LogIt('initializing lightcontrol module successful', logger.LogLevelInformation)
 
+logger.LogIt('initializing config editor module', logger.LogLevelInformation)
+let configeditor = Object.create(moduleLightControl).Init({ logger, conf, websocket, webservice })
+logger.LogIt('initializing config editor module successful', logger.LogLevelInformation)
 
 
 
