@@ -47,7 +47,9 @@ function _createClientConnectListeners() {
         websocket.emit('initialize_config_editor', conf)
     })
 
-    websocket.on('test123', function (data) {
-
+    websocket.on('set_logging_UseUnixTimestamp', function (data) {
+        if (conf.logging.UseUnixTimeStampPrefix !== data.value) {
+            conf.logging.UseUnixTimeStampPrefix = data.value
+        }
     })
 }
