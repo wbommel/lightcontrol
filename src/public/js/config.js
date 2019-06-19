@@ -7,13 +7,17 @@ $(document).on('ready', function () {
 
     //create socket listeners
     socket.on('initialize_config_editor', function (data) {
+        $('#settingsGeneralPort').val(data.port)
+
+        $('#settingsLoggingLogLevel').val(data.logging.LogLevel)
+        $('#settingsLoggingUseUnixTimestamp').val(data.logging.UseUnixTimeStampPrefix)
+        $('#settingsLoggingLogMessages').val(data.logging.DoLogMessages)
+        $('#settingsLoggingOutputToConsole').val(data.logging.OutputToConsole)
+        $('#settingsLoggingOutputToCallback').val(data.logging.OutputToCallback)
     })
 
     socket.on('config_changed_on_server', function (data) {
     })
-
-    $('#settingsGeneralPort').val("8083")
-    $('#settingsLoggingLogLevel').val("ALLES UND ÜBERHAUPT!")
 })
 
 

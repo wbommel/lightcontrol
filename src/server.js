@@ -103,7 +103,7 @@ let lightcontrol = Object.create(moduleLightControl).Init({ logger, conf, util, 
 logger.LogIt('initializing lightcontrol module successful', logger.LogLevelInformation)
 
 logger.LogIt('initializing config editor module', logger.LogLevelInformation)
-let configeditor = Object.create(moduleLightControl).Init({ logger, conf, websocket, webservice })
+let configeditor = Object.create(moduleConfigEditor).Init({ logger, conf, websocket, webservice })
 logger.LogIt('initializing config editor module successful', logger.LogLevelInformation)
 
 

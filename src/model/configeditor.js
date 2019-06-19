@@ -40,8 +40,14 @@ module.exports = {
 function _createClientConnectListeners() {
     if (!_isInitialized) { return; }
 
-    webSocket.sockets.on('connection', (socket) => {
+    websocket.sockets.on('connection', (socket) => {
         logger.LogIt('     config editor (maybe?!) connected...', logger.LogLevelInformation)
         logger.LogIt('           client id: ' + socket.id, logger.LogLevelInformation)
+
+        websocket.emit('initialize_config_editor', conf)
+    })
+
+    websocket.on('test123', function (data) {
+
     })
 }

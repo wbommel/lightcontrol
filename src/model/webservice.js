@@ -42,7 +42,7 @@ module.exports = {
     LogConnectedClients: function () {
         _logConnectedClients()
     },
-    SendHeartBeat: function(){
+    SendHeartBeat: function () {
         _sendHeartbeat()
     }
 }
@@ -90,10 +90,13 @@ function _startServer(portNumber) {
     //statische Dateien ausliefern
     webApp.use(express.static(__dirname + '/../public'));
 
-    webApp.get('/', function (req, res) {
+    //webApp.get('/', function (req, res) {
+    webApp.all('/', function (req, res) {
         // wenn der Pfad / aufgerufen wird
         // so wird die Datei index.html ausgegeben
         res.sendfile(__dirname + '../public/index.html')
+
+        next()
     });
 
     // Portnummer in die Konsole schreiben
