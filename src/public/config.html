@@ -11,15 +11,19 @@
 
 <body>
     <H1>Lightcontrol Configuration</H1>
-    
+
     <div class="configframe" id="general">
-        <h3><p>General settings</p></h3>
+        <h3>
+            <p>General settings</p>
+        </h3>
         <label>Port:</label>
         <input type="text" id="settingsGeneralPort" onchange="onChangePort()" />
     </div>
 
     <div class="configframe" id="logging">
-        <h3><p>Logging settings</p></h3>
+        <h3>
+            <p>Logging settings</p>
+        </h3>
         <div>
             <label for="">Loglevel:</label>
             <input type="text" id="settingsLoggingLogLevel" onchange="onChangeLogLevel()" />
@@ -39,6 +43,52 @@
         <div>
             <label for="">Output to callback:</label>
             <input type="checkbox" id="settingsLoggingOutputToCallback" onchange="onChangeOutputToCallback()" />
+        </div>
+    </div>
+
+    <div class="configframe" id="hardware">
+        <h3>
+            <p>Hardware settings</p>
+        </h3>
+
+        <div>
+            <label>PCF8591 Address:</label>
+            <input type="text" id="settingsHardwarePcf8591Address" onchange="onChangePcf8591Address()" />
+        </div>
+
+        <div class="configframe" id="hardwaregpios">
+            <h4>
+                <p>GPIO settings</p>
+            </h4>
+
+            <div>
+                <label>Relais1 GPIO:</label>
+                <input type="text" id="settingsHardwareGpioRelais1" onchange="onChange...()" />
+            </div>
+
+            <div>
+                <label>Relais2 GPIO:</label>
+                <input type="text" id="settingsHardwareGpioRelais2" onchange="onChange...()" />
+            </div>
+
+            <div>
+                <label>Button-Automatic GPIO:</label>
+                <input type="text" id="settingsHardwareGpioButtonAutomatic" onchange="onChange...()" />
+            </div>
+
+            <div>
+                <label>Button-Light-On GPIO:</label>
+                <input type="text" id="settingsHardwareGpioButtonLightOn" onchange="onChange...()" />
+            </div>
+
+            <div>
+                <label>Button-Light-Off GPIO:</label>
+                <input type="text" id="settingsHardwareGpioButtonLightOff" onchange="onChange...()" />
+            </div>
+        </div>
+
+        <div class="configframe" id="lightrules">
+
         </div>
     </div>
 

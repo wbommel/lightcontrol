@@ -16,6 +16,24 @@ $(document).on('ready', function () {
         $('#settingsLoggingLogMessages').prop("checked", data.logging.DoLogMessages)
         $('#settingsLoggingOutputToConsole').prop("checked", data.logging.OutputToConsole)
         $('#settingsLoggingOutputToCallback').prop("checked", data.logging.OutputToCallback)
+
+        $('#settingsHardwarePcf8591Address').val(data.hardware.Pcf8591Address)
+
+        $('#settingsHardwareGpioRelais1').val(data.hardware.gpios.Relais1)
+        $('#settingsHardwareGpioRelais2').val(data.hardware.gpios.Relais2)
+        $('#settingsHardwareGpioButtonAutomatic').val(data.hardware.gpios.ButtonAutomatic)
+        $('#settingsHardwareGpioButtonLightOn').val(data.hardware.gpios.ButtonManualLightOn)
+        $('#settingsHardwareGpioButtonLightOff').val(data.hardware.gpios.ButtonManualLightOff)
+
+        let rules = data.rules
+        let rule
+        for (var idx = 0; idx < rules.length; idx++) {
+            rule = rules[idx]
+            $('#lightrules').append($("<label>").text('Rule:'))
+            let input = $('<input type="text">').attr({ id: 'from', name: 'from', value: rule.from })
+            //input.val(rule.from)
+            $('#lightrules').append(input)
+        }
     })
 
     socket.on('config_changed_on_server', function (data) {
@@ -52,6 +70,8 @@ function onChangeOutputToCallback() {
     // alert("onChangeOutputToCallback called. '" + $('#settingsLoggingOutputToCallback').val() + "'")
 }
 
+function onChangePcf8591Address() {
 
+}
 
 
