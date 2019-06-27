@@ -1,4 +1,12 @@
 /**
  * global definitions
  */
- 
+ .lightrulelabel {
+     display: inline-block;
+     width: 80px;
+ }
+
+ .hardwaregpiolabel {
+    display: inline-block;
+    width: 170px;
+ }

@@ -29,14 +29,45 @@ $(document).on('ready', function () {
         let rule
         for (var idx = 0; idx < rules.length; idx++) {
             rule = rules[idx]
-            $('#lightrules').append($("<label>").text('Rule:'))
-            let input = $('<input type="text">').attr({ id: 'from', name: 'from', value: rule.from })
-            //input.val(rule.from)
-            $('#lightrules').append(input)
+
+            let strRulePriorityName = 'rulePriority' + rule.id
+            let strRuleFromName = 'ruleFrom' + rule.id
+            let strRuleToName = 'ruleTo' + rule.id
+            let strRuleDimTimeName = 'ruleDimTime' + rule.id
+            let strRuleWeekdaysName = 'ruleWeekdays' + rule.id
+
+            //$('#lightrules').append($("<label>").text('Rule:'))
+            //$('#lightrules').append($('<input type="text">').attr({ id: strRuleFromName, name: 'from', value: rule.From }))
+
+
+            let fixture = $([
+                "           <div id='", "rule", rule.id, "'>",
+                "               <h5>Rule ", rule.id, "</h5>",
+                "               <label class='lightrulelabel'>Priority:</label>",
+                "               <input id='", strRulePriorityName, "' type='text' value='", rule.Priority, "' onchange='onChangeRulePriority(this)' />",
+                "               </br>",
+                "               <label class='lightrulelabel'>From:</label>",
+                "               <input id='", strRuleFromName, "' type='text' value='", rule.From, "' onchange='onChangeRuleFrom(this)' />",
+                "               </br>",
+                "               <label class='lightrulelabel'>To:</label>",
+                "               <input id='", strRuleToName, "' type='text' value='", rule.To, "' onchange='onChangeRuleTo(this)' />",
+                "               </br>",
+                "               <label class='lightrulelabel'>DimTime:</label>",
+                "               <input id='", strRuleDimTimeName, "' type='text' value='", rule.DimTime, "' onchange='onChangeRuleDimTime(this)' />",
+                "               </br>",
+                "               <label class='lightrulelabel'>Weekdays:</label>",
+                "               <input id='", strRuleWeekdaysName, "' type='text' value='", rule.Weekdays, "' onchange='onChangeRuleWeekdays(this)' />",
+                "           </div>"
+            ].join("\n"))
+            $('#lightrules').append(fixture)
         }
     })
 
     socket.on('config_changed_on_server', function (data) {
+    })
+
+    socket.on('client_message', function (data) {
+        alert(data.message)
     })
 })
 
@@ -55,7 +86,9 @@ function onChangeLogLevel() {
 
 function onChangeUseUnixTimestamp() {
     //alert("onChangeUseUnixTimestamp called. '" + $('#settingsLoggingUseUnixTimestamp').val() + "'")
-    socket.emit('set_logging_UseUnixTimestamp', { value: $('#settingsLoggingUseUnixTimestamp').prop("checked") })
+    if (socket !== undefined) {
+        socket.emit('set_logging_UseUnixTimestamp', { value: $('#settingsLoggingUseUnixTimestamp').prop("checked") })
+    }
 }
 
 function onChangeLogMessages() {
@@ -74,4 +107,23 @@ function onChangePcf8591Address() {
 
 }
 
+function onChangeRulePriority(data) {
+    alert('onChangeRulePriority() called... \n' + data.id + '\n' + data.value)
+}
+
+function onChangeRuleFrom(data) {
+    alert('onChangeRuleFrom() called... \n' + data.id + '\n' + data.value)
+}
+
+function onChangeRuleTo(data) {
+    alert('onChangeRuleTo() called... \n' + data.id + '\n' + data.value)
+}
+
+function onChangeRuleDimTime(data) {
+    alert('onChangeRuleDimTime() called... \n' + data.id + '\n' + data.value)
+}
+
+function onChangeRuleWeekdays(data) {
+    alert('onChangeRuleWeekdays() called... \n' + data.id + '\n' + data.value)
+}
 

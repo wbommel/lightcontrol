@@ -147,7 +147,10 @@ function _createClientConnectListeners() {
         socket.on('ManualValue_100', (data) => { _clientListenerManualValue_100(socket, data) })
         socket.on('ManualValue_0', (data) => { _clientListenerManualValue_0(socket, data) })
 
-        socket.on('', (data) => { })
+        socket.on('set_logging_UseUnixTimestamp', (data) => {
+            socket.emit('client_message', { message: 'UseUnixTimestamp checkbox clicked in client. Value: ' + data.value })
+            logger.LogIt('UseUnixTimestamp checkbox clicked in client. Value: ' + data.value)
+        })
 
         _logConnectedClients()
     })
