@@ -45,54 +45,54 @@ module.exports = {
 
 
 
-function _readRulesfromDB(resultCallback){
+// function _readRulesfromDB(resultCallback){
 
-          //create connection object
-          let connection = mysql.createConnection({
-              host: HOST,
-              port: PORT,
-              user: MYSQL_USER,
-              password: MYSQL_PASS,
-              insecureAuth: true
-          }, function (e) {
-              resultCallback(null, null, e);
-          });
+//           //create connection object
+//           let connection = mysql.createConnection({
+//               host: HOST,
+//               port: PORT,
+//               user: MYSQL_USER,
+//               password: MYSQL_PASS,
+//               insecureAuth: true
+//           }, function (e) {
+//               resultCallback(null, null, e);
+//           });
 
-          connection.query('use ' + DATABASE);
+//           connection.query('use ' + DATABASE);
 
-          logger.LogIt('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
-          //console.log('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
+//           logger.LogIt('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
+//           //console.log('dbaccess.js: Connection successful. (connection.state: ' + connection.state + ')');
 
-          connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
-              let ruleFound = false;
+//           connection.query('SELECT * FROM ' + TABLE_RULES + ' ORDER BY Priority ASC, id ASC', function (err, results, fields) {
+//               let ruleFound = false;
 
-              if (err) {
-                  logger.ToConsole(err);
-                  //console.log(err);
-              } else {
-                  this.Rules = results;//TODO: not working since undefined, why?
-                  rules = results;//TODO: not working since undefined, why?
+//               if (err) {
+//                   logger.ToConsole(err);
+//                   //console.log(err);
+//               } else {
+//                   this.Rules = results;//TODO: not working since undefined, why?
+//                   rules = results;//TODO: not working since undefined, why?
 
-                  for (let i in results) {
-                      let rule = results[i];
+//                   for (let i in results) {
+//                       let rule = results[i];
 
-                      if (_ruleApplies(rule)) {
-                          ruleFound = true;
-                          if (typeof resultCallback === "function") {
-                              resultCallback(results, rule);
-                              break;
-                          }
-                      }
-                  }
-              }
+//                       if (_ruleApplies(rule)) {
+//                           ruleFound = true;
+//                           if (typeof resultCallback === "function") {
+//                               resultCallback(results, rule);
+//                               break;
+//                           }
+//                       }
+//                   }
+//               }
 
-              if (!ruleFound) {
-                  resultCallback(results, null);//return null if no rule is active
-              }
-          });
+//               if (!ruleFound) {
+//                   resultCallback(results, null);//return null if no rule is active
+//               }
+//           });
 
-          connection.end();
-}
+//           connection.end();
+// }
 
 
 
@@ -142,8 +142,8 @@ function _ruleApplies(rule) {
  *  12345678901234567890
  *  YYYY;MM;DD;hh;mm
  *
- * Example: Every date from 01.01.0000 to 31.12.9999
- *          Every week day from 08:00 to 11:00
+ * Example: Every day from Jan 1st, 0000 to Dec 31st, 9999 
+ * (depending on Weekdays field) from 08:00 to 11:00
  *  From    : "0000;01;01;08;00"
  *  To      : "9999;12;31;11;00"
  *  Weekdays: 127 (see below)
