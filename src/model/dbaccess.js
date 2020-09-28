@@ -7,8 +7,6 @@
  *
  */
 
-
-
 /**
  * requirements
  */
@@ -17,33 +15,28 @@ const logger = require('../logger.js') // test own logger class (only reference 
 const rulevalidation = require('./rulevalidation')
 const conf = require('../config.json')
 
-
 /**
  * database server settings
  */
-const HOST = 'localhost';
-const PORT = 3306;
-const MYSQL_USER = 'root';    //your mysql/mariadb user. Do not use root. User your own user. ;-)
-const MYSQL_PASS = 'Warlock'; //your mysql/mariadb root pw. Do not use this example. Create your onw secure pw. ;-)
-const DATABASE = ' lightcontrol';
-const TABLE_RULES = 'lightrulesgeneral';
-
-
+const HOST = 'localhost'
+const PORT = 3306
+const MYSQL_USER = 'root' // your mysql/mariadb user. Do not use root. User your own user. ;-)
+const MYSQL_PASS = 'Warlock' // your mysql/mariadb root pw. Do not use this example. Create your onw secure pw. ;-)
+const DATABASE = ' lightcontrol'
+const TABLE_RULES = 'lightrulesgeneral'
 
 /**
  * global declarations
  */
-let rules;
+let rules
 
 module.exports = {
-    Rules: rules,
-    GetAplyingRule: function (resultCallback) {
-      //_readRulesfromDB(resultCallback)
-      _readRulesFromConfig(resultCallback)
-    }
-};
-
-
+  Rules: rules,
+  GetAplyingRule: function (resultCallback) {
+    // _readRulesfromDB(resultCallback)
+    _readRulesFromConfig(resultCallback)
+  }
+}
 
 // function _readRulesfromDB(resultCallback){
 
@@ -94,46 +87,71 @@ module.exports = {
 //           connection.end();
 // }
 
+function _readRulesFromConfig (resultCallback) {
+  if (typeof resultCallback !== 'function') { return }
 
+  if (!conf.rules) {
+    resultCallback(null, null, 'ERROR no rules...')
+    return
+  }
 
-function _readRulesFromConfig(resultCallback){
-      if (typeof resultCallback !== "function") { return }
+  const rulesFound = []
+  let ruleFound = false
+  this.Rules = conf.rules
+  rules = conf.rules
 
-      if (!conf.rules) {
-        resultCallback(null, null, "ERROR no rules...")
-        return
-      }
+  for (const i in rules) {
+    const rule = rules[i]
 
-      let ruleFound = false
-      this.Rules = conf.rules
-      rules = conf.rules
+    if (_ruleApplies(rule)) {
+      rulesFound.push(rule)
+      break
+    }
+  }
 
-      for (let i in rules) {
-          let rule = rules[i]
+  if (rulesFound.length > 0) {
+    ruleFound = true
+    resultCallback(rules, rulesFound[0])
+  }
 
-          if (_ruleApplies(rule)) {
-              ruleFound = true;
-              resultCallback(rules, rule);
-              break;
-          }
-      }
-
-      if (!ruleFound) {
-          resultCallback(rules, null);//return null if no rule is active
-      }
+  if (!ruleFound) {
+    resultCallback(rules, null)// return null if no rule is active
+  }
 }
 
-
-
-function _ruleApplies(rule) {
-    return rulevalidation.YearIsInRuleRange(rule) &&
+function _ruleApplies (rule) {
+  return rulevalidation.YearIsInRuleRange(rule) &&
         rulevalidation.TodayIsInRuleRange(rule) &&
         rulevalidation.TodayIsTheCorrectWeekday(rule) &&
-        rulevalidation.TimeIsInRange(rule);
+        rulevalidation.TimeIsInRange(rule)
 }
 
+function _readRulesFromConfig_backup (resultCallback) {
+  if (typeof resultCallback !== 'function') { return }
 
+  if (!conf.rules) {
+    resultCallback(null, null, 'ERROR no rules...')
+    return
+  }
 
+  let ruleFound = false
+  this.Rules = conf.rules
+  rules = conf.rules
+
+  for (const i in rules) {
+    const rule = rules[i]
+
+    if (_ruleApplies(rule)) {
+      ruleFound = true
+      resultCallback(rules, rule)
+      break
+    }
+  }
+
+  if (!ruleFound) {
+    resultCallback(rules, null)// return null if no rule is active
+  }
+}
 
 /**
  * Database format descriptions
@@ -142,7 +160,7 @@ function _ruleApplies(rule) {
  *  12345678901234567890
  *  YYYY;MM;DD;hh;mm
  *
- * Example: Every day from Jan 1st, 0000 to Dec 31st, 9999 
+ * Example: Every day from Jan 1st, 0000 to Dec 31st, 9999
  * (depending on Weekdays field) from 08:00 to 11:00
  *  From    : "0000;01;01;08;00"
  *  To      : "9999;12;31;11;00"
