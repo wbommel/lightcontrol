@@ -1,6 +1,7 @@
 /**
  * global requirements
  */
+const path = require('path')
 const express = require('express') // express library
 const app = express() // express Application
 const server = require('http').createServer(app) // web server
@@ -9,9 +10,8 @@ const conf = require('./config.json') // configuration (server port etc)
 const dbaccess = require('./model/dbaccess') // database access stuff
 const calculations = require('./model/calculations') // calculations
 const util = require('util') // string formatting etc
-const fs = require('fs') // filesystem operations (for reading external html code i.e.
-//      for rule editor popup
-const winston = require('winston') // winston logger (https://github.com/winstonjs/winston)
+// const fs = require('fs') // filesystem operations (for reading external html code i.e. for rule editor popup
+// const winston = require('winston') // winston logger (https://github.com/winstonjs/winston)
 const logger = require('./logger.js') // test own logger class
 
 /**
@@ -50,7 +50,7 @@ let mode = 1
 const refreshInterval = 1000
 
 // read external html data
-const externalWebTest = fs.readFileSync(__dirname + '/public/webtest.html', 'UTF-8')
+// const externalWebTest = fs.readFileSync(__dirname + '/public/webtest.html', 'UTF-8')
 
 // manual lamp switch
 let manualLampOn = false
@@ -71,12 +71,12 @@ logger.UseUnixTimeStampPrefix = true
 server.listen(conf.port)
 
 // statische Dateien ausliefern
-app.use(express.static(__dirname + '/public'))
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', function (req, res) {
   // wenn der Pfad / aufgerufen wird
   // so wird die Datei index.html ausgegeben
-  res.sendfile(__dirname + '/public/index.html')
+  res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
 // Portnummer in die Konsole schreiben
@@ -102,26 +102,40 @@ try {
   Relais1.writeSync(ledFalseValue)
   Relais2.writeSync(ledFalseValue)
 
-  ButtonAutomatic.watch(function (err, value) {
-    if (mode === 0) {
-      mode = 1
-      firstRun = true
+  ButtonAutomatic.watch((err, value) => {
+    if (err) {
+      toLog(err.message + ' / ' + value)
+    } else {
+      if (mode === 0) {
+        mode = 1
+        firstRun = true
+      }
     }
   })
-  Button100Percent.watch(function (err, value) {
-    if (mode === 1) {
-      mode = 0
-    }
-    if (dimValue !== 255) {
-      dimValue = 255
+
+  Button100Percent.watch((err, value) => {
+    if (err) {
+      toLog(err.message + ' / ' + value)
+    } else {
+      if (mode === 1) {
+        mode = 0
+      }
+      if (dimValue !== 255) {
+        dimValue = 255
+      }
     }
   })
-  Button50Percent.watch(function (err, value) {
-    if (mode === 1) {
-      mode = 0
-    }
-    if (dimValue !== 127) {
-      dimValue = 127
+
+  Button50Percent.watch((err, value) => {
+    if (err) {
+      toLog(err.message + ' / ' + value)
+    } else {
+      if (mode === 1) {
+        mode = 0
+      }
+      if (dimValue !== 127) {
+        dimValue = 127
+      }
     }
   })
 
@@ -133,16 +147,16 @@ try {
 let i2c
 let i2c1
 try {
-  i2c = require('i2c-bus')	// package to communicate via i2c
-  i2c1 = i2c.openSync(1)		// open i2c bus 1
+  i2c = require('i2c-bus') // package to communicate via i2c
+  i2c1 = i2c.openSync(1) // open i2c bus 1
   writeDAC(0)
 
   toLog('Created and initialized \'i2c-bus\' i2c1')
 } catch (e) {
   toLog('Could not create \'i2c-bus\'...')
 }
-const PCF8591_ADDR = 0x48		// adress of PCF8591 on i2c bus (i2cdetect -y 1)
-const CMD_ACCESS_CONFIG = 0x41	// 'adress' of DAC in the PCF8591
+const PCF8591_ADDR = 0x48 // adress of PCF8591 on i2c bus (i2cdetect -y 1)
+const CMD_ACCESS_CONFIG = 0x41 // 'adress' of DAC in the PCF8591
 let dacValue = 0
 
 // enter  automatic mode
