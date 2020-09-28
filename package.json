@@ -22,9 +22,8 @@
     "test": "mocha"
   },
   "devDependencies": {
-    "assert": "^1.4.1",
     "mocha": "^5.0.5",
-    "standard": "^14.3.3",
+    "assert": "^1.4.1",
     "string.prototype.padstart": "^3.0.0"
   }
 }
