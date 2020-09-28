@@ -26,3 +26,12 @@ for (const i in filteredRules) {
 if (filteredRules.length > 1) {
   console.log('We need to filter further...')
 }
+
+/**
+ * filter overlapping rules by priority
+ *
+ * @param {*} rules
+ */
+function prioritizeRules (rules) {
+
+}
