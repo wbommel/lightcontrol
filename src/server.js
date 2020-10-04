@@ -10,8 +10,7 @@ const conf = require('./config.json') // configuration (server port etc)
 const dbaccess = require('./model/dbaccess') // database access stuff
 const calculations = require('./model/calculations') // calculations
 const util = require('util') // string formatting etc
-const fs = require('fs') // filesystem operations (for reading external html code i.e.
-//      for rule editor popup
+// const fs = require('fs') // filesystem operations (for reading external html code i.e. for rule editor popup
 // const winston = require('winston') // winston logger (https://github.com/winstonjs/winston)
 const logger = require('./logger.js') // test own logger class
 
