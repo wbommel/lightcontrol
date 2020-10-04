@@ -39,7 +39,7 @@ let dimValue = 0
 const databaseCheckInterval = 5
 
 // global debug switch
-let showDebugInfo = false
+let showDebugInfo = false || conf.showdebuginfo
 
 // global mode selector (default=1)
 // 0 = manual mode
@@ -68,7 +68,8 @@ logger.DoLogMessages = showDebugInfo
 logger.UseUnixTimeStampPrefix = true
 
 // start up web server
-server.listen(conf.port)
+const port = conf.port || 8083
+server.listen(port)
 
 // statische Dateien ausliefern
 app.use(express.static(path.join(__dirname, 'public')))
@@ -80,7 +81,7 @@ app.get('/', function (req, res) {
 })
 
 // Portnummer in die Konsole schreiben
-console.log('Der Server läuft nun unter http://127.0.0.1:' + conf.port + '/')
+console.log('Der Server läuft nun unter http://127.0.0.1:' + port + '/')
 
 /**
  * initialize hardware relevant stuff
@@ -133,8 +134,8 @@ try {
       if (mode === 1) {
         mode = 0
       }
-      if (dimValue !== 127) {
-        dimValue = 127
+      if (dimValue !== 0) {
+        dimValue = 0
       }
     }
   })
@@ -144,20 +145,25 @@ try {
   toLog('Could not create \'onoff\'...')
 }
 
+const addressPCF8591 = 0x48 || parseInt(conf.hardware.PCF8591_ADDR, 16) // adress of PCF8591 on i2c bus (i2cdetect -y 1)
+const addressDAC = 0x41 || parseInt(conf.hardware.CMD_ACCESS_CONFIG, 16) // 'adress' of DAC in the PCF8591
+let dacValue = 0
 let i2c
 let i2c1
 try {
   i2c = require('i2c-bus') // package to communicate via i2c
+  console.log('%o', i2c)
+  console.log('-----------------------------')
   i2c1 = i2c.openSync(1) // open i2c bus 1
+  console.log('%o', i2c1)
+  console.log('-----------------------------')
   writeDAC(0)
 
   toLog('Created and initialized \'i2c-bus\' i2c1')
 } catch (e) {
   toLog('Could not create \'i2c-bus\'...')
+  toLog(e.message)
 }
-const PCF8591_ADDR = 0x48 // adress of PCF8591 on i2c bus (i2cdetect -y 1)
-const CMD_ACCESS_CONFIG = 0x41 // 'adress' of DAC in the PCF8591
-let dacValue = 0
 
 // enter  automatic mode
 setInterval(_automaticMode, 1000)
@@ -317,8 +323,7 @@ function _automaticMode () {
             Weekdays: rules[i].Weekdays
           })
         }
-      }
-      )
+      })
     }
 
     // get dimValue
@@ -410,6 +415,10 @@ function writeDAC (value) {
 
   // only write when legal
   if (Number.isInteger(value) && value >= 0 && value <= 0xff) {
-    i2c1.writeByteSync(PCF8591_ADDR, CMD_ACCESS_CONFIG, value)
+    try {
+      i2c1.writeByteSync(addressPCF8591, addressDAC, value)
+    } catch (err) {
+      toLog(err.message)
+    }
   }
 }
